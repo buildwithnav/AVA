@@ -1,0 +1,591 @@
+[
+  {
+    "id": "fdf-list-studies",
+    "service": "fdf-api",
+    "route": "/fdf_filters/studies",
+    "httpMethod": "GET",
+    "description": "Fetches all available studies from FDF.",
+    "parameters": []
+  },
+  {
+    "id": "fdf-list-sites",
+    "service": "fdf-api",
+    "route": "/fdf_filters/sites",
+    "httpMethod": "GET",
+    "description": "Fetches all sites for the specified study.",
+    "parameters": [
+      {
+        "name": "studyId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "fdf-list-pis",
+    "service": "fdf-api",
+    "route": "/fdf/pis",
+    "httpMethod": "GET",
+    "description": "Fetches all Principal Investigators (PIs) for a site in a study.",
+    "parameters": [
+      {
+        "name": "studyId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "siteId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "fdf-query-form-counts",
+    "service": "fdf-api",
+    "route": "/fdf/qfcounts",
+    "httpMethod": "GET",
+    "description": "Gets query form counts for a site in a study.",
+    "parameters": [
+      {
+        "name": "studyId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "siteId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "fdf-read-timepoint",
+    "service": "fdf-api",
+    "route": "/fdf/timepoint",
+    "httpMethod": "GET",
+    "description": "Fetches timepoint data for a PI at a site and study.",
+    "parameters": [
+      {
+        "name": "studyId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "siteId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "piId",
+        "type": "string",
+        "required": true,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "monlog-filters-init",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon_filters/init",
+    "httpMethod": "GET",
+    "description": "Fetch all monitoring log filter dropdowns \u2014 studies, visit types, and reason codes.",
+    "parameters": []
+  },
+  {
+    "id": "monlog-filters-sites",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon_filters/sites",
+    "httpMethod": "GET",
+    "description": "Fetch all sites for a given study.",
+    "parameters": [
+      {
+        "name": "studyid",
+        "type": "number",
+        "required": true,
+        "location": "query",
+        "description": "Study ID from init filter"
+      }
+    ]
+  },
+  {
+    "id": "monlog-logs-header",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon/logs_header",
+    "httpMethod": "GET",
+    "description": "Fetch the header (study name, site name, PIs) for a study-site combination.",
+    "parameters": [
+      {
+        "name": "StudyId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "SiteId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "StartDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "EndDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "monlog-logs-view",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon/logs_view",
+    "httpMethod": "GET",
+    "description": "Fetch paginated monitoring log visits for a study-site, with optional status/date/visit-type filters.",
+    "parameters": [
+      {
+        "name": "StudyId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "SiteId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "Status",
+        "type": "string",
+        "required": false,
+        "location": "query",
+        "description": "Filter by status (%, COMPLETED, READY_FOR_MONITOR, Draft, READY_FOR_SITE)"
+      },
+      {
+        "name": "StartDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "EndDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "VisitType",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "monlog-tabs-counts",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon/tabs_counts",
+    "httpMethod": "GET",
+    "description": "Fetch aggregate status counts (completed, draft, ready for monitor/site) for a study-site.",
+    "parameters": [
+      {
+        "name": "StudyId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "SiteId",
+        "type": "number",
+        "required": true,
+        "location": "query"
+      },
+      {
+        "name": "Status",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "StartDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "EndDate",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "VisitType",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "monlog-details",
+    "service": "elogs-api",
+    "route": "/core/api/elogs/mon/details",
+    "httpMethod": "GET",
+    "description": "Fetch detailed visit information for a specific monitoring log entry.",
+    "parameters": [
+      {
+        "name": "logId",
+        "type": "number",
+        "required": true,
+        "location": "query",
+        "description": "Monitoring log ID"
+      },
+      {
+        "name": "Status",
+        "type": "string",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "isActive",
+        "type": "string",
+        "required": false,
+        "location": "query",
+        "description": "Active flag (Y/N), default Y"
+      }
+    ]
+  },
+  {
+    "id": "kb_schema",
+    "internal": true,
+    "description": "Get column names, types, and sample rows for a knowledge base. Call this before querying to understand the data structure.",
+    "parameters": [
+      {
+        "name": "knowledgeBaseId",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "ID of the knowledge base to inspect"
+      }
+    ]
+  },
+  {
+    "id": "kb_query",
+    "internal": true,
+    "description": "Query a tabular dataset using DuckDB SQL. Call kb_schema first to see available columns. Results shown to you are capped at 250 rows; when capped the response includes truncated:true and totalRowCount (the full row count) - treat that as the signal to re-run with aggregation. The full result is always available to the user via the CSV download, so never widen a query just to see more rows. For analytical questions (outliers, distributions, totals, averages, min/max, highest/lowest, trends, counts), compute the answer in SQL using aggregation (COUNT, SUM, AVG, STDDEV, PERCENTILE_CONT, MEDIAN, MIN, MAX, GROUP BY) or ORDER BY column DESC/ASC LIMIT n - do not select raw rows and inspect them. For outliers, use statistical thresholds (e.g. values beyond mean +/- 2*STDDEV, or top/bottom percentiles via PERCENTILE_CONT) computed over the full table. Prefer selecting specific columns over SELECT *. After results return, interpret the numbers for the user rather than just restating the table. If a result is truncated, tell the user it was capped and re-run with aggregation for a complete answer.",
+    "parameters": [
+      {
+        "name": "datasetIds",
+        "type": "array",
+        "required": true,
+        "location": "body",
+        "description": "IDs of datasets to query. Multiple IDs enables JOINs."
+      },
+      {
+        "name": "sql",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "SQL SELECT query"
+      }
+    ]
+  },
+  {
+    "id": "kb_search",
+    "internal": true,
+    "description": "Search Q&A articles and support documents using natural language.",
+    "parameters": [
+      {
+        "name": "knowledgeBaseId",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "ID of the document knowledge base to search"
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "Natural language search query"
+      },
+      {
+        "name": "topK",
+        "type": "integer",
+        "required": false,
+        "location": "body",
+        "description": "Number of results (default 5)"
+      }
+    ]
+  },
+  {
+    "id": "start_workflow",
+    "internal": true,
+    "description": "Starts a multi-step workflow. Only use when the user explicitly wants to perform an action (fetch report, generate extract, create ticket). Pick the promptId from the 'Available workflows' list in your system prompt. Never use for data questions about loaded knowledge bases.",
+    "parameters": [
+      {
+        "name": "promptId",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "The workflow promptId from the available workflows list"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "location": "body",
+        "description": "Fallback: free-text description if no promptId matches"
+      },
+      {
+        "name": "context",
+        "type": "object",
+        "required": false,
+        "location": "body",
+        "description": "Relevant data from the conversation (study IDs, query results, etc.)"
+      }
+    ]
+  },
+  {
+    "id": "list-study-reviews",
+    "service": "cmon-api",
+    "route": "/cmon/cma/dashboard/studyReviews",
+    "httpMethod": "GET",
+    "description": "Lists study reviews; supports filtering by myWork and hideLoader.",
+    "parameters": [
+      {
+        "name": "myWork",
+        "type": "boolean",
+        "required": false,
+        "location": "query"
+      },
+      {
+        "name": "hideLoader",
+        "type": "boolean",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "get-review-detail",
+    "service": "cmon-api",
+    "route": "/cmon/cma/review/get/{reviewId}",
+    "httpMethod": "GET",
+    "description": "Fetches review details for the given reviewId.",
+    "parameters": [
+      {
+        "name": "reviewId",
+        "type": "number",
+        "required": true,
+        "location": "path"
+      },
+      {
+        "name": "hideLoader",
+        "type": "boolean",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "list-review-findings",
+    "service": "cmon-api",
+    "route": "/cmon/cma/findingMgmt/ws/findings/{reviewId}",
+    "httpMethod": "GET",
+    "description": "Lists findings and associated details for the specified review.",
+    "parameters": [
+      {
+        "name": "reviewId",
+        "type": "number",
+        "required": true,
+        "location": "path"
+      },
+      {
+        "name": "hideLoader",
+        "type": "boolean",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "list-finding-actions",
+    "service": "cmon-api",
+    "route": "/cmon/cma/findingMgmt/ws/actions/{reviewId}/{findingId}",
+    "httpMethod": "GET",
+    "description": "Lists actions and associated details for a specific finding within a review.",
+    "parameters": [
+      {
+        "name": "reviewId",
+        "type": "number",
+        "required": true,
+        "location": "path"
+      },
+      {
+        "name": "findingId",
+        "type": "number",
+        "required": true,
+        "location": "path"
+      },
+      {
+        "name": "hideLoader",
+        "type": "boolean",
+        "required": false,
+        "location": "query"
+      }
+    ]
+  },
+  {
+    "id": "cds-site-details-extract",
+    "service": "cds-reporting",
+    "route": "/core/api/report_mgmt/reporting/export",
+    "httpMethod": "POST",
+    "contentType": "json",
+    "responseFormat": "xlsx",
+    "description": "Exports study-site level clinical trial data from CDS reporting including site details, IRB/EC information, approval dates, and protocol revision history.",
+    "parameters": [
+      {
+        "name": "key",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "site_details_extract",
+        "description": "Report key identifier"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "{\"pStudyId\":\"0\"}",
+        "description": "JSON string of report parameters. pStudyId: study ID filter (0 = all studies)"
+      }
+    ]
+  },
+  {
+    "id": "cds-patient-details-extract",
+    "service": "cds-reporting",
+    "route": "/core/api/report_mgmt/reporting/export",
+    "httpMethod": "POST",
+    "contentType": "json",
+    "responseFormat": "xlsx",
+    "description": "Exports patient-level clinical trial data from CDS reporting including study and site identifiers, patient demographics, consent/enrollment/procedure dates, randomization and cohort assignments, device implant details, withdrawal/death status, and monitoring dates.",
+    "parameters": [
+      {
+        "name": "key",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "patient_details_extract",
+        "description": "Report key identifier"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "{\"pStudyId\":\"0\"}",
+        "description": "JSON string of report parameters. pStudyId: study ID filter (0 = all studies)"
+      }
+    ]
+  },
+  {
+    "id": "create-support-request",
+    "service": "support-api",
+    "route": "/api/support",
+    "httpMethod": "POST",
+    "contentType": "json",
+    "description": "Creates a support request ticket. Provide title, description, priority, and category extracted from the user's issue.",
+    "parameters": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "Short summary of the issue (max 100 characters)"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "description": "Detailed description of the problem"
+      },
+      {
+        "name": "priority",
+        "type": "string",
+        "required": false,
+        "location": "body",
+        "description": "Priority level: P1 - Critical, P2 - High, P3 - Medium, P4 - Low"
+      },
+      {
+        "name": "category",
+        "type": "string",
+        "required": false,
+        "location": "body",
+        "description": "Issue category: Account Access, Password Reset, EDC Portal, RDC Error, eForms, eLogs, Other"
+      }
+    ]
+  },
+  {
+    "id": "cds-site-requirement-extract",
+    "service": "cds-reporting",
+    "route": "/core/api/report_mgmt/reporting/export",
+    "httpMethod": "POST",
+    "contentType": "json",
+    "responseFormat": "xlsx",
+    "description": "Exports site requirement tracking data from CDS reporting including regulatory and IRB/EC submissions, contractual agreements, certifications, training requirements, activation milestones, enrollment planning, sub-study readiness, and closeout documentation.",
+    "parameters": [
+      {
+        "name": "key",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "site_requirement_extract",
+        "description": "Report key identifier"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "location": "body",
+        "defaultValue": "{\"pStudyId\":\"0\"}",
+        "description": "JSON string of report parameters. pStudyId: study ID filter (0 = all studies)"
+      }
+    ]
+  },
+  {
+    "id": "create-ado-work-item",
+    "service": "context-forge",
+    "route": "mcp:create_work_item",
+    "httpMethod": "MCP",
+    "description": "Create an Azure DevOps work item (Epic, Feature, Product Backlog Item, Bug, or Task). Routes through the Context Forge MCP gateway to the ADO MCP server. Returns the created work item JSON including the id field.",
+    "parameters": [
+      { "name": "type", "type": "string", "required": true, "location": "body", "description": "Work item type: Epic, Feature, Product Backlog Item, Bug, or Task" },
+      { "name": "title", "type": "string", "required": true, "location": "body", "description": "Work item title" },
+      { "name": "description", "type": "string", "required": false, "location": "body", "description": "Description in HTML format. Use <p>, <ul>/<li>, <b>, <br> tags. Do not use markdown." },
+      { "name": "acceptanceCriteria", "type": "string", "required": false, "location": "body", "description": "Acceptance criteria in HTML. Use BDD Given/When/Then style with <strong> keywords." },
+      { "name": "areaPath", "type": "string", "required": false, "location": "body", "description": "Area path (e.g. CDS\\The Wizards)" },
+      { "name": "iterationPath", "type": "string", "required": false, "location": "body", "description": "Iteration path (e.g. CDS\\Sprint 2026-01)" },
+      { "name": "parentId", "type": "number", "required": false, "location": "body", "description": "Parent work item ID to link under" },
+      { "name": "priority", "type": "number", "required": false, "location": "body", "description": "Priority 1-4 (1=Critical, 4=Low)" },
+      { "name": "assignedTo", "type": "string", "required": false, "location": "body", "description": "Assignee display name or email" },
+      { "name": "tags", "type": "string", "required": false, "location": "body", "description": "Comma-separated tags" },
+      { "name": "effort", "type": "number", "required": false, "location": "body", "description": "Story points / effort estimate" }
+    ]
+  }
+]

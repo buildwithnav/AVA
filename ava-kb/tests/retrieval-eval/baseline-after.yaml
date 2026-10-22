@@ -1,0 +1,75 @@
+# After Evaluation Results (Post-Architecture Rework)
+# Date: 2026-05-26
+# Architecture: Parent-child chunking + routed retrieval (fast/expanded/agentic)
+# Chunk stats: Parent sections (full headings, ~2000 char max), children (500 char overlapping windows)
+# Settings: Parent-child via chunk_document(), BM25 search on children, parent expansion for context
+# Backend: TF-IDF similarity (sentence-transformers unavailable in corp environment)
+
+summary:
+  passed: 3
+  total: 6
+  pass_rate: 50%
+  average_similarity: 0.487
+  improvement_from_baseline: "+1 case passing (33% → 50%), +0.008 avg similarity"
+
+results:
+  - id: "MONITORING-VISIT-REPORT-verbatim-retrieval"
+    score: 0.865
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: PASS
+    notes: "Still strong keyword match. Slight improvement from 0.854 → 0.865."
+
+  - id: "MONITORING-VISIT-REPORT-next-section-retrieval"
+    score: 0.124
+    threshold: 0.60
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Follow-up/context question. Still fails — requires agentic mode with conversation context to know 'next section'. Score dropped from 0.289 — expected since parent-child changes chunk boundaries."
+
+  - id: "sma-db-table-question"
+    score: 0.204
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Still fragmented across chunks. Parent-child didn't help here because the DB table listing spans multiple parent sections. Needs expanded strategy with query decomposition."
+
+  - id: "sma-db-package-question"
+    score: 0.136
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Package section not retrieved. Keyword gap between 'database packages' and the actual section content. Needs expanded strategy or better heading indexing."
+
+  - id: "sdv-crfs-rdc-manual-question"
+    score: 0.875
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: PASS
+    notes: "Strong keyword match maintained."
+
+  - id: "crf-discrepancy-finding-edit-question"
+    score: 0.719
+    threshold: 0.60
+    source_match: true
+    chunks_retrieved: 15
+    result: PASS
+    notes: "NEW PASS! Was 0.494, now 0.719. Parent-child chunking delivers full section context which includes the edit constraint."
+
+analysis:
+  improvements:
+    - "Case 6 (CRF edit): 0.494 → 0.719 — PASS. Parent section context includes the answer."
+    - "Case 1 (MVR verbatim): 0.854 → 0.865 — marginal improvement."
+    - "Source matching: 6/6 (maintained)."
+  remaining_gaps:
+    - "Case 2 (next section): Requires conversation-aware agentic retrieval — pure search can't solve this."
+    - "Cases 3, 4 (DB tables/packages): Content spans multiple sections OR has keyword gap. Needs expanded strategy with sub-query decomposition at the LLM layer."
+  next_steps:
+    - "Cases 3, 4 will improve when the expanded strategy is invoked in the agent loop (query router classifies these as 'expanded')."
+    - "Case 2 requires the full agentic mode with conversation context — it's designed as a follow-up question."
+    - "These remaining cases test the full pipeline (router → strategy → agent loop), not just chunking."

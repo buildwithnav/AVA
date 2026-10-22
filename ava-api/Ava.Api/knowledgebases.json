@@ -1,0 +1,796 @@
+[
+  {
+    "id": "support-faq",
+    "name": "Support FAQ",
+    "description": "Support articles and frequently asked questions",
+    "type": "document",
+    "scope": "domain",
+    "domainId": "support",
+    "source": { "kind": "static" },
+    "enabled": true
+  },
+  {
+    "id": "clinical-data-sites",
+    "name": "Clinical Site Details",
+    "description": "Study-site level clinical trial data including site details, operational status, IRB/EC information, approval dates, protocol revision status, and history summaries.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-data",
+    "source": {
+      "kind": "api",
+      "toolId": "cds-site-details-extract"
+    },
+    "columnDefinitions": {
+      "Study": {
+        "label": "Study",
+        "description": "The unique identifier for the parent clinical study as assigned by the source system.",
+        "dataType": "string"
+      },
+      "Title": {
+        "label": "Title",
+        "description": "The descriptive title or name of the clinical study.",
+        "dataType": "string"
+      },
+      "Site Code": {
+        "label": "Site Code",
+        "description": "The unique site identifier assigned by the source system for a participating or nominated clinical trial site.",
+        "dataType": "string"
+      },
+      "Site Name": {
+        "label": "Site Name",
+        "description": "The official or source-system name of the clinical trial site or institution.",
+        "dataType": "string"
+      },
+      "Site Address": {
+        "label": "Site Address",
+        "description": "The primary street address for the clinical trial site.",
+        "dataType": "string"
+      },
+      "Site City": {
+        "label": "Site City",
+        "description": "The city where the clinical trial site is located.",
+        "dataType": "string"
+      },
+      "Site State": {
+        "label": "Site State",
+        "description": "The state, province, region, or source-system geographic code for the clinical trial site.",
+        "dataType": "string"
+      },
+      "Site Zip": {
+        "label": "Site Zip",
+        "description": "The postal or ZIP code for the clinical trial site.",
+        "dataType": "string"
+      },
+      "Site Country": {
+        "label": "Site Country",
+        "description": "The country where the clinical trial site is located.",
+        "dataType": "string"
+      },
+      "Site Status": {
+        "label": "Site Status",
+        "description": "The current operational status of the clinical trial site in the study. Observed values: ACTIVATED, APPROACH, CLOSED, COMPLIANCE/REG HOLD, DECLINED, END ENROLL, ENROLLING, HOLD, INA WTHDRN, NOMINATED, NOT OFFERED, PENDING, PRE CLOSE, WAIT LIST, WITHDRAWN.",
+        "dataType": "enum"
+      },
+      "Site Status Date": {
+        "label": "Site Status Date",
+        "description": "The date associated with the current site status.",
+        "dataType": "date"
+      },
+      "Site CRA Name": {
+        "label": "Site CRA Name",
+        "description": "The clinical research associate assigned to the site, when available.",
+        "dataType": "string"
+      },
+      "IRB Chairman Name": {
+        "label": "IRB Chairman Name",
+        "description": "The name of the IRB or ethics committee chairperson associated with the site, when available.",
+        "dataType": "string"
+      },
+      "IRB Name": {
+        "label": "IRB Name",
+        "description": "The name of the institutional review board or ethics committee responsible for oversight or approval.",
+        "dataType": "string"
+      },
+      "IRB Address 1": {
+        "label": "IRB Address 1",
+        "description": "The first address line for the IRB or ethics committee.",
+        "dataType": "string"
+      },
+      "IRB Address 2": {
+        "label": "IRB Address 2",
+        "description": "The second address line for the IRB or ethics committee, when available.",
+        "dataType": "string"
+      },
+      "IRB Address 3": {
+        "label": "IRB Address 3",
+        "description": "The third address line for the IRB or ethics committee, when available.",
+        "dataType": "string"
+      },
+      "IRB City": {
+        "label": "IRB City",
+        "description": "The city where the IRB or ethics committee is located.",
+        "dataType": "string"
+      },
+      "IRB State": {
+        "label": "IRB State",
+        "description": "The state, province, region, or source-system geographic code for the IRB or ethics committee.",
+        "dataType": "string"
+      },
+      "IRB Zip": {
+        "label": "IRB Zip",
+        "description": "The postal or ZIP code for the IRB or ethics committee.",
+        "dataType": "string"
+      },
+      "IRB Country": {
+        "label": "IRB Country",
+        "description": "The country where the IRB or ethics committee is located.",
+        "dataType": "string"
+      },
+      "IRB Phone": {
+        "label": "IRB Phone",
+        "description": "The phone number for the IRB or ethics committee, when available.",
+        "dataType": "string"
+      },
+      "IRB Fax": {
+        "label": "IRB Fax",
+        "description": "The fax number for the IRB or ethics committee, when available.",
+        "dataType": "string"
+      },
+      "IRB Email": {
+        "label": "IRB Email",
+        "description": "The email address for the IRB or ethics committee, when available.",
+        "dataType": "string"
+      },
+      "IRB Local/Central": {
+        "label": "IRB Local/Central",
+        "description": "Indicates whether the IRB or ethics committee is categorized as local or central. Observed values: CENTRAL, LOCAL.",
+        "dataType": "enum"
+      },
+      "Original IRB/EC Approval Date": {
+        "label": "Original IRB/EC Approval Date",
+        "description": "The original IRB or ethics committee approval date for the site and study.",
+        "dataType": "date"
+      },
+      "Orig. IRB/EC Appr. Exp. Date": {
+        "label": "Orig. IRB/EC Appr. Exp. Date",
+        "description": "The original expiration date associated with the IRB or ethics committee approval.",
+        "dataType": "date"
+      },
+      "IRB/EC Approval Exp. Date": {
+        "label": "IRB/EC Approval Exp. Date",
+        "description": "The current expiration date associated with IRB or ethics committee approval.",
+        "dataType": "date"
+      },
+      "IRB History Summary": {
+        "label": "IRB History Summary",
+        "description": "A summarized history of IRB or ethics committee approval events, often represented as pipe-separated status entries.",
+        "dataType": "string"
+      },
+      "Protocol History Summary": {
+        "label": "Protocol History Summary",
+        "description": "A summarized history of protocol review or approval events, often represented as pipe-separated status entries.",
+        "dataType": "string"
+      },
+      "Amendment History Summary": {
+        "label": "Amendment History Summary",
+        "description": "A summarized history of study amendment review or approval events, often represented as pipe-separated status entries.",
+        "dataType": "string"
+      },
+      "Comments Summary": {
+        "label": "Comments Summary",
+        "description": "A summarized list of site, regulatory, or operational comments and milestone notes, often represented as pipe-separated date-stamped entries.",
+        "dataType": "string"
+      },
+      "Latest Protocol Rev.": {
+        "label": "Latest Protocol Rev.",
+        "description": "The latest protocol or clinical investigation plan revision identifier recorded for the site.",
+        "dataType": "enum"
+      },
+      "Latest Prot. Rev. Status": {
+        "label": "Latest Prot. Rev. Status",
+        "description": "The approval or processing status for the latest protocol revision. Observed values: APPROVED, CONDITIONAL, DISAPPROVED, PENDING, SENT, TO COUNTRY OFFICE, WAIVED.",
+        "dataType": "enum"
+      },
+      "Latest Prot. Rev. Status Date": {
+        "label": "Latest Prot. Rev. Status Date",
+        "description": "The date associated with the latest protocol revision status.",
+        "dataType": "date"
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-data-patients",
+    "name": "Clinical Patient Details",
+    "description": "Patient-level clinical trial data including study and site identifiers, patient demographics, consent/enrollment/procedure dates, randomization and cohort assignments, device implant details, withdrawal/death status, and monitoring dates.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-data",
+    "source": {
+      "kind": "api",
+      "toolId": "cds-patient-details-extract"
+    },
+    "columnDefinitions": {
+      "STUDY": {
+        "label": "STUDY",
+        "description": "Sponsor/source-system study code identifying the clinical trial or registry record belongs to, such as CRD_1032, CRD_1003, or CRD_971. Used with SITE and PT/PT_LAST to associate the patient with the correct parent study.",
+        "dataType": "string"
+      },
+      "STUDY_TITLE": {
+        "label": "STUDY_TITLE",
+        "description": "Full study or registry title associated with STUDY, such as VANTAGE, SH Device Registry, ARIES HM3, or other trial names. Provides human-readable context for the study code.",
+        "dataType": "string"
+      },
+      "SITE": {
+        "label": "SITE",
+        "description": "Sponsor/source-system site code identifying the clinical trial site where the patient was consented, enrolled, implanted, followed, or screened, such as EU1883 or EU1957.",
+        "dataType": "string"
+      },
+      "SITE_NAME": {
+        "label": "SITE_NAME",
+        "description": "Name of the participating site, hospital, institution, or internal-use site associated with SITE.",
+        "dataType": "string"
+      },
+      "CITY": {
+        "label": "CITY",
+        "description": "City recorded for the clinical trial site.",
+        "dataType": "string"
+      },
+      "STATE": {
+        "label": "STATE",
+        "description": "State, province, region, or source-system geographic abbreviation for the clinical trial site.",
+        "dataType": "string"
+      },
+      "COUNTRY": {
+        "label": "COUNTRY",
+        "description": "Country recorded for the clinical trial site.",
+        "dataType": "string"
+      },
+      "PT": {
+        "label": "PT",
+        "description": "Patient/subject number within the study or site context. This is a source-system patient identifier, not a direct personal identifier.",
+        "dataType": "string"
+      },
+      "PT_LAST": {
+        "label": "PT_LAST",
+        "description": "Composite patient/subject identifier or label, commonly combining site code and patient number, such as SITE-PT. Used as the row-level patient key in reporting.",
+        "dataType": "string"
+      },
+      "PT_STATUS": {
+        "label": "PT_STATUS",
+        "description": "Patient-level disposition/status flag summarizing subject state in the study. Observed values: ALL; D; D ALL; F; F D; W; W ALL; W D; W D ALL.",
+        "dataType": "enum"
+      },
+      "PHYSICIAN": {
+        "label": "PHYSICIAN",
+        "description": "Investigator or treating/enrolling physician associated with the patient record, when available.",
+        "dataType": "string"
+      },
+      "GENDER": {
+        "label": "GENDER",
+        "description": "Patient sex/gender value as captured by the source study system. Observed values: F; FEMALE; Female; M; MALE; Male.",
+        "dataType": "enum"
+      },
+      "PT_AGE": {
+        "label": "PT_AGE",
+        "description": "Patient age at the relevant study baseline, screening, consent, or enrollment time point. Observed non-blank range: -1 to 100.",
+        "dataType": "integer"
+      },
+      "NYHA_CLASS_ENR": {
+        "label": "NYHA_CLASS_ENR",
+        "description": "NYHA functional class or heart-failure status at enrollment/baseline. Observed values: CLASS II; CLASS IIIA; CLASS IIIB; CLASS IV; I; II; III; IV; IV (AMBULATORY); IV (NON-AMBULATORY); NO HEART FAILURE; NO HF; NOT ASSESSED; NOT DETERMINED; NOT DONE; UNK.",
+        "dataType": "enum"
+      },
+      "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')",
+        "description": "Date the patient signed informed consent or consent was recorded, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "CONSENT_REV": {
+        "label": "CONSENT_REV",
+        "description": "Informed consent form revision/version used for the patient consent, often including revision letter, version number, date, and/or country/language suffix.",
+        "dataType": "enum"
+      },
+      "PROT_REV": {
+        "label": "PROT_REV",
+        "description": "Protocol revision/version applicable to the patient record at consent, notification, enrollment, or procedure. Observed values: 1; A; B; C; D; E; F; G; H; K; VERSION B; VERSION C; VERSION E; and others.",
+        "dataType": "enum"
+      },
+      "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')",
+        "description": "Patient notification date from the source system, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')",
+        "description": "Date the patient was enrolled or formally entered into the study, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')",
+        "description": "Date of device implant, index procedure, ablation, or relevant study procedure, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "SYST_REV_FG": {
+        "label": "SYST_REV_FG",
+        "description": "System revision flag indicating whether a system revision occurred or was applicable for the patient. Observed values: Y.",
+        "dataType": "enum"
+      },
+      "RAND_CONFIG": {
+        "label": "RAND_CONFIG",
+        "description": "Randomization configuration or study-specific randomized configuration value. Observed values: APPROVED, PENDING RANDOMIZATION; CONTROL; EXISTING; INTERMEDIATE; LOW; MEDICAL THERAPY (CONTROL) GROUP; N; NEW; RANDOMIZED; ROLL-IN; SCREEN FAILURE; TREATMENT; Y; and others.",
+        "dataType": "enum"
+      },
+      "RAND_ARM": {
+        "label": "RAND_ARM",
+        "description": "Randomization arm or assigned treatment/control group. Observed values: AMULET; CAV; CONTROL; DEVICE; MEDICAL THERAPY (CONTROL) GROUP; MITRACLIP DEVICE (DEVICE) GROUP; NAVITOR; NOAC; PORTICO; SINGLE ARM; TREATMENT; TRICLIP DEVICE (DEVICE) GROUP; VIRTUAL; and others.",
+        "dataType": "enum"
+      },
+      "DEVICE_TYPE": {
+        "label": "DEVICE_TYPE",
+        "description": "Device type, therapy type, or implant category. Observed values: ASSERT-IQ TM INSERTABLE CARDIAC MONITOR; CLIP; ETERNA SCS; IPG; LEAD; LVAD; N; PROCLAIM DRG; PROCLAIM ELITE 5; PROCLAIM ELITE 7; PROCLAIM IPG 5; PROCLAIM XR; PRODIGY; PRODIGY MRI; VALVE; Y.",
+        "dataType": "enum"
+      },
+      "PG_MANUF": {
+        "label": "PG_MANUF",
+        "description": "Pulse generator manufacturer for cardiac rhythm/device studies. Observed values: ABBOTT; ABBOTT/SJM; BIOTRONIK; BOSTON SCIENTIFIC; LIVANOVA; MEDTRONIC; OTHER; SJM/ABBOTT; UNKNOWN.",
+        "dataType": "enum"
+      },
+      "PG_MODEL": {
+        "label": "PG_MODEL",
+        "description": "Pulse generator model recorded for cardiac rhythm/device studies, when applicable.",
+        "dataType": "string"
+      },
+      "PG_SERIAL": {
+        "label": "PG_SERIAL",
+        "description": "Pulse generator serial number recorded for cardiac rhythm/device studies, when applicable.",
+        "dataType": "string"
+      },
+      "DEVICE_MODEL": {
+        "label": "DEVICE_MODEL",
+        "description": "Model or size identifier for the study device, implant, or comparator device used for the patient, when applicable.",
+        "dataType": "string"
+      },
+      "DEVICE_SERIAL": {
+        "label": "DEVICE_SERIAL",
+        "description": "Serial number or unique device identifier for the implanted or study device, when captured by the source system.",
+        "dataType": "string"
+      },
+      "TO_CHAR(P.WD_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.WD_DT,'YYYY-MM-DD')",
+        "description": "Withdrawal, discontinuation, screen-failure, or study-exit date for the patient, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "WD_REASON": {
+        "label": "WD_REASON",
+        "description": "Reason the patient withdrew, discontinued, screen-failed, was lost to follow-up, died, or otherwise exited study participation.",
+        "dataType": "enum"
+      },
+      "DEATH_FG": {
+        "label": "DEATH_FG",
+        "description": "Flag indicating whether the patient death indicator is recorded. Observed values: Y.",
+        "dataType": "enum"
+      },
+      "IMPLANT_TYPE": {
+        "label": "IMPLANT_TYPE",
+        "description": "Study-specific implant or procedure type. Observed values: DE NOVO IMPLANT; IDE; IMPLANT; INDEX ABLATION PROCEDURE; INITIAL; INITIAL PROCEDURE; INSERTION; NEW IMPLANT; REPLACEMENT; SYSTEM UPGRADE; and others.",
+        "dataType": "enum"
+      },
+      "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')",
+        "description": "Patient death date, formatted as YYYY-MM-DD when populated and applicable.",
+        "dataType": "date"
+      },
+      "SOURCE": {
+        "label": "SOURCE",
+        "description": "Source-system or procedure-source text for the patient record, sometimes containing source category, region, visit/procedure timing, or procedure-event strings.",
+        "dataType": "enum"
+      },
+      "OLD_SITE": {
+        "label": "OLD_SITE",
+        "description": "Prior site code or migrated legacy site value, when a patient/site was transferred or converted from an earlier source-system site identifier.",
+        "dataType": "string"
+      },
+      "FCE": {
+        "label": "FCE",
+        "description": "Field clinical engineer or field clinical contact associated with the patient/site record, when available.",
+        "dataType": "string"
+      },
+      "CRA_NAME": {
+        "label": "CRA_NAME",
+        "description": "Clinical research associate assigned to the patient/site/study record, when available.",
+        "dataType": "string"
+      },
+      "PT_TRANS_FG": {
+        "label": "PT_TRANS_FG",
+        "description": "Patient transfer flag indicating whether the patient was transferred between sites or source-system contexts, when populated.",
+        "dataType": "enum"
+      },
+      "PT_GROUP_VALUE": {
+        "label": "PT_GROUP_VALUE",
+        "description": "Patient group, cohort, analysis population, or study-specific classification. Observed values include 12_MONTH; 30_DAY; ALIVE; ENROLLMENT; EXTENSION COHORT; GROUP 1 through GROUP 5; MAIN STUDY; ROLL-IN; and others.",
+        "dataType": "enum"
+      },
+      "WEIGHT": {
+        "label": "WEIGHT",
+        "description": "Patient weight value at the relevant baseline, enrollment, or procedure time point. Observed non-blank range: 1 to 960.",
+        "dataType": "number"
+      },
+      "WEIGHT_UNIT": {
+        "label": "WEIGHT_UNIT",
+        "description": "Unit of measure for WEIGHT. Observed values: G; KG; Kg; kg; LB; LBS; lbs.",
+        "dataType": "enum"
+      },
+      "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')",
+        "description": "Date enrollment documentation or data was received/recorded by the source workflow, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')": {
+        "label": "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')",
+        "description": "Monitoring trigger date used to initiate monitoring/workflow activities for the patient record, formatted as YYYY-MM-DD when populated.",
+        "dataType": "date"
+      },
+      "RETROSPECTIVE_FG": {
+        "label": "RETROSPECTIVE_FG",
+        "description": "Flag indicating whether the patient record is retrospective or prospectively captured. Observed values: N; Y.",
+        "dataType": "enum"
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-sites",
+    "name": "Clinical Site - Site Details",
+    "description": "Study-site level clinical trial data including site details, operational status, IRB/EC information, approval dates, protocol revision status, and history summaries.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-details-extract" },
+    "columnDefinitions": {
+      "Study": { "label": "Study", "description": "The unique identifier for the parent clinical study as assigned by the source system.", "dataType": "string" },
+      "Title": { "label": "Title", "description": "The descriptive title or name of the clinical study.", "dataType": "string" },
+      "Site Code": { "label": "Site Code", "description": "The unique site identifier assigned by the source system for a participating or nominated clinical trial site.", "dataType": "string" },
+      "Site Name": { "label": "Site Name", "description": "The official or source-system name of the clinical trial site or institution.", "dataType": "string" },
+      "Site Address": { "label": "Site Address", "description": "The primary street address for the clinical trial site.", "dataType": "string" },
+      "Site City": { "label": "Site City", "description": "The city where the clinical trial site is located.", "dataType": "string" },
+      "Site State": { "label": "Site State", "description": "The state, province, region, or source-system geographic code for the clinical trial site.", "dataType": "string" },
+      "Site Zip": { "label": "Site Zip", "description": "The postal or ZIP code for the clinical trial site.", "dataType": "string" },
+      "Site Country": { "label": "Site Country", "description": "The country where the clinical trial site is located.", "dataType": "string" },
+      "Site Status": { "label": "Site Status", "description": "The current operational status of the clinical trial site. Observed values: ACTIVATED, APPROACH, CLOSED, COMPLIANCE/REG HOLD, DECLINED, END ENROLL, ENROLLING, HOLD, INA WTHDRN, NOMINATED, NOT OFFERED, PENDING, PRE CLOSE, WAIT LIST, WITHDRAWN.", "dataType": "enum" },
+      "Site Status Date": { "label": "Site Status Date", "description": "The date associated with the current site status.", "dataType": "date" },
+      "Site CRA Name": { "label": "Site CRA Name", "description": "The clinical research associate assigned to the site, when available.", "dataType": "string" },
+      "IRB Chairman Name": { "label": "IRB Chairman Name", "description": "The name of the IRB or ethics committee chairperson associated with the site, when available.", "dataType": "string" },
+      "IRB Name": { "label": "IRB Name", "description": "The name of the institutional review board or ethics committee responsible for oversight or approval.", "dataType": "string" },
+      "IRB Address 1": { "label": "IRB Address 1", "description": "The first address line for the IRB or ethics committee.", "dataType": "string" },
+      "IRB Address 2": { "label": "IRB Address 2", "description": "The second address line for the IRB or ethics committee, when available.", "dataType": "string" },
+      "IRB Address 3": { "label": "IRB Address 3", "description": "The third address line for the IRB or ethics committee, when available.", "dataType": "string" },
+      "IRB City": { "label": "IRB City", "description": "The city where the IRB or ethics committee is located.", "dataType": "string" },
+      "IRB State": { "label": "IRB State", "description": "The state, province, or region for the IRB or ethics committee.", "dataType": "string" },
+      "IRB Zip": { "label": "IRB Zip", "description": "The postal or ZIP code for the IRB or ethics committee.", "dataType": "string" },
+      "IRB Country": { "label": "IRB Country", "description": "The country where the IRB or ethics committee is located.", "dataType": "string" },
+      "IRB Phone": { "label": "IRB Phone", "description": "The phone number for the IRB or ethics committee, when available.", "dataType": "string" },
+      "IRB Fax": { "label": "IRB Fax", "description": "The fax number for the IRB or ethics committee, when available.", "dataType": "string" },
+      "IRB Email": { "label": "IRB Email", "description": "The email address for the IRB or ethics committee, when available.", "dataType": "string" },
+      "IRB Local/Central": { "label": "IRB Local/Central", "description": "Indicates whether the IRB or ethics committee is local or central. Observed values: CENTRAL, LOCAL.", "dataType": "enum" },
+      "Original IRB/EC Approval Date": { "label": "Original IRB/EC Approval Date", "description": "The original IRB or ethics committee approval date for the site and study.", "dataType": "date" },
+      "Orig. IRB/EC Appr. Exp. Date": { "label": "Orig. IRB/EC Appr. Exp. Date", "description": "The original expiration date associated with the IRB or ethics committee approval.", "dataType": "date" },
+      "IRB/EC Approval Exp. Date": { "label": "IRB/EC Approval Exp. Date", "description": "The current expiration date associated with IRB or ethics committee approval.", "dataType": "date" },
+      "IRB History Summary": { "label": "IRB History Summary", "description": "A summarized history of IRB or ethics committee approval events, often pipe-separated.", "dataType": "string" },
+      "Protocol History Summary": { "label": "Protocol History Summary", "description": "A summarized history of protocol review or approval events, often pipe-separated.", "dataType": "string" },
+      "Amendment History Summary": { "label": "Amendment History Summary", "description": "A summarized history of study amendment review or approval events, often pipe-separated.", "dataType": "string" },
+      "Comments Summary": { "label": "Comments Summary", "description": "A summarized list of site, regulatory, or operational comments and milestone notes.", "dataType": "string" },
+      "Latest Protocol Rev.": { "label": "Latest Protocol Rev.", "description": "The latest protocol or clinical investigation plan revision identifier recorded for the site.", "dataType": "enum" },
+      "Latest Prot. Rev. Status": { "label": "Latest Prot. Rev. Status", "description": "The approval or processing status for the latest protocol revision. Observed values: APPROVED, CONDITIONAL, DISAPPROVED, PENDING, SENT, TO COUNTRY OFFICE, WAIVED.", "dataType": "enum" },
+      "Latest Prot. Rev. Status Date": { "label": "Latest Prot. Rev. Status Date", "description": "The date associated with the latest protocol revision status.", "dataType": "date" }
+    },
+    "enabled": false
+  },
+  {
+    "id": "clinical-site-patients",
+    "name": "Clinical Site - Patient Details",
+    "description": "Patient-level clinical trial data including study and site identifiers, patient demographics, consent/enrollment/procedure dates, randomization and cohort assignments, device implant details, withdrawal/death status, and monitoring dates.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-patient-details-extract" },
+    "columnDefinitions": {
+      "STUDY": { "label": "STUDY", "description": "Sponsor/source-system study code identifying the clinical trial.", "dataType": "string" },
+      "STUDY_TITLE": { "label": "STUDY_TITLE", "description": "Full study or registry title associated with STUDY.", "dataType": "string" },
+      "SITE": { "label": "SITE", "description": "Sponsor/source-system site code for the clinical trial site.", "dataType": "string" },
+      "SITE_NAME": { "label": "SITE_NAME", "description": "Name of the participating site, hospital, or institution.", "dataType": "string" },
+      "CITY": { "label": "CITY", "description": "City recorded for the clinical trial site.", "dataType": "string" },
+      "STATE": { "label": "STATE", "description": "State, province, or region for the clinical trial site.", "dataType": "string" },
+      "COUNTRY": { "label": "COUNTRY", "description": "Country recorded for the clinical trial site.", "dataType": "string" },
+      "PT": { "label": "PT", "description": "Patient/subject number within the study or site context.", "dataType": "string" },
+      "PT_LAST": { "label": "PT_LAST", "description": "Composite patient/subject identifier combining site code and patient number.", "dataType": "string" },
+      "PT_STATUS": { "label": "PT_STATUS", "description": "Patient-level disposition/status flag. Observed values: ALL; D; D ALL; F; F D; W; W ALL; W D; W D ALL.", "dataType": "enum" },
+      "PHYSICIAN": { "label": "PHYSICIAN", "description": "Investigator or treating/enrolling physician associated with the patient record.", "dataType": "string" },
+      "GENDER": { "label": "GENDER", "description": "Patient sex/gender. Observed values: F; FEMALE; Female; M; MALE; Male.", "dataType": "enum" },
+      "PT_AGE": { "label": "PT_AGE", "description": "Patient age at the relevant study baseline or enrollment time point. Range: -1 to 100.", "dataType": "integer" },
+      "NYHA_CLASS_ENR": { "label": "NYHA_CLASS_ENR", "description": "NYHA functional class at enrollment/baseline. Observed values: CLASS II; CLASS IIIA; CLASS IIIB; CLASS IV; I; II; III; IV; NO HEART FAILURE; NOT DETERMINED; UNK.", "dataType": "enum" },
+      "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')", "description": "Date the patient signed informed consent, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "CONSENT_REV": { "label": "CONSENT_REV", "description": "Informed consent form revision/version used for the patient consent.", "dataType": "enum" },
+      "PROT_REV": { "label": "PROT_REV", "description": "Protocol revision/version applicable to the patient record.", "dataType": "enum" },
+      "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')", "description": "Patient notification date, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')", "description": "Date the patient was enrolled into the study, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')", "description": "Date of device implant or relevant study procedure, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "SYST_REV_FG": { "label": "SYST_REV_FG", "description": "System revision flag. Observed values: Y.", "dataType": "enum" },
+      "RAND_CONFIG": { "label": "RAND_CONFIG", "description": "Randomization configuration or study-specific assignment value.", "dataType": "enum" },
+      "RAND_ARM": { "label": "RAND_ARM", "description": "Randomization arm or assigned treatment/control group.", "dataType": "enum" },
+      "DEVICE_TYPE": { "label": "DEVICE_TYPE", "description": "Device type, therapy type, or implant category.", "dataType": "enum" },
+      "PG_MANUF": { "label": "PG_MANUF", "description": "Pulse generator manufacturer. Observed values: ABBOTT; BIOTRONIK; BOSTON SCIENTIFIC; LIVANOVA; MEDTRONIC; OTHER; UNKNOWN.", "dataType": "enum" },
+      "PG_MODEL": { "label": "PG_MODEL", "description": "Pulse generator model, when applicable.", "dataType": "string" },
+      "PG_SERIAL": { "label": "PG_SERIAL", "description": "Pulse generator serial number, when applicable.", "dataType": "string" },
+      "DEVICE_MODEL": { "label": "DEVICE_MODEL", "description": "Model or size identifier for the study device or implant.", "dataType": "string" },
+      "DEVICE_SERIAL": { "label": "DEVICE_SERIAL", "description": "Serial number or unique device identifier for the implanted device.", "dataType": "string" },
+      "TO_CHAR(P.WD_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.WD_DT,'YYYY-MM-DD')", "description": "Withdrawal or study-exit date, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "WD_REASON": { "label": "WD_REASON", "description": "Reason the patient withdrew, discontinued, screen-failed, or otherwise exited study participation.", "dataType": "enum" },
+      "DEATH_FG": { "label": "DEATH_FG", "description": "Flag indicating patient death. Observed values: Y.", "dataType": "enum" },
+      "IMPLANT_TYPE": { "label": "IMPLANT_TYPE", "description": "Study-specific implant or procedure type.", "dataType": "enum" },
+      "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')", "description": "Patient death date, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "SOURCE": { "label": "SOURCE", "description": "Source-system or procedure-source text for the patient record.", "dataType": "enum" },
+      "OLD_SITE": { "label": "OLD_SITE", "description": "Prior site code when a patient/site was transferred from an earlier source-system identifier.", "dataType": "string" },
+      "FCE": { "label": "FCE", "description": "Field clinical engineer or field clinical contact associated with the patient/site record.", "dataType": "string" },
+      "CRA_NAME": { "label": "CRA_NAME", "description": "Clinical research associate assigned to the patient/site/study record.", "dataType": "string" },
+      "PT_TRANS_FG": { "label": "PT_TRANS_FG", "description": "Patient transfer flag indicating whether the patient was transferred between sites.", "dataType": "enum" },
+      "PT_GROUP_VALUE": { "label": "PT_GROUP_VALUE", "description": "Patient group, cohort, or analysis population assigned to the patient.", "dataType": "enum" },
+      "WEIGHT": { "label": "WEIGHT", "description": "Patient weight at the relevant baseline or enrollment time point. Range: 1 to 960.", "dataType": "number" },
+      "WEIGHT_UNIT": { "label": "WEIGHT_UNIT", "description": "Unit of measure for WEIGHT. Observed values: G; KG; Kg; kg; LB; LBS; lbs.", "dataType": "enum" },
+      "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')", "description": "Date enrollment documentation was received by the source workflow, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')": { "label": "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')", "description": "Monitoring trigger date for the patient record, formatted as YYYY-MM-DD.", "dataType": "date" },
+      "RETROSPECTIVE_FG": { "label": "RETROSPECTIVE_FG", "description": "Flag indicating whether the patient record is retrospective. Observed values: N; Y.", "dataType": "enum" }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-requirements",
+    "name": "Clinical Site Requirements",
+    "description": "Study-site requirement tracking data including regulatory and IRB/EC submissions, contractual agreements, certifications, training requirements, activation milestones, enrollment planning, sub-study readiness, and closeout documentation.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-requirement-extract" },
+    "columnDefinitions": {
+      "STUDY": { "label": "STUDY", "description": "Unique clinical study or protocol identifier for the site requirement record.", "dataType": "string" },
+      "SITE_CODE": { "label": "SITE_CODE", "description": "Unique clinical trial site identifier for which site requirement milestones are tracked.", "dataType": "string" },
+      "Approval for qualified CT imaging": { "label": "Approval for qualified CT imaging", "description": "Status of site approval for protocol-required CT imaging. Observed values: APPROVED, SENT, RECEIVED, CONDITIONAL.", "dataType": "enum" },
+      "Approval for qualified CT imaging Date": { "label": "Approval for qualified CT imaging Date", "description": "Date associated with the current CT imaging qualification status.", "dataType": "date" },
+      "Approval for qualified ECG tracings": { "label": "Approval for qualified ECG tracings", "description": "Status of site qualification for ECG tracing collection or submission. Observed values: APPROVED, SENT, RECEIVED, CONDITIONAL.", "dataType": "enum" },
+      "Approval for qualified ECG tracings Date": { "label": "Approval for qualified ECG tracings Date", "description": "Date associated with the current ECG tracing qualification status.", "dataType": "date" },
+      "Approval for qualified ECHO imaging": { "label": "Approval for qualified ECHO imaging", "description": "Status of site qualification for echocardiography imaging. Observed values: APPROVED, SENT, RECEIVED, CONDITIONAL.", "dataType": "enum" },
+      "Approval for qualified ECHO imaging Date": { "label": "Approval for qualified ECHO imaging Date", "description": "Date associated with the current ECHO imaging qualification status.", "dataType": "date" },
+      "Approval for qualified MRI imaging": { "label": "Approval for qualified MRI imaging", "description": "Status of site qualification for protocol-required MRI imaging. Observed values: APPROVED, SENT, RECEIVED, CONDITIONAL.", "dataType": "enum" },
+      "Approval for qualified MRI imaging Date": { "label": "Approval for qualified MRI imaging Date", "description": "Date associated with the current MRI imaging qualification status.", "dataType": "date" },
+      "Clinical Trial Financial Agreement": { "label": "Clinical Trial Financial Agreement", "description": "Status of the financial agreement covering study budget, payment terms, and reimbursement. Observed values: APPROVED, SENT, RECEIVED, CONDITIONAL, NEGOTIATION-SITE.", "dataType": "enum" },
+      "Clinical Trial Financial Agreement Date": { "label": "Clinical Trial Financial Agreement Date", "description": "Date associated with the current Clinical Trial Financial Agreement status.", "dataType": "date" },
+      "Consulting Agreement": { "label": "Consulting Agreement", "description": "Status of any consulting agreement required between sponsor and site personnel.", "dataType": "enum" },
+      "Consulting Agreement Date": { "label": "Consulting Agreement Date", "description": "Date associated with the current Consulting Agreement status.", "dataType": "date" },
+      "Confidentiality Disclosure Agreement": { "label": "Confidentiality Disclosure Agreement", "description": "Status of the confidentiality or nondisclosure agreement required before sharing confidential study materials.", "dataType": "enum" },
+      "Confidentiality Disclosure Agreement Date": { "label": "Confidentiality Disclosure Agreement Date", "description": "Date associated with the current Confidentiality Disclosure Agreement status.", "dataType": "date" },
+      "Indemnification Agreement": { "label": "Indemnification Agreement", "description": "Status of the indemnification agreement defining legal responsibility and liability coverage.", "dataType": "enum" },
+      "Indemnification Agreement Date": { "label": "Indemnification Agreement Date", "description": "Date associated with the current Indemnification Agreement status.", "dataType": "date" },
+      "Research Agreement": { "label": "Research Agreement", "description": "Status of the research agreement governing the site's participation in the clinical study.", "dataType": "enum" },
+      "Research Agreement Date": { "label": "Research Agreement Date", "description": "Date associated with the current Research Agreement status.", "dataType": "date" },
+      "Publication Agreement": { "label": "Publication Agreement", "description": "Status of the publication agreement defining rights and responsibilities for publication of study results.", "dataType": "enum" },
+      "Publication Agreement Date": { "label": "Publication Agreement Date", "description": "Date associated with the current Publication Agreement status.", "dataType": "date" },
+      "CLIA Certification": { "label": "CLIA Certification", "description": "Status of the site's Clinical Laboratory Improvement Amendments certification.", "dataType": "enum" },
+      "CLIA Certification Date": { "label": "CLIA Certification Date", "description": "Date associated with the current CLIA Certification status.", "dataType": "date" },
+      "Lab Certification": { "label": "Lab Certification", "description": "Status of site laboratory certification documentation for protocol-defined assessments.", "dataType": "enum" },
+      "Lab Certification Date": { "label": "Lab Certification Date", "description": "Date associated with the current Lab Certification status.", "dataType": "date" },
+      "CMS Approval": { "label": "CMS Approval", "description": "Status of CMS approval or related regulatory approval documentation.", "dataType": "enum" },
+      "CMS Approval Date": { "label": "CMS Approval Date", "description": "Date associated with the current CMS Approval status.", "dataType": "date" },
+      "IRB Registration": { "label": "IRB Registration", "description": "Status of Institutional Review Board or Ethics Committee registration for the site.", "dataType": "enum" },
+      "IRB Registration Date": { "label": "IRB Registration Date", "description": "Date associated with the current IRB Registration status.", "dataType": "date" },
+      "EC/IRB Original Submission Date": { "label": "EC/IRB Original Submission Date", "description": "Date the initial ethics committee or IRB submission was made for the site.", "dataType": "date" },
+      "EC/IRB Renewal Letter": { "label": "EC/IRB Renewal Letter", "description": "Status of the IRB/EC renewal letter or continuing approval documentation.", "dataType": "enum" },
+      "EC/IRB Renewal Letter Date": { "label": "EC/IRB Renewal Letter Date", "description": "Date associated with the current EC/IRB Renewal Letter status.", "dataType": "date" },
+      "Capital Equipment": { "label": "Capital Equipment", "description": "Status indicating whether required capital equipment is available and documented at the site.", "dataType": "enum" },
+      "Capital Equipment Date": { "label": "Capital Equipment Date", "description": "Date associated with the current Capital Equipment status.", "dataType": "date" },
+      "Cardiac Biomarkers Assay": { "label": "Cardiac Biomarkers Assay", "description": "Status of cardiac biomarker assay capability or documentation at the site.", "dataType": "enum" },
+      "Cardiac Biomarkers Assay Date": { "label": "Cardiac Biomarkers Assay Date", "description": "Date associated with the current Cardiac Biomarkers Assay status.", "dataType": "date" },
+      "Chemistry/Hematology Lab Normals": { "label": "Chemistry/Hematology Lab Normals", "description": "Status of chemistry and hematology laboratory normal ranges submitted by the site.", "dataType": "enum" },
+      "Chemistry/Hematology Lab Normals Date": { "label": "Chemistry/Hematology Lab Normals Date", "description": "Date associated with the current Chemistry/Hematology Lab Normals status.", "dataType": "date" },
+      "EDC Training": { "label": "EDC Training", "description": "Status of required Electronic Data Capture training completion by site staff.", "dataType": "enum" },
+      "EDC Training Date": { "label": "EDC Training Date", "description": "Date associated with completion or status update of EDC Training.", "dataType": "date" },
+      "Site Training Log": { "label": "Site Training Log", "description": "Status of the site training log documenting required protocol, system, and device training.", "dataType": "enum" },
+      "Site Training Log Date": { "label": "Site Training Log Date", "description": "Date associated with the current Site Training Log status.", "dataType": "date" },
+      "Training Log for Echo/RDC": { "label": "Training Log for Echo/RDC", "description": "Status of training documentation for echocardiography or RDC-specific study procedures.", "dataType": "enum" },
+      "Training Log for Echo/RDC Date": { "label": "Training Log for Echo/RDC Date", "description": "Date associated with the Training Log for Echo/RDC status.", "dataType": "date" },
+      "Site Activation Approval Form": { "label": "Site Activation Approval Form", "description": "Status of the formal approval form used to authorize site activation.", "dataType": "enum" },
+      "Site Activation Approval Form Date": { "label": "Site Activation Approval Form Date", "description": "Date associated with the current Site Activation Approval Form status.", "dataType": "date" },
+      "Site Activation Checklist": { "label": "Site Activation Checklist", "description": "Status of the checklist confirming all required documents, approvals, contracts, and training are complete before site activation.", "dataType": "enum" },
+      "Site Activation Checklist Date": { "label": "Site Activation Checklist Date", "description": "Date associated with the current Site Activation Checklist status.", "dataType": "date" },
+      "Site Activation Letter": { "label": "Site Activation Letter", "description": "Status of the official communication confirming site activation or authorization to begin study activities.", "dataType": "enum" },
+      "Site Activation Letter Date": { "label": "Site Activation Letter Date", "description": "Date associated with the Site Activation Letter status.", "dataType": "date" },
+      "Site Initiation Visit Date": { "label": "Site Initiation Visit Date", "description": "Date the Site Initiation Visit occurred, confirming the site is trained and ready to conduct the study.", "dataType": "date" },
+      "Enrollment Commitment/Month": { "label": "Enrollment Commitment/Month", "description": "Planned number of subjects the site commits to enroll per month.", "dataType": "integer" },
+      "Projected Total Enrollment": { "label": "Projected Total Enrollment", "description": "Total number of subjects the site is expected to enroll over the course of the study.", "dataType": "integer" },
+      "Enrollment Closure Notice": { "label": "Enrollment Closure Notice", "description": "Status of the formal notice that enrollment has been or is being closed for the site.", "dataType": "enum" },
+      "Enrollment Closure Notice Date": { "label": "Enrollment Closure Notice Date", "description": "Date associated with the Enrollment Closure Notice status.", "dataType": "date" },
+      "Device Position sub-study": { "label": "Device Position sub-study", "description": "Status indicating whether the site meets requirements for the Device Position sub-study.", "dataType": "enum" },
+      "Device Position sub-study Date": { "label": "Device Position sub-study Date", "description": "Date associated with the current Device Position sub-study status.", "dataType": "date" },
+      "Imaging sub-study": { "label": "Imaging sub-study", "description": "Status indicating whether the site meets requirements for an imaging-related sub-study.", "dataType": "enum" },
+      "Imaging sub-study Date": { "label": "Imaging sub-study Date", "description": "Date associated with the current Imaging sub-study status.", "dataType": "date" },
+      "ROAM sub-study": { "label": "ROAM sub-study", "description": "Status indicating whether the site meets requirements for the ROAM sub-study.", "dataType": "enum" },
+      "ROAM sub-study Date": { "label": "ROAM sub-study Date", "description": "Date associated with the current ROAM sub-study status.", "dataType": "date" },
+      "External Sensing for CPT sub-study": { "label": "External Sensing for CPT sub-study", "description": "Status indicating whether the site meets requirements for the External Sensing for CPT sub-study.", "dataType": "enum" },
+      "External Sensing for CPT sub-study Date": { "label": "External Sensing for CPT sub-study Date", "description": "Date associated with the current External Sensing for CPT sub-study status.", "dataType": "date" },
+      "Site Closeout Letter": { "label": "Site Closeout Letter", "description": "Status of the formal closeout letter issued when study activities at the site are ending.", "dataType": "enum" },
+      "Site Closeout Letter Date": { "label": "Site Closeout Letter Date", "description": "Date associated with the Site Closeout Letter status.", "dataType": "date" },
+      "Study Site Closeout Approval Document": { "label": "Study Site Closeout Approval Document", "description": "Status of the document approving or confirming site closeout after required activities are complete.", "dataType": "enum" },
+      "Study Site Closeout Approval Document Date": { "label": "Study Site Closeout Approval Document Date", "description": "Date associated with the current Study Site Closeout Approval Document status.", "dataType": "date" },
+      "Willing to use and equipped for EDC": { "label": "Willing to use and equipped for EDC", "description": "Indicates whether the site is willing and operationally equipped to use the required Electronic Data Capture system. Observed values: YES, NO.", "dataType": "enum" }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-sts-master",
+    "name": "Clinical Site - STS Master",
+    "description": "Study and site performance master dataset (STS Master) combining site and study attributes, Abbott personnel, activation and enrollment milestones, follow-up compliance, protocol deviations, data discrepancy/query management, adverse and serious adverse event metrics, and agreement status. Supports site performance monitoring, startup and enrollment efficiency, KPIs, executive reporting, and identification of high- and under-performing sites.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-sts-master-extract" },
+    "columnDefinitions": {
+      "SITE": { "label": "SITE", "description": "Site code; the global unique identifier for the clinical site.", "dataType": "string" },
+      "SITE_NAME": { "label": "SITE_NAME", "description": "Site name; the clinical study site institution name.", "dataType": "string" },
+      "SITE_CITY": { "label": "SITE_CITY", "description": "City in which the site is located.", "dataType": "string" },
+      "SITE_STATE": { "label": "SITE_STATE", "description": "State or province in which the site is located.", "dataType": "string" },
+      "SITE_COUNTRY": { "label": "SITE_COUNTRY", "description": "Country in which the site is located.", "dataType": "string" },
+      "SITE_GEO_AREA_CODE": { "label": "SITE_GEO_AREA_CODE", "description": "Geographic area/region code in which the site is located (e.g., EMEA).", "dataType": "string" },
+      "SITE_GEO_AREA_DESC": { "label": "SITE_GEO_AREA_DESC", "description": "Description of the geographic area/region in which the site is located.", "dataType": "string" },
+      "PI": { "label": "PI", "description": "Principal Investigator (PI) for the study site.", "dataType": "string" },
+      "RC_LEAD_NAME": { "label": "RC_LEAD_NAME", "description": "Lead Research Coordinator (RC) at the site.", "dataType": "string" },
+      "CSL": { "label": "CSL", "description": "Clinical Site Lead from Abbott.", "dataType": "string" },
+      "CSL_MGR": { "label": "CSL_MGR", "description": "Manager of the Clinical Site Lead.", "dataType": "string" },
+      "CSL_DIR": { "label": "CSL_DIR", "description": "Director of the Clinical Site Lead.", "dataType": "string" },
+      "ORG_UNIT_CODE": { "label": "ORG_UNIT_CODE", "description": "Organization Unit Code. A REG suffix indicates a regulated study; a PM suffix indicates a post-market study.", "dataType": "string" },
+      "BUSINESS_UNIT": { "label": "BUSINESS_UNIT", "description": "Business Unit (BU) the study belongs to.", "dataType": "string" },
+      "STUDY": { "label": "STUDY", "description": "Study code or CRD number.", "dataType": "string" },
+      "STUDY_TITLE": { "label": "STUDY_TITLE", "description": "Study title or name of the study.", "dataType": "string" },
+      "STUDY_CATEGORY": { "label": "STUDY_CATEGORY", "description": "Category of study (e.g., IDE, Post Market).", "dataType": "string" },
+      "STUDY_SUB_CAT": { "label": "STUDY_SUB_CAT", "description": "Sub-category of the study.", "dataType": "string" },
+      "STUDY_STAGE": { "label": "STUDY_STAGE", "description": "Study stage (e.g., Current or Completed).", "dataType": "string" },
+      "STUDY_STATUS": { "label": "STUDY_STATUS", "description": "Study status (e.g., Active).", "dataType": "string" },
+      "SITE_STATUS": { "label": "SITE_STATUS", "description": "Site status (e.g., Enrolling).", "dataType": "string" },
+      "SITE_STATUS_DT": { "label": "SITE_STATUS_DT", "description": "Site status date.", "dataType": "date" },
+      "PRT_SENT_DT": { "label": "PRT_SENT_DT", "description": "Date the protocol was sent to the site.", "dataType": "date" },
+      "ORIG_IRB_DT": { "label": "ORIG_IRB_DT", "description": "Original IRB/Ethics Committee (EC) approval date.", "dataType": "date" },
+      "ORIG_SJM_APPR_DT": { "label": "ORIG_SJM_APPR_DT", "description": "Site activation date; original Abbott approval date.", "dataType": "date" },
+      "PRT_TO_APPR_DAYS": { "label": "PRT_TO_APPR_DAYS", "description": "Number of days from protocol sent to site activation (time taken to activate the site).", "dataType": "integer" },
+      "ENR_DB_TOT": { "label": "ENR_DB_TOT", "description": "Total subjects enrolled (actual) at the study site.", "dataType": "integer" },
+      "ENR_DB_PREV_YR": { "label": "ENR_DB_PREV_YR", "description": "Total subjects enrolled last year at this study site.", "dataType": "integer" },
+      "ENR_DB_CUR_YR": { "label": "ENR_DB_CUR_YR", "description": "Total subjects enrolled this year at this study site.", "dataType": "integer" },
+      "ENR_FST_PROJ_DT": { "label": "ENR_FST_PROJ_DT", "description": "Projected date of first enrollment at the study site.", "dataType": "date" },
+      "ENR_FST_DB_DT": { "label": "ENR_FST_DB_DT", "description": "Actual date of first enrollment at the study site.", "dataType": "date" },
+      "APPR_TO_ENR_DAYS": { "label": "APPR_TO_ENR_DAYS", "description": "Number of days from original Abbott approval to first enrollment.", "dataType": "integer" },
+      "APPR_WITHOUT_ENR_DAYS": { "label": "APPR_WITHOUT_ENR_DAYS", "description": "Number of days since original site activation without any enrollment.", "dataType": "integer" },
+      "ENR_LST_DB_DT": { "label": "ENR_LST_DB_DT", "description": "Date of the last/latest enrollment at the study site.", "dataType": "date" },
+      "FRM_TERM_NUM": { "label": "FRM_TERM_NUM", "description": "Number of patients/subjects withdrawn or terminated.", "dataType": "integer" },
+      "PT_ACTIVE_NUM": { "label": "PT_ACTIVE_NUM", "description": "Number of active patients/subjects.", "dataType": "integer" },
+      "FRM_EXPECT_NUM": { "label": "FRM_EXPECT_NUM", "description": "Total number of follow-up forms expected.", "dataType": "integer" },
+      "FRM_RECV_NUM": { "label": "FRM_RECV_NUM", "description": "Total number of follow-up forms received.", "dataType": "integer" },
+      "FRM_MISS_NUM": { "label": "FRM_MISS_NUM", "description": "Total number of missed visit deviations.", "dataType": "integer" },
+      "FRM_IR_NUM": { "label": "FRM_IR_NUM", "description": "Number of visits completed within the expected protocol follow-up window.", "dataType": "integer" },
+      "FRM_IR_PERC": { "label": "FRM_IR_PERC", "description": "Percent of visits completed within the expected protocol follow-up window.", "dataType": "number" },
+      "FRM_SUBM_AVG_TIME": { "label": "FRM_SUBM_AVG_TIME", "description": "Average time to submit CRFs (CRF submission time).", "dataType": "number" },
+      "FRM_DEV_NUM": { "label": "FRM_DEV_NUM", "description": "Number of protocol deviations.", "dataType": "integer" },
+      "FRM_DEV_PT_PERC": { "label": "FRM_DEV_PT_PERC", "description": "Percent of deviations by patient.", "dataType": "number" },
+      "DEV_FREE_PT_NUM": { "label": "DEV_FREE_PT_NUM", "description": "Number of patients/subjects without any protocol deviations.", "dataType": "integer" },
+      "DEV_FREE_PT_PERC": { "label": "DEV_FREE_PT_PERC", "description": "Percentage of patients/subjects without any protocol deviations.", "dataType": "number" },
+      "DEV_PER_VISIT": { "label": "DEV_PER_VISIT", "description": "Protocol deviation rate per visit (number of deviations divided by visits).", "dataType": "number" },
+      "DISCREP_TOT_NUM": { "label": "DISCREP_TOT_NUM", "description": "Total number of data discrepancies or queries.", "dataType": "integer" },
+      "DISCREP_OPEN_NUM": { "label": "DISCREP_OPEN_NUM", "description": "Total number of open data discrepancies or queries.", "dataType": "integer" },
+      "DISCREP_TOT_RECV_PERC": { "label": "DISCREP_TOT_RECV_PERC", "description": "Percentage of received data points/responses with discrepancies or queries.", "dataType": "number" },
+      "DISCREP_PER_PT": { "label": "DISCREP_PER_PT", "description": "Number of discrepancies or queries per patient/subject.", "dataType": "number" },
+      "DISCREP_RESOLV_AVG_TIME": { "label": "DISCREP_RESOLV_AVG_TIME", "description": "Average time to resolve discrepancies or queries.", "dataType": "number" },
+      "DISCREP_RESOLV_NUM": { "label": "DISCREP_RESOLV_NUM", "description": "Number of discrepancies or queries resolved.", "dataType": "integer" },
+      "DISCREP_PER_VISIT": { "label": "DISCREP_PER_VISIT", "description": "Discrepancy or query rate by visit.", "dataType": "number" },
+      "DTH_PT_NUM": { "label": "DTH_PT_NUM", "description": "Total number of subject/patient deaths.", "dataType": "integer" },
+      "DTH_PT_PERC": { "label": "DTH_PT_PERC", "description": "Percentage of subject/patient deaths.", "dataType": "number" },
+      "AE_COMPL_NUM": { "label": "AE_COMPL_NUM", "description": "Number of SAEs (Serious Adverse Events).", "dataType": "integer" },
+      "AE_COMPL_PERC": { "label": "AE_COMPL_PERC", "description": "Percentage of SAEs.", "dataType": "number" },
+      "AE_TOT_NUM": { "label": "AE_TOT_NUM", "description": "Number of Adverse Events (AE).", "dataType": "integer" },
+      "AE_TOT_PER_VISIT": { "label": "AE_TOT_PER_VISIT", "description": "Number of AEs per visit.", "dataType": "number" },
+      "AE_TOT_PER_PT": { "label": "AE_TOT_PER_PT", "description": "Number of AEs per subject/patient.", "dataType": "number" },
+      "VISIT_TOT_NUM": { "label": "VISIT_TOT_NUM", "description": "Total number of received patient/subject visits.", "dataType": "integer" },
+      "PT_COMPLETE_NUM": { "label": "PT_COMPLETE_NUM", "description": "Number of patients/subjects who have completed the study.", "dataType": "integer" },
+      "FRM_SUBM_NUM": { "label": "FRM_SUBM_NUM", "description": "Number of CRFs submitted.", "dataType": "integer" },
+      "ENROLL_RATE_MON": { "label": "ENROLL_RATE_MON", "description": "Monthly enrollment rate.", "dataType": "number" },
+      "PRT_CNTRY_OFFICE_SENT_DT": { "label": "PRT_CNTRY_OFFICE_SENT_DT", "description": "Date the protocol was sent to the country office.", "dataType": "date" },
+      "INVITATION_LTTR_SENT_DT": { "label": "INVITATION_LTTR_SENT_DT", "description": "Date the site invitation letter was sent.", "dataType": "date" },
+      "PRJ_SITE_ACTIVATION_DT": { "label": "PRJ_SITE_ACTIVATION_DT", "description": "Original projected site activation date.", "dataType": "date" },
+      "QUAL_FRM_SUBM_DT": { "label": "QUAL_FRM_SUBM_DT", "description": "Date the site qualification form was submitted (actual site qualification date).", "dataType": "date" },
+      "PRJ_SITE_QUAL_DT": { "label": "PRJ_SITE_QUAL_DT", "description": "Planned/projected site qualification visit date.", "dataType": "date" },
+      "RA_STATUS": { "label": "RA_STATUS", "description": "Research Agreement/contract status.", "dataType": "string" },
+      "RA_DT": { "label": "RA_DT", "description": "Research Agreement/contract status date.", "dataType": "date" },
+      "SIV_DT": { "label": "SIV_DT", "description": "Site Initiation Visit (SIV) date.", "dataType": "date" },
+      "PRE_SIV_HUDDLE_DT": { "label": "PRE_SIV_HUDDLE_DT", "description": "Pre-SIV huddle date.", "dataType": "date" },
+      "SAE_LATE_NUM": { "label": "SAE_LATE_NUM", "description": "Number of late SAEs.", "dataType": "integer" },
+      "SAE_ONTIME_PERC": { "label": "SAE_ONTIME_PERC", "description": "Percentage of SAEs submitted on time.", "dataType": "number" },
+      "MASTER_AGR_FG": { "label": "MASTER_AGR_FG", "description": "Indicates whether the site has a master agreement. Observed values: Y (Yes), N (No).", "dataType": "enum" }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-so-personnel",
+    "name": "Clinical Site - SO Personnel",
+    "description": "Abbott personnel assignments to clinical studies and study sites (Study Organizer / SO Personnel), including role definitions, assignment history, assignment status, and organizational responsibility. Contains both study-level roles (when Site is blank) and site-level roles, enabling teams to identify who is responsible for a study or site, track role coverage, monitor resource allocation, and analyze staffing changes over time.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-so-personnel-extract" },
+    "columnDefinitions": {
+      "STUDY": { "label": "STUDY", "description": "Study code or CRD number.", "dataType": "string" },
+      "STUDY_TITLE": { "label": "STUDY_TITLE", "description": "Study title or name of the study.", "dataType": "string" },
+      "SITE": { "label": "SITE", "description": "Site code. If blank, the record represents a study-level role rather than a site-level role.", "dataType": "string" },
+      "SITE_NAME": { "label": "SITE_NAME", "description": "Site name.", "dataType": "string" },
+      "ROLE_CODE": { "label": "ROLE_CODE", "description": "Role type code in Study Organizer.", "dataType": "string" },
+      "ROLE_IN_STUDY": { "label": "ROLE_IN_STUDY", "description": "Full description of the role in Study Organizer.", "dataType": "string" },
+      "LAST_NAME": { "label": "LAST_NAME", "description": "Last name of the Abbott personnel.", "dataType": "string" },
+      "FIRST_NAME": { "label": "FIRST_NAME", "description": "First name of the Abbott personnel.", "dataType": "string" },
+      "USERNAME": { "label": "USERNAME", "description": "Username of the Abbott personnel.", "dataType": "string" },
+      "PER_STATUS": { "label": "PER_STATUS", "description": "Assignment status of the person. ASSIGNED = currently assigned to this role in the study or study site; COMPLETE = the study completed so the assignment ended; TERM = the person is no longer with Abbott; UNASSIGNED = the person is no longer assigned to this role. Observed values: ASSIGNED, COMPLETE, TERM, UNASSIGNED.", "dataType": "enum" },
+      "ASSIGN_CURR_FG": { "label": "ASSIGN_CURR_FG", "description": "Indicates whether the person is currently assigned to the study or study site in this role. Y = currently assigned; N or blank = not currently assigned. Observed values: Y, N.", "dataType": "enum" },
+      "ASSIGN_START_DT": { "label": "ASSIGN_START_DT", "description": "Date the person was assigned.", "dataType": "date" },
+      "ASSIGN_END_DT": { "label": "ASSIGN_END_DT", "description": "Date the assignment ended.", "dataType": "date" }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-nomination-header",
+    "name": "Clinical Site - Site Nomination Header",
+    "description": "Site nomination and site qualification form header dataset for clinical studies. Contains ONE row per nomination/qualification form (identified by NOM_ID), capturing form type (Nomination vs Qualification), study details, site identity and address, principal investigator, submission and approval workflow (submitted/approved timestamps and persons, approval status, disapproval reason, form status), and participation outcome (whether the site declined and why). IMPORTANT: This is one of TWO tightly related knowledge bases that must be used together. This HEADER KB holds the form-level facts (one row per form); the companion 'Clinical Site - Site Nomination Details' KB holds the individual form questions and responses (many rows per form). They are joined on NOM_ID. To answer questions that involve both form-level attributes (approval status, dates, site, study, decline reason) and specific question responses, combine both KBs on NOM_ID.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-nom-header-extract" },
+    "columnDefinitions": {
+      "FORM_TYPE": { "label": "FORM_TYPE", "description": "Type of form. Observed values: Nomination, Qualification.", "dataType": "enum" },
+      "NOM_ID": { "label": "NOM_ID", "description": "Unique identifier representing a site nomination or site qualification form. JOIN KEY: use this to join to the 'Clinical Site - Site Nomination Details' KB, which holds one row per form question for the same NOM_ID.", "dataType": "number" },
+      "STUDY": { "label": "STUDY", "description": "Study code or CRD number.", "dataType": "string" },
+      "STUDY_TITLE": { "label": "STUDY_TITLE", "description": "Study title or name of the study.", "dataType": "string" },
+      "SITE": { "label": "SITE", "description": "Site code; the global unique identifier for the clinical site.", "dataType": "string" },
+      "SITE_NAME": { "label": "SITE_NAME", "description": "Site name; the clinical study site.", "dataType": "string" },
+      "ADDRESS1": { "label": "ADDRESS1", "description": "Site address line 1.", "dataType": "string" },
+      "ADDRESS2": { "label": "ADDRESS2", "description": "Site address line 2.", "dataType": "string" },
+      "ADDRESS3": { "label": "ADDRESS3", "description": "Site address line 3.", "dataType": "string" },
+      "CITY": { "label": "CITY", "description": "City in which the site is located.", "dataType": "string" },
+      "STATE": { "label": "STATE", "description": "State in which the site is located.", "dataType": "string" },
+      "COUNTRY": { "label": "COUNTRY", "description": "Country in which the site is located.", "dataType": "string" },
+      "ZIP": { "label": "ZIP", "description": "Zip/postal code in which the site is located.", "dataType": "string" },
+      "PI_FIRST": { "label": "PI_FIRST", "description": "First name of the Principal Investigator at the time of submission of the nomination/qualification form.", "dataType": "string" },
+      "PI_LAST": { "label": "PI_LAST", "description": "Last name of the Principal Investigator at the time of submission of the nomination/qualification form.", "dataType": "string" },
+      "APPROVAL_STATUS": { "label": "APPROVAL_STATUS", "description": "Approval status of the site qualification (not applicable for site nomination).", "dataType": "string" },
+      "APPROVED_TS": { "label": "APPROVED_TS", "description": "Date the site qualification was approved.", "dataType": "date" },
+      "APPROVED_BY": { "label": "APPROVED_BY", "description": "Person who approved the site qualification.", "dataType": "string" },
+      "DISAPPROVAL_REASON": { "label": "DISAPPROVAL_REASON", "description": "If the site qualification was disapproved, the reason for disapproval.", "dataType": "string" },
+      "SUBMITTED_TS": { "label": "SUBMITTED_TS", "description": "Date the form was submitted.", "dataType": "date" },
+      "SUBMITTED_BY": { "label": "SUBMITTED_BY", "description": "Person who submitted the form.", "dataType": "string" },
+      "COMMENTS": { "label": "COMMENTS", "description": "Free-text reviewer/evaluator comments captured on the nomination or qualification form. This is the primary source of QUALITATIVE, narrative assessment about the site and its team. Use this column to answer subjective or descriptive questions such as how involved, engaged, dedicated, responsive, experienced, motivated, or committed the Principal Investigator (PI) and Research Coordinator (RC) or site staff are, site strengths and concerns, feasibility notes, enrollment expectations, and any other narrative observations that are not captured in the structured columns. When a question asks about attitudes, commitment, involvement, dedication, quality, or overall impressions of a site/PI/RC, search this COMMENTS text.", "dataType": "string" },
+      "SITE_DECLINED": { "label": "SITE_DECLINED", "description": "Whether the site declined to participate. Y = Yes. Observed values: Y, N.", "dataType": "enum" },
+      "SITE_DECLINED_REASON": { "label": "SITE_DECLINED_REASON", "description": "Reason the site declined participation.", "dataType": "string" },
+      "FORM_STATUS": { "label": "FORM_STATUS", "description": "Form status.", "dataType": "string" }
+    },
+    "enabled": true
+  },
+  {
+    "id": "clinical-site-nomination-details",
+    "name": "Clinical Site - Site Nomination Details",
+    "description": "Site nomination and site qualification form question/response detail dataset for clinical studies. Contains MANY rows per form (one row per question) identified by NOM_ID, capturing each question asked on the nomination/qualification form, its response, its display order, and whether it was mandatory. IMPORTANT: This is one of TWO tightly related knowledge bases that must be used together. This DETAILS KB holds the individual questions and answers; the companion 'Clinical Site - Site Nomination Header' KB holds the form-level facts (study, site, PI, submission/approval workflow, decline outcome) with one row per form. They are joined on NOM_ID. To answer questions about specific form responses in the context of a site, study, or approval outcome, combine both KBs on NOM_ID.",
+    "type": "dataset",
+    "scope": "domain",
+    "domainId": "clinical-site",
+    "source": { "kind": "api", "toolId": "cds-site-nom-details-extract" },
+    "columnDefinitions": {
+      "NOM_ID": { "label": "NOM_ID", "description": "Unique identifier representing a site nomination or site qualification form. JOIN KEY: use this to join to the 'Clinical Site - Site Nomination Header' KB, which holds one row of form-level facts for the same NOM_ID. Multiple detail rows share the same NOM_ID (one per question).", "dataType": "number" },
+      "QUESTION_ID": { "label": "QUESTION_ID", "description": "Identifier of the question on the form. May be null in some cases.", "dataType": "number" },
+      "QUESTION_LABEL": { "label": "QUESTION_LABEL", "description": "The question asked on the nomination/qualification form.", "dataType": "string" },
+      "QUESTION_RESPONSE": { "label": "QUESTION_RESPONSE", "description": "Response/answer to the question on the form.", "dataType": "string" },
+      "DISP_SEQ": { "label": "DISP_SEQ", "description": "Display order of the question on the form.", "dataType": "string" },
+      "MANDATORY_FG": { "label": "MANDATORY_FG", "description": "Whether or not the question was mandatory. Observed values: Y, N.", "dataType": "enum" }
+    },
+    "enabled": true
+  }
+]

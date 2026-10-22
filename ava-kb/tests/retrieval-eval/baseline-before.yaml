@@ -1,0 +1,76 @@
+# Baseline Evaluation Results
+# Date: 2026-05-26
+# Architecture: Original (flat chunks, hybrid RRF, auto-retrieve every message)
+# Chunk stats: 246 total (161 DOCX avg 380 chars, 85 PDF avg 1011 chars)
+# Settings: ChunkSize=1000, ChunkOverlap=125, HybridSearch (BM25 + pgvector embedding)
+# Backend: TF-IDF similarity (sentence-transformers unavailable in corp environment)
+
+summary:
+  passed: 2
+  total: 6
+  pass_rate: 33%
+  average_similarity: 0.479
+
+results:
+  - id: "MONITORING-VISIT-REPORT-verbatim-retrieval"
+    score: 0.854
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: PASS
+    notes: "Direct keyword match to section heading. Retrieved correct DOCX section."
+
+  - id: "MONITORING-VISIT-REPORT-next-section-retrieval"
+    score: 0.289
+    threshold: 0.60
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Structural/follow-up question. System has no section ordering awareness. Best match was unrelated findings content."
+
+  - id: "sma-db-table-question"
+    score: 0.205
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Found the heading chunk but table content is split across multiple chunks. Only matched the header, not the full table listing."
+
+  - id: "sma-db-package-question"
+    score: 0.135
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Didn't retrieve the packages section at all. Top result was the document purpose section."
+
+  - id: "sdv-crfs-rdc-manual-question"
+    score: 0.896
+    threshold: 0.70
+    source_match: true
+    chunks_retrieved: 15
+    result: PASS
+    notes: "Strong keyword match (SDV, CRFs, RDC). Retrieved the correct procedural steps chunk."
+
+  - id: "crf-discrepancy-finding-edit-question"
+    score: 0.494
+    threshold: 0.60
+    source_match: true
+    chunks_retrieved: 15
+    result: FAIL
+    notes: "Semantic gap — 'can't edit' vs 'edits can only occur in RDC'. Best match was a related but wrong section about findings management."
+
+analysis:
+  strengths:
+    - Source document matching works (6/6 correct source)
+    - Direct keyword queries work well (cases 1, 5 pass)
+  weaknesses:
+    - No section ordering/structure awareness (case 2 fails)
+    - Large sections split across chunks lose coherence (cases 3, 4 fail)
+    - Semantic gap between question phrasing and answer text not bridged (case 6)
+    - No parent-child relationship — can't return full sections when chunks are fragmented
+  expected_improvements_from_new_architecture:
+    - "Parent-child chunking: cases 3, 4 should improve dramatically (full section retrieval)"
+    - "Query router + expanded strategy: case 3, 4 would trigger 'expanded' mode with more results"
+    - "Agentic retrieval with context: case 2 should improve (can look up next section)"
+    - "Better embedding matching: case 6 would benefit from semantic search in expanded mode"

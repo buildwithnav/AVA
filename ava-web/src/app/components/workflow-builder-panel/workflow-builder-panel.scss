@@ -1,0 +1,356 @@
+// Workflow Builder Panel — inline chat styles
+
+.wbp-similar-card {
+  margin-bottom: 12px;
+  border-left: 4px solid #1e88e5;
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .wbp-similar-hint {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+
+  .wbp-similar-item {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fafafa;
+
+    .wbp-similar-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+
+      strong { font-size: 14px; }
+    }
+
+    .wbp-similar-domain {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .wbp-similar-score {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .wbp-similar-desc {
+      font-size: 13px;
+      opacity: 0.8;
+      margin: 4px 0;
+    }
+
+    .wbp-similar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.wbp-builder-card {
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+}
+
+.wbp-spacer { flex: 1; }
+
+// ── Form section ──────────────────────────────────────────────
+
+.wbp-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 4px;
+}
+
+.wbp-form-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+}
+
+.wbp-field-grow { flex: 1; }
+.wbp-field-sm { min-width: 120px; }
+.wbp-field-full { width: 100%; }
+
+.wbp-section-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+// ── Tags ──────────────────────────────────────────────────────
+
+.wbp-tags-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wbp-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.wbp-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  background: #e3f2fd;
+  color: #1565c0;
+
+  &.removable {
+    padding-right: 4px;
+  }
+
+  .wbp-tag-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 10px;
+    opacity: 0.6;
+    border-radius: 50%;
+
+    &:hover { opacity: 1; background: rgba(0, 0, 0, 0.08); }
+  }
+}
+
+.wbp-tag-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .wbp-tag-input {
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 12px;
+    outline: none;
+    width: 140px;
+
+    &:focus { border-color: #1e88e5; }
+  }
+}
+
+// ── Stages ────────────────────────────────────────────────────
+
+.wbp-stages-section {
+  padding: 12px 4px;
+}
+
+.wbp-stages-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  .wbp-section-label { flex: 1; font-size: 14px; }
+}
+
+.wbp-add-stage-select {
+  width: 180px;
+}
+
+.wbp-empty-stages {
+  text-align: center;
+  padding: 24px;
+  opacity: 0.5;
+
+  i { font-size: 32px; margin-bottom: 8px; display: block; }
+  p { font-size: 13px; }
+}
+
+mat-card.wbp-stage-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  padding: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover { border-color: #90caf9; }
+
+  &.wbp-stage-selected {
+    border-color: #1e88e5;
+    box-shadow: 0 0 0 1px #1e88e5;
+  }
+
+  > mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+
+    .wbp-stage-id {
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .wbp-stage-type-badge {
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  }
+
+  > mat-card-content {
+    padding: 8px 12px 12px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+// ── Nested sub-stages (foreach) ───────────────────────────────
+
+.wbp-substages {
+  margin: 0 4px 8px 16px;
+  padding: 8px 0 4px 12px;
+  border-left: 3px solid #4e342e;
+
+  &.wbp-substages-deep {
+    margin-left: 12px;
+    border-left-color: #795548;
+  }
+}
+
+.wbp-substages-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+
+  .wbp-substages-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .wbp-add-sub-select {
+    width: 160px;
+    font-size: 12px;
+  }
+}
+
+.wbp-substages-empty {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 4px 0 8px;
+}
+
+mat-card.wbp-substage-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  padding: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover { border-color: #bcaaa4; }
+
+  &.wbp-stage-selected {
+    border-color: #4e342e;
+    box-shadow: 0 0 0 1px #4e342e;
+  }
+
+  &.wbp-deep-card {
+    background: rgba(0, 0, 0, 0.015);
+  }
+
+  > mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    min-height: 36px;
+
+    .wbp-stage-id {
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .wbp-stage-type-badge {
+      color: white;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+  }
+
+  > mat-card-content {
+    padding: 6px 10px 10px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+// ── JSON Preview ──────────────────────────────────────────────
+.wbp-json-section {
+  padding: 12px 4px;
+}
+
+.wbp-json-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  .wbp-section-label { flex: 1; }
+}
+
+.wbp-json-content {
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow: auto;
+  max-height: 400px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}

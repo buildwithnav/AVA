@@ -1,0 +1,180 @@
+{
+    "description": "Study-site level clinical trial data including study identifiers, site details, site operational status, IRB/EC information, approval dates, protocol revision status, and history summaries. No patient-level records; professional/site identifiers and contact details only.",
+    "fields": {
+        "study": {
+            "label": "Source Study ID",
+            "description": "The unique identifier for the parent clinical study as assigned by the source system.",
+            "data_type": "string"
+        },
+        "title": {
+            "label": "Study Title",
+            "description": "The descriptive title or name of the clinical study.",
+            "data_type": "string"
+        },
+        "site_code": {
+            "label": "Site Code",
+            "description": "The unique site identifier assigned by the source system for a participating or nominated clinical trial site.",
+            "data_type": "string"
+        },
+        "site_name": {
+            "label": "Site Name",
+            "description": "The official or source-system name of the clinical trial site or institution.",
+            "data_type": "string"
+        },
+        "site_address": {
+            "label": "Site Address",
+            "description": "The primary street address for the clinical trial site.",
+            "data_type": "string"
+        },
+        "site_city": {
+            "label": "Site City",
+            "description": "The city where the clinical trial site is located.",
+            "data_type": "string"
+        },
+        "site_state": {
+            "label": "Site State/Province",
+            "description": "The state, province, region, or source-system geographic code for the clinical trial site.",
+            "data_type": "string"
+        },
+        "site_zip": {
+            "label": "Site Postal Code",
+            "description": "The postal or ZIP code for the clinical trial site.",
+            "data_type": "string"
+        },
+        "site_country": {
+            "label": "Site Country",
+            "description": "The country where the clinical trial site is located.",
+            "data_type": "string"
+        },
+        "site_status": {
+            "label": "Site Status",
+            "description": "The current operational status of the clinical trial site in the study. Observed categories/values in this file: ACTIVATED, APPROACH, CLOSED, COMPLIANCE/REG HOLD, DECLINED, END ENROLL, ENROLLING, HOLD, INA WTHDRN, NOMINATED, NOT OFFERED, PENDING, PRE CLOSE, WAIT LIST, WITHDRAWN.",
+            "data_type": "enum"
+        },
+        "site_status_date": {
+            "label": "Site Status Date",
+            "description": "The date associated with the current site status.",
+            "data_type": "date"
+        },
+        "site_cra_name": {
+            "label": "Site CRA Name",
+            "description": "The clinical research associate assigned to the site, when available.",
+            "data_type": "string"
+        },
+        "irb_chairman_name": {
+            "label": "IRB/EC Chair Name",
+            "description": "The name of the IRB or ethics committee chairperson associated with the site, when available.",
+            "data_type": "string"
+        },
+        "irb_name": {
+            "label": "IRB/EC Name",
+            "description": "The name of the institutional review board or ethics committee responsible for oversight or approval.",
+            "data_type": "string"
+        },
+        "irb_address_1": {
+            "label": "IRB/EC Address Line 1",
+            "description": "The first address line for the IRB or ethics committee.",
+            "data_type": "string"
+        },
+        "irb_address_2": {
+            "label": "IRB/EC Address Line 2",
+            "description": "The second address line for the IRB or ethics committee, when available.",
+            "data_type": "string"
+        },
+        "irb_address_3": {
+            "label": "IRB/EC Address Line 3",
+            "description": "The third address line for the IRB or ethics committee, when available.",
+            "data_type": "string"
+        },
+        "irb_city": {
+            "label": "IRB/EC City",
+            "description": "The city where the IRB or ethics committee is located.",
+            "data_type": "string"
+        },
+        "irb_state": {
+            "label": "IRB/EC State/Province",
+            "description": "The state, province, region, or source-system geographic code for the IRB or ethics committee.",
+            "data_type": "string"
+        },
+        "irb_zip": {
+            "label": "IRB/EC Postal Code",
+            "description": "The postal or ZIP code for the IRB or ethics committee.",
+            "data_type": "string"
+        },
+        "irb_country": {
+            "label": "IRB/EC Country",
+            "description": "The country where the IRB or ethics committee is located.",
+            "data_type": "string"
+        },
+        "irb_phone": {
+            "label": "IRB/EC Phone",
+            "description": "The phone number for the IRB or ethics committee, when available.",
+            "data_type": "string"
+        },
+        "irb_fax": {
+            "label": "IRB/EC Fax",
+            "description": "The fax number for the IRB or ethics committee, when available.",
+            "data_type": "string"
+        },
+        "irb_email": {
+            "label": "IRB/EC Email",
+            "description": "The email address for the IRB or ethics committee, when available.",
+            "data_type": "string"
+        },
+        "irb_local_central": {
+            "label": "IRB/EC Local or Central",
+            "description": "Indicates whether the IRB or ethics committee is categorized as local or central. Observed categories/values in this file: CENTRAL, LOCAL.",
+            "data_type": "enum"
+        },
+        "original_irb_ec_approval_date": {
+            "label": "Original IRB/EC Approval Date",
+            "description": "The original IRB or ethics committee approval date for the site and study.",
+            "data_type": "date"
+        },
+        "orig_irb_ec_appr_exp_date": {
+            "label": "Original IRB/EC Approval Expiration Date",
+            "description": "The original expiration date associated with the IRB or ethics committee approval.",
+            "data_type": "date"
+        },
+        "irb_ec_approval_exp_date": {
+            "label": "Current IRB/EC Approval Expiration Date",
+            "description": "The current expiration date associated with IRB or ethics committee approval.",
+            "data_type": "date"
+        },
+        "irb_history_summary": {
+            "label": "IRB/EC History Summary",
+            "description": "A summarized history of IRB or ethics committee approval events, often represented as pipe-separated status entries.",
+            "data_type": "string"
+        },
+        "protocol_history_summary": {
+            "label": "Protocol History Summary",
+            "description": "A summarized history of protocol review or approval events, often represented as pipe-separated status entries.",
+            "data_type": "string"
+        },
+        "amendment_history_summary": {
+            "label": "Amendment History Summary",
+            "description": "A summarized history of study amendment review or approval events, often represented as pipe-separated status entries.",
+            "data_type": "string"
+        },
+        "comments_summary": {
+            "label": "Comments Summary",
+            "description": "A summarized list of site, regulatory, or operational comments and milestone notes, often represented as pipe-separated date-stamped entries.",
+            "data_type": "string"
+        },
+        "latest_protocol_rev": {
+            "label": "Latest Protocol Revision",
+            "description": "The latest protocol or clinical investigation plan revision identifier recorded for the site.",
+            "data_type": "enum"
+        },
+        "latest_prot_rev_status": {
+            "label": "Latest Protocol Revision Status",
+            "description": "The approval or processing status for the latest protocol revision. Observed categories/values in this file: APPROVED, CONDITIONAL, DISAPPROVED, PENDING, SENT, TO COUNTRY OFFICE, WAIVED.",
+            "data_type": "enum"
+        },
+        "latest_prot_rev_status_date": {
+            "label": "Latest Protocol Revision Status Date",
+            "description": "The date associated with the latest protocol revision status.",
+            "data_type": "date"
+        }
+    }
+}

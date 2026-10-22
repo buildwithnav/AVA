@@ -1,0 +1,235 @@
+:host {
+  display: block;
+  padding: 16px;
+  max-width: 1200px;
+}
+
+.search-bar {
+  width: 100%;
+  margin-bottom: 16px;
+
+  mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+h3 {
+  margin: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section-divider {
+  margin: 32px 0;
+}
+
+// ── Custom Tools ──────────────────────────────────────────────────────────────
+
+.service-card {
+  margin-bottom: 16px;
+}
+
+.tool-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.editing {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
+  }
+}
+
+.tool-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tool-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.tool-id {
+  font-weight: 600;
+  color: #5e35b1;
+}
+
+.tool-method {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.tool-route {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+}
+
+.tool-desc {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 0.85rem;
+}
+
+.tool-actions {
+  display: flex;
+  gap: 4px;
+}
+
+// ── Edit form ─────────────────────────────────────────────────────────────────
+
+.tool-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.tool-edit-card {
+  margin-bottom: 16px;
+}
+
+.edit-title {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  .tool-id {
+    font-size: 1rem;
+  }
+}
+
+.new-tool-card {
+  border: 1px dashed rgba(187, 134, 252, 0.4);
+}
+
+.params-section {
+  grid-column: 1 / -1;
+}
+
+.params-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+// ── MCP Tools ─────────────────────────────────────────────────────────────────
+
+.category-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.mcp-tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mcp-tool-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.mcp-tool-name {
+  font-weight: 500;
+  color: #5e35b1;
+  min-width: 220px;
+  font-size: 0.85rem;
+}
+
+.mcp-tool-desc {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 0.85rem;
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  color: rgba(0, 0, 0, 0.5);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+}
+
+// ── Archived section ──────────────────────────────────────────────────────────
+
+.archived-toggle {
+  margin: 16px 0;
+}
+
+.archived-card {
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+.archived-item {
+  opacity: 0.7;
+}
+
+.empty-state-inline {
+  padding: 16px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+}

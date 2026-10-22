@@ -1,0 +1,66 @@
+# ── .NET ──────────────────────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+*.binlog
+.vs/
+
+# ── Node / Angular ────────────────────────────────────────────────────────────
+node_modules/
+# node_modules as a symlink (Lib/workflow-builder consumes the UI's install)
+node_modules
+dist/
+.angular/
+npm-debug.log
+yarn-error.log
+
+# ── Generated artifacts ───────────────────────────────────────────────────────
+vectors.cache.json
+prompts.*.json
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+*.sublime-workspace
+.vscode/
+
+# ── Secrets ────────────────────────────────────────────────────────────────────
+.env
+appsettings.Secrets.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Test / coverage ───────────────────────────────────────────────────────────
+/coverage
+TestResults/
+/Lib/site-packages
+test-results/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# ── Publish / Build outputs ───────────────────────────────────────────────────
+publish/
+
+# ── Data / Session files ──────────────────────────────────────────────────────
+ava-kb/data/kb/session/
+ava-kb/data/kb/domain/
+ava-kb/data/kb/docs/
+
+# ── Markdown docs (keep local only, except README and docs/) ─────────────────
+*.md
+!**/README.md
+!docs/**
+
+ava-api/Ava.Api/nul
+.vscode/settings.json

@@ -1,0 +1,540 @@
+<div class="chat-shell">
+  <!-- Header: title + domain selector + auth widgets -->
+  @if (!isEmbedded) {
+  <div class="chat-header">
+    <div class="chat-title-group" (click)="resetToHome()" style="cursor: pointer;" matTooltip="Back to home">
+      <div class="header-brand">
+        <img src="abbott-logo.png" alt="Abbott" class="header-logo">
+        <span class="header-divider"></span>
+        <div class="header-text">
+          <span class="chat-title">AVA</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="domain-selector" subscriptSizing="dynamic">
+      <mat-label>Domain</mat-label>
+      <mat-select [(ngModel)]="selectedDomain" (ngModelChange)="onDomainChange()">
+        <mat-option [value]="ALL_DOMAINS">All Domains</mat-option>
+        <mat-divider class="domain-option-rule"></mat-divider>
+        @for (d of domains; track d.id) {
+          <mat-option [value]="d.id">{{ d.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (hasSubDomains) {
+      <mat-form-field appearance="outline" class="domain-selector subdomain-selector" subscriptSizing="dynamic">
+        <mat-label>Study</mat-label>
+        <mat-select [(ngModel)]="selectedSubDomain" (ngModelChange)="onSubDomainChange()">
+          <mat-option [value]="ALL_SUB_DOMAINS">All</mat-option>
+          <mat-divider class="domain-option-rule"></mat-divider>
+          @for (s of subDomains; track s.id) {
+            <mat-option [value]="s.id">{{ s.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <!-- ── ADO PAT widget ─────────────────────────────────────────────────── -->
+    <div class="auth-widget ado-widget">
+      @if (adoConnected) {
+        <!-- Connected state -->
+        <div class="auth-pill connected">
+          <span class="status-dot"></span>
+          <span class="pill-label">ADO</span>
+          <button mat-icon-button class="pill-action" (click)="disconnectAdo()" matTooltip="Disconnect ADO PAT" aria-label="Disconnect ADO PAT">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else if (adoPatVisible) {
+        <!-- PAT input state -->
+        <div class="ado-pat-input-row">
+          <mat-form-field appearance="outline" class="pat-field" subscriptSizing="dynamic">
+            <mat-label>ADO PAT</mat-label>
+            <input matInput type="password" [(ngModel)]="adoPatInput" placeholder="Paste your PAT" (keydown.enter)="connectAdo()">
+          </mat-form-field>
+          <button mat-flat-button class="connect-btn" (click)="connectAdo()" [disabled]="!adoPatInput.trim()">Connect</button>
+          <button mat-icon-button (click)="toggleAdoPatInput()" matTooltip="Cancel" aria-label="Cancel ADO PAT input">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <!-- Disconnected state -->
+        <button mat-stroked-button class="auth-connect-btn" (click)="toggleAdoPatInput()">
+          <mat-icon>vpn_key</mat-icon>
+          ADO PAT
+        </button>
+      }
+    </div>
+
+    <!-- ── GitHub Copilot widget ──────────────────────────────────────────── -->
+    <div class="auth-widget github-widget">
+      @if (githubState === 'connected') {
+        <!-- Connected: model picker + disconnect -->
+        <div class="auth-pill connected github-connected">
+          <span class="status-dot"></span>
+          <span class="pill-label">Copilot</span>
+          @if (availableModels.length) {
+            <mat-select
+              class="model-select"
+              [(ngModel)]="selectedModelId"
+              (ngModelChange)="onModelChange($event)"
+              panelClass="model-select-panel"
+              placeholder="Default model">
+              @for (m of availableModels; track m.id) {
+                <mat-option [value]="m.id">{{ m.label }}</mat-option>
+              }
+            </mat-select>
+          }
+          <button mat-icon-button class="pill-action" (click)="disconnectGitHub()" matTooltip="Disconnect GitHub" aria-label="Disconnect GitHub">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else if (githubState === 'pending') {
+        <!-- Pending: show user code + open button -->
+        <div class="auth-pill pending">
+          <span class="status-dot"></span>
+          <span class="pill-label">Enter code:</span>
+          <span class="device-code">{{ githubUserCode }}</span>
+          <button mat-flat-button class="connect-btn small" (click)="openGitHubVerification()">
+            <mat-icon>open_in_new</mat-icon>
+            Open GitHub
+          </button>
+          <button mat-icon-button class="pill-action" (click)="disconnectGitHub()" matTooltip="Cancel" aria-label="Cancel GitHub auth">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <!-- Disconnected -->
+        <button mat-stroked-button class="auth-connect-btn" (click)="connectGitHub()">
+          <mat-icon>code</mat-icon>
+          Copilot
+        </button>
+      }
+    </div>
+
+    <!-- ── Menu button & dropdown ─────────────────────────────────────────── -->
+    <div class="ava-menu-wrapper">
+      <button class="ava-menu-btn" (click)="toggleMenu($event)" aria-label="Open menu" matTooltip="Menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      @if (menuOpen) {
+        <div class="ava-menu-dropdown" (click)="$event.stopPropagation()">
+          <!-- Theme section -->
+          <div class="ava-menu-section">
+            <div class="ava-menu-section-label">THEME</div>
+            <div class="ava-menu-swatches">
+              @for (t of themes; track t.id) {
+                <button
+                  class="ava-menu-swatch"
+                  [class.active]="t.id === currentTheme"
+                  [style.background]="t.swatch"
+                  [matTooltip]="t.name"
+                  (click)="setTheme(t.id)"
+                  [attr.aria-label]="t.name + ' theme'">
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- KB status pill — floats over the content so switching domains never shifts layout -->
+  @if (domainKbs.length > 0) {
+    <div class="kb-dock">
+      <button class="kb-pill" (click)="openKbModal()"
+              [title]="'View ' + domainKbs.length + ' knowledge bases'">
+        <mat-icon class="kb-pill-icon">storage</mat-icon>
+        <span class="kb-pill-label">
+          {{ domainKbs.length }} knowledge base{{ domainKbs.length > 1 ? 's' : '' }} loaded
+        </span>
+        <mat-icon class="kb-pill-chevron">open_in_full</mat-icon>
+      </button>
+    </div>
+  }
+
+  @if (kbModalOpen) {
+    <div class="kb-modal-backdrop" (click)="closeKbModal()">
+      <div class="kb-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <div class="kb-modal-header">
+          <mat-icon class="kb-modal-header-icon">storage</mat-icon>
+          <span class="kb-modal-title">
+            Knowledge bases
+            <span class="kb-modal-count">{{ domainKbs.length }}</span>
+          </span>
+          <button class="kb-modal-close" (click)="closeKbModal()" aria-label="Close">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="kb-modal-body">
+          @for (kb of domainKbs; track kb.id) {
+            <div class="kb-bar-row">
+              <span class="kb-bar-name">{{ kb.name }}</span>
+              <span class="kb-bar-meta">
+                @if (kb.rowCount != null) { {{ kb.rowCount | number }} rows · }
+                @if (kb.lastRefreshedAt) {
+                  refreshed {{ formatKbDate(kb.lastRefreshedAt) }}
+                } @else {
+                  never refreshed
+                }
+              </span>
+              @if (kb.source.kind !== 'upload') {
+                <button class="kb-refresh-btn"
+                        (click)="refreshKb(kb, $event)"
+                        [disabled]="kbRefreshingId === kb.id"
+                        [title]="'Refresh ' + kb.name">
+                  @if (kbRefreshingId === kb.id) {
+                    <mat-icon class="kb-refresh-spin">refresh</mat-icon>
+                  } @else {
+                    <mat-icon>refresh</mat-icon>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="chat-container" [style.display]="currentView === 'chat' ? 'flex' : 'none'">
+    <!-- Breadcrumb bar for completed selections -->
+    @if (breadcrumbs.length > 0) {
+      <div class="breadcrumb-bar">
+        @for (bc of breadcrumbs; track bc.stageId; let last = $last) {
+          <div class="breadcrumb-chip" [class.rewindable]="bc.rewindable">
+            <span class="breadcrumb-label">{{ bc.selectedValue }}</span>
+            @if (bc.rewindable && !isLoading) {
+              <button mat-icon-button
+                      class="breadcrumb-change-btn"
+                      (click)="rewindToStage(bc.stageId)"
+                      matTooltip="Change selection"
+                      aria-label="Change selection">
+                <mat-icon>edit</mat-icon>
+              </button>
+            }
+          </div>
+          @if (!last) {
+            <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+          }
+        }
+      </div>
+    }
+
+    <!-- Message list -->
+    <div class="message-list" #messageContainer>
+      @if (messages.length === 0) {
+        <div class="empty-state">
+          <svg class="empty-avatar-img ava-themed-avatar" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="60" class="avatar-bg"/>
+            <circle cx="60" cy="48" r="18" class="avatar-icon" stroke-width="3.5" fill="none"/>
+            <path d="M42 42 C42 30, 60 24, 72 30" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M32 48 C32 28, 88 28, 88 48" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <rect x="28" y="44" width="8" height="14" rx="4" class="avatar-icon-fill"/>
+            <rect x="84" y="44" width="8" height="14" rx="4" class="avatar-icon-fill"/>
+            <path d="M32 56 C32 72, 48 76, 56 72" class="avatar-icon" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="56" cy="72" r="4" class="avatar-icon-fill"/>
+            <path d="M36 82 C36 74, 48 68, 60 68 C72 68, 84 74, 84 82" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <line x1="60" y1="66" x2="60" y2="70" class="avatar-icon" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          @if (isAllDomains) {
+            <!-- Default domain selection -->
+            <p class="empty-title">How can I help you today?</p>
+            <p class="empty-subtitle">Select a domain to get started</p>
+            <div class="suggestion-chips">
+              @for (d of domains; track d.id) {
+                <button class="suggestion-chip" (click)="selectDomainChip(d.id)">
+                  <mat-icon>{{getDomainIcon(d.id)}}</mat-icon>
+                  {{ d.name }}
+                </button>
+              }
+            </div>
+          } @else {
+            @if (selectedDomainDef || selectedDomainDescription) {
+              <div class="empty-domain-header">
+                @if (selectedDomainDef) {
+                  <p class="empty-domain-name">{{ selectedDomainDef.name }}</p>
+                }
+                @if (selectedDomainDescription) {
+                  <p class="empty-domain-description">{{ selectedDomainDescription }}</p>
+                }
+              </div>
+            }
+
+            @if (suggestionsLoading) {
+              <p class="empty-subtitle">Loading suggestions…</p>
+            } @else if (workflowSuggestions.length > 0) {
+              <div class="workflow-suggestion-cards">
+                @for (s of visibleSuggestions; track s.id) {
+                  <button class="workflow-card" (click)="selectSuggestion(s)">
+                    <mat-icon>{{s.icon}}</mat-icon>
+                    <span class="workflow-card-text">{{ s.description }}</span>
+                  </button>
+                }
+              </div>
+              @if (workflowSuggestions.length > 3 && !showAllSuggestions) {
+                <button class="show-more-btn" (click)="showAllSuggestions = true">
+                  Show more <mat-icon>expand_more</mat-icon>
+                </button>
+              }
+              @if (showAllSuggestions && workflowSuggestions.length > 3) {
+                <button class="show-more-btn" (click)="showAllSuggestions = false">
+                  Show less <mat-icon>expand_less</mat-icon>
+                </button>
+              }
+            } @else {
+              <p class="empty-no-workflows">
+                No workflows have been set up for this domain yet. You can create a custom
+                domain workflow from the Admin page or the AVA Orchestration page.
+              </p>
+            }
+
+            @if (!appContext) {
+              <button class="back-to-domains-btn" (click)="backToAllDomains()">
+                <mat-icon>arrow_back</mat-icon> All domains
+              </button>
+            }
+          }
+        </div>
+      }
+
+      @for (msg of messages; track msg.id) {
+        @if (msg.content || msg.isStreaming || (msg.selectionPayload && !msg.selectionConsumed && !msg.superseded) || msg.plan?.length || msg.workflowBuilderPayload || (msg.saveConfirmationPayload && !msg.saveConsumed)) {
+        <div class="message-row"
+             [class.user]="msg.role === 'user'"
+             [class.assistant]="msg.role === 'assistant'"
+             [class.system]="msg.role === 'system'"
+             [class.superseded]="!!msg.superseded">
+
+          @if (msg.role === 'assistant') {
+            <!-- Assistant messages with avatar -->
+            <div class="assistant-row">
+              <div class="assistant-avatar">
+                <svg class="avatar-img ava-themed-avatar" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="60" cy="60" r="60" class="avatar-bg"/>
+                  <circle cx="60" cy="48" r="18" class="avatar-icon" stroke-width="3.5" fill="none"/>
+                  <path d="M42 42 C42 30, 60 24, 72 30" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                  <path d="M32 48 C32 28, 88 28, 88 48" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                  <rect x="28" y="44" width="8" height="14" rx="4" class="avatar-icon-fill"/>
+                  <rect x="84" y="44" width="8" height="14" rx="4" class="avatar-icon-fill"/>
+                  <path d="M32 56 C32 72, 48 76, 56 72" class="avatar-icon" stroke-width="3" fill="none" stroke-linecap="round"/>
+                  <circle cx="56" cy="72" r="4" class="avatar-icon-fill"/>
+                  <path d="M36 82 C36 74, 48 68, 60 68 C72 68, 84 74, 84 82" class="avatar-icon" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                  <line x1="60" y1="66" x2="60" y2="70" class="avatar-icon" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <mat-card class="message-card assistant-card" [class.superseded-card]="!!msg.superseded">
+                @if (msg.plan?.length) {
+                  <app-agent-run-panel
+                    [plan]="msg.plan!"
+                    [steps]="msg.steps || []"
+                    [isRunning]="!!msg.isStreaming">
+                  </app-agent-run-panel>
+                }
+                <mat-card-content class="message-content markdown-body">
+                  @if (msg.content) {
+                    <div [innerHTML]="renderMarkdown(msg.content)"></div>
+                  } @else if (msg.isStreaming) {
+                    <span class="typing-indicator">
+                      <span></span><span></span><span></span>
+                    </span>
+                  }
+                </mat-card-content>
+
+                <!-- Reproducible CSV export links (SQL-backed kb_query results) -->
+                @if (msg.tableExports?.length) {
+                  <div class="table-exports">
+                    @for (exp of msg.tableExports; track exp.queryId) {
+                      <div class="table-export">
+                        <div class="export-bar">
+                          <button
+                            type="button"
+                            class="export-download-btn"
+                            [disabled]="downloadingQueryId === exp.queryId"
+                            (click)="downloadCsv(exp)">
+                            @if (downloadingQueryId === exp.queryId) {
+                              <mat-icon class="export-icon spinning">sync</mat-icon>
+                            } @else {
+                              <svg class="export-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                                <path fill="currentColor" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm0 2v3h6V5H5Zm8 0v3h6V5h-6Zm-8 5v3h6v-3H5Zm8 0v3h6v-3h-6Zm-8 5v4h6v-4H5Zm8 0v4h6v-4h-6Z"/>
+                              </svg>
+                            }
+                            <span>{{ exportLabel(exp) }}</span>
+                          </button>
+                        </div>
+                        @if (exportErrors[exp.queryId]) {
+                          <div class="table-export-error">{{ exportErrors[exp.queryId] }}</div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Diagnostics footer -->
+                @if (hasDiagnostics(msg)) {
+                  <div class="diagnostics-footer">
+                    <mat-icon class="diagnostics-icon">info_outline</mat-icon>
+                    <div class="diagnostics-details">
+                      @if (msg.diagnostics!.retrievalStrategy) {
+                        <span class="diagnostics-item">
+                          <strong>Retrieval:</strong> {{ msg.diagnostics!.retrievalStrategy }}{{ msg.diagnostics!.routerUsedLlm ? ' (LLM routed)' : '' }}{{ msg.diagnostics!.routerConfidence ? ' (' + (msg.diagnostics!.routerConfidence! * 100).toFixed(0) + '% conf)' : '' }}
+                        </span>
+                      }
+                      @if (msg.diagnostics!.searchIterations && msg.diagnostics!.searchIterations > 1) {
+                        <span class="diagnostics-item">
+                          <strong>Search loops:</strong> {{ msg.diagnostics!.searchIterations }}
+                        </span>
+                      }
+                      @if (msg.diagnostics!.toolsCalled.length > 0) {
+                        <span class="diagnostics-item">
+                          <strong>Tools:</strong> {{ msg.diagnostics!.toolsCalled.join(', ') }}
+                        </span>
+                      }
+                      @if (msg.diagnostics!.workflowsExecuted.length > 0) {
+                        <span class="diagnostics-item">
+                          <strong>Workflows:</strong> {{ msg.diagnostics!.workflowsExecuted.join(', ') }}
+                        </span>
+                      }
+                      @if (msg.diagnostics!.domainFilesUsed.length > 0) {
+                        <span class="diagnostics-item">
+                          <strong>Domain files:</strong> {{ msg.diagnostics!.domainFilesUsed.join(', ') }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+              </mat-card>
+            </div>
+          } @else {
+            <!-- User and system messages -->
+            <mat-card class="message-card" [class.user-card]="msg.role === 'user'" [class.system-card]="msg.role === 'system'" [class.superseded-card]="!!msg.superseded">
+              <mat-card-content class="message-content">
+                @if (msg.content) {
+                  <span [innerHTML]="msg.content"></span>
+                } @else if (msg.isStreaming) {
+                  <span class="typing-indicator">
+                    <span></span><span></span><span></span>
+                  </span>
+                }
+
+                <!-- Selection UI for user_input_required -->
+                @if (msg.selectionPayload && msg.agentRunId && !msg.superseded && !msg.selectionConsumed) {
+                  <div class="selection-options" [class.expanded]="msg.selectionExpanded">
+                    @if (msg.selectionPayload.options.length > 50) {
+                      <div class="selection-search">
+                        <input type="text"
+                               placeholder="Search options..."
+                               [(ngModel)]="msg.selectionFilter"
+                               (input)="0"
+                               autocomplete="off">
+                      </div>
+                    }
+                    @for (option of getFilteredOptions(msg); track $index; let i = $index) {
+                      @if (msg.selectionExpanded || i < 20 || msg.selectionPayload.options.length <= 20) {
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          class="selection-button"
+                          (click)="selectOption(msg.agentRunId!, getOriginalIndex(msg, option))"
+                          [disabled]="isLoading">
+                          {{ option.label }}
+                        </button>
+                      }
+                    }
+                  </div>
+                  @if (!msg.selectionExpanded && getFilteredOptions(msg).length > 20) {
+                    <button class="selection-toggle" (click)="msg.selectionExpanded = true">
+                      <mat-icon>expand_more</mat-icon>
+                      Show all {{ getFilteredOptions(msg).length }} options
+                    </button>
+                  }
+                  @if (msg.selectionExpanded && msg.selectionPayload.options.length > 20) {
+                    <button class="selection-toggle" (click)="msg.selectionExpanded = false">
+                      <mat-icon>expand_less</mat-icon>
+                      Show fewer
+                    </button>
+                  }
+                }
+
+                <!-- Workflow Builder Panel (inline in chat) -->
+                @if (msg.workflowBuilderPayload) {
+                  <app-workflow-builder-panel
+                    [payload]="msg.workflowBuilderPayload"
+                    (submitted)="onWorkflowBuilderSubmit($event, msg)"
+                    (cancelled)="onWorkflowBuilderCancel(msg)"
+                    (cloneSelected)="onWorkflowBuilderClone($event)">
+                  </app-workflow-builder-panel>
+                }
+
+                <!-- Save Confirmation Panel (inline in chat) -->
+                @if (msg.saveConfirmationPayload && !msg.saveConsumed) {
+                  <app-save-confirmation-panel
+                    [payload]="msg.saveConfirmationPayload"
+                    (saved)="onSaveComplete($event, msg)"
+                    (cancelled)="onSaveCancel(msg)">
+                  </app-save-confirmation-panel>
+                }
+              </mat-card-content>
+            </mat-card>
+          }
+
+        </div>
+        }
+      }
+    </div>
+
+    <!-- Loading bar -->
+    @if (isLoading) {
+      <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+    }
+
+    <!-- Input area -->
+    <div class="input-area">
+      <div class="input-area-inner">
+        <mat-form-field appearance="outline" class="input-field" subscriptSizing="dynamic">
+            <textarea
+            matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="6"
+              [(ngModel)]="inputText"
+              (keydown)="onKeyDown($event)"
+              placeholder="Ask AVA something..."
+              [disabled]="isLoading"
+              autocomplete="off"></textarea>
+          </mat-form-field>
+        <button
+          mat-fab
+          class="send-button"
+          (click)="send()"
+          [disabled]="!inputText.trim() || isLoading"
+          aria-label="Send message">
+          <mat-icon>send</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="clear-button"
+          (click)="resetToHome()"
+          [disabled]="isLoading || messages.length === 0"
+          aria-label="Clear conversation"
+          matTooltip="Clear conversation">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflow Builder iframe (shown when toggled via menu) -->
+  @if (currentView === 'workflows') {
+    <iframe
+      class="workflow-builder-iframe"
+      [src]="workflowBuilderUrl"
+      title="Workflow Builder">
+    </iframe>
+  }
+</div>

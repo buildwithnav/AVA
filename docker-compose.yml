@@ -1,0 +1,103 @@
+version: '3.9'
+
+services:
+  # ── Redis ──────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: ava-redis
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── ava-kb (Knowledge Base Python Service) ──────────────────────────────────
+  ava-kb:
+    build:
+      context: ./ava-kb
+      dockerfile: Dockerfile
+    container_name: ava-kb
+    ports:
+      - '8100:8100'
+    environment:
+      - KB_API_KEY=${KB_API_KEY:-change-me-in-production}
+      - DATA_DIR=/app/data
+    volumes:
+      - ./data/kb:/app/data/kb
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8100/health']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── ava-api (Orchestration API) ───────────────────────────────────────────
+  ava-api:
+    build:
+      context: ./ava-api
+      dockerfile: Dockerfile
+    container_name: ava-api
+    ports:
+      - '5010:8080'
+    env_file:
+      - ./ava-api/.env
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AVA__KnowledgeBase__KBServiceBaseUrl=http://ava-kb:8100
+      - AVA__KnowledgeBase__ApiKey=${KB_API_KEY:-change-me-in-production}
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+      ava-kb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── ava-web (Chat UI) ─────────────────────────────────────────────────────
+  ava-web:
+    build:
+      context: ./ava-web
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost:5010
+    container_name: ava-web
+    ports:
+      - '6200:80'
+    depends_on:
+      - ava-api
+    restart: unless-stopped
+
+  # ── ava-orchestration-ui (Orchestration UI) ───────────────────────────────
+  ava-orchestration-ui:
+    build:
+      context: ./ava-orchestration-ui
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost:5010
+    container_name: ava-orchestration-ui
+    ports:
+      - '6201:80'
+    depends_on:
+      - ava-api
+    restart: unless-stopped
+
+  # ── ava-loader (Embedded element bundle server) ────────────────────────────
+  ava-loader:
+    build:
+      context: ./ava-web
+      dockerfile: Dockerfile.loader
+    container_name: ava-loader
+    ports:
+      - '9090:9090'
+    depends_on:
+      - ava-web
+    restart: unless-stopped

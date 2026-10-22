@@ -1,0 +1,418 @@
+<!-- Similar Prompts Discovery Panel -->
+@if (showSimilar && similarPrompts.length > 0) {
+  <mat-card class="wbp-similar-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>search</mat-icon>
+        Similar Existing Workflows Found
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="wbp-similar-hint">These existing workflows are similar to what you're building. Clone one to save time, or dismiss to start fresh.</p>
+      @for (match of similarPrompts; track match.prompt.id) {
+        <div class="wbp-similar-item">
+          <div class="wbp-similar-info">
+            <strong>{{ match.prompt.id }}</strong>
+            <span class="wbp-similar-domain">{{ match.prompt.domain }}</span>
+            <span class="wbp-similar-score">{{ (match.score * 100).toFixed(0) }}% match</span>
+          </div>
+          <p class="wbp-similar-desc">{{ match.prompt.description }}</p>
+          <div class="wbp-similar-tags">
+            @for (tag of match.prompt.contextTags.slice(0, 5); track tag) {
+              <span class="wbp-tag-chip">{{ tag }}</span>
+            }
+          </div>
+          <button mat-stroked-button color="primary" (click)="clonePrompt(match)">
+            <mat-icon>content_copy</mat-icon> Clone & Edit
+          </button>
+        </div>
+      }
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="dismissSimilar()">Start Fresh Instead</button>
+    </mat-card-actions>
+  </mat-card>
+}
+
+<!-- Main Builder Panel -->
+<mat-card class="wbp-builder-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>settings</mat-icon>
+      Workflow Builder
+    </mat-card-title>
+    <span class="wbp-spacer"></span>
+    <button mat-raised-button color="primary" (click)="onSubmit()"
+            [disabled]="!prompt.id.trim() || !(prompt.domains?.length)">
+      <mat-icon>save</mat-icon> Save Workflow
+    </button>
+    <button mat-button (click)="onCancel()">Cancel</button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="200ms">
+      <!-- Metadata Tab -->
+      <mat-tab label="Metadata">
+        <div class="wbp-form-section">
+          <div class="wbp-form-row">
+            <mat-form-field appearance="outline" class="wbp-field-grow">
+              <mat-label>Prompt ID</mat-label>
+              <input matInput [(ngModel)]="prompt.id" placeholder="e.g. ado-create-bug">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="wbp-field-sm">
+              <mat-label>Domains</mat-label>
+              <mat-select [(ngModel)]="prompt.domains" multiple>
+                @for (d of availableDomains; track d) {
+                  <mat-option [value]="d">{{ d }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="wbp-field-full">
+            <mat-label>Description</mat-label>
+            <input matInput [(ngModel)]="prompt.description"
+                   placeholder="Brief description of what this workflow does">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="wbp-field-full">
+            <mat-label>System Prompt</mat-label>
+            <textarea matInput [(ngModel)]="prompt.systemPrompt"
+                      rows="5" placeholder="Instructions for the LLM..."></textarea>
+          </mat-form-field>
+
+          <!-- Context Tags -->
+          <div class="wbp-tags-section">
+            <label class="wbp-section-label">Context Tags</label>
+            <div class="wbp-tags-list">
+              @for (tag of prompt.contextTags; track tag) {
+                <span class="wbp-tag-chip removable">
+                  {{ tag }}
+                  <button class="wbp-tag-remove" (click)="removeTag(tag)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </span>
+              }
+              <div class="wbp-tag-input-row">
+                <input class="wbp-tag-input"
+                       [(ngModel)]="newTagValue"
+                       placeholder="Add tag..."
+                       (keydown.enter)="addTagFromInput(); $event.preventDefault()">
+                <button mat-icon-button (click)="addTagFromInput()" [disabled]="!newTagValue.trim()"
+                        matTooltip="Add tag">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <mat-slide-toggle [(ngModel)]="prompt.piiCheck" color="primary">
+            Enable PII detection
+          </mat-slide-toggle>
+        </div>
+      </mat-tab>
+
+      <!-- Stages Tab -->
+      <mat-tab label="Stages">
+        <div class="wbp-stages-section">
+          <div class="wbp-stages-header">
+            <span class="wbp-section-label">Workflow Stages ({{ prompt.stages.length }})</span>
+            <div class="wbp-add-stage-group">
+              <mat-form-field appearance="outline" class="wbp-add-stage-select" subscriptSizing="dynamic">
+                <mat-label>Add Stage</mat-label>
+                <mat-select (selectionChange)="addStage($event.value); $event.source.value = ''">
+                  @for (type of stageTypes; track type) {
+                    <mat-option [value]="type">
+                      <mat-icon [style.color]="getStageMeta(type).color">{{getStageMeta(type).icon}}</mat-icon>
+                      {{ getStageMeta(type).label }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          @if (prompt.stages.length === 0) {
+            <div class="wbp-empty-stages">
+              <mat-icon>layers</mat-icon>
+              <p>No stages yet. Add your first stage above.</p>
+            </div>
+          }
+
+          @for (stage of prompt.stages; track $index; let i = $index) {
+            <mat-card class="wbp-stage-card" [class.wbp-stage-selected]="selectedStageIndex === i">
+              <mat-card-header (click)="selectStage(i)">
+                <mat-icon [style.color]="getStageMeta(stage.type).color">{{getStageMeta(stage.type).icon}}</mat-icon>
+                <span class="wbp-stage-id">{{ stage.stageId }}</span>
+                <span class="wbp-stage-type-badge" [style.background]="getStageMeta(stage.type).color">
+                  {{ getStageMeta(stage.type).label }}
+                </span>
+                <span class="wbp-spacer"></span>
+                @if (selectedStageIndex === i) {
+                  <button mat-icon-button matTooltip="Collapse" (click)="collapseStage(); $event.stopPropagation()">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                }
+                <button mat-icon-button matTooltip="Move up" (click)="moveStageUp(i); $event.stopPropagation()"
+                        [disabled]="i === 0">
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Move down" (click)="moveStageDown(i); $event.stopPropagation()"
+                        [disabled]="i === prompt.stages.length - 1">
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Remove" (click)="removeStage(i); $event.stopPropagation()">
+                  <mat-icon style="color: #d32f2f;">delete</mat-icon>
+                </button>
+              </mat-card-header>
+
+              <!-- Expanded stage config -->
+              @if (selectedStageIndex === i) {
+                <mat-card-content (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+                  <mat-form-field appearance="outline" class="wbp-field-full">
+                    <mat-label>Stage ID</mat-label>
+                    <input matInput [(ngModel)]="stage.stageId">
+                  </mat-form-field>
+
+                  @if (stage.type === 'ai-extract' || stage.type === 'ai-generate' || stage.type === 'ai-analyze' || stage.type === 'confirmation') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Prompt</mat-label>
+                      <textarea matInput [(ngModel)]="stage.prompt" rows="3"
+                                placeholder="Instructions or prompt text..."></textarea>
+                    </mat-form-field>
+                  }
+
+                  @if (stage.type === 'ai-extract') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Required Fields (comma-separated)</mat-label>
+                      <input matInput [ngModel]="(stage.required ?? []).join(', ')"
+                             (ngModelChange)="stage.required = parseCommaSeparated($event)"
+                             placeholder="e.g. workflowGoal, domain">
+                    </mat-form-field>
+                  }
+
+                  @if (stage.type === 'tool') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Tool ID</mat-label>
+                      <input matInput [(ngModel)]="stage.toolId" placeholder="e.g. my-tool-service">
+                    </mat-form-field>
+                  }
+
+                  @if (stage.type === 'ai-generate') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Template Ref</mat-label>
+                      <input matInput [(ngModel)]="stage.templateRef"
+                             placeholder="Optional template ID from templates.json">
+                    </mat-form-field>
+                  }
+
+                  @if (stage.type === 'user-select') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Select Prompt</mat-label>
+                      <input matInput [(ngModel)]="stage.selectPrompt"
+                             placeholder="Prompt shown above the options">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Options From (field name)</mat-label>
+                      <input matInput [(ngModel)]="stage.optionsFrom"
+                             placeholder="e.g. projectOptions">
+                    </mat-form-field>
+                  }
+
+                  @if (stage.type === 'foreach') {
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Items From (dot-path)</mat-label>
+                      <input matInput [(ngModel)]="stage.itemsFrom"
+                             placeholder="e.g. features">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="wbp-field-full">
+                      <mat-label>Item Alias</mat-label>
+                      <input matInput [(ngModel)]="stage.itemAlias"
+                             placeholder="e.g. feature">
+                    </mat-form-field>
+                  }
+                </mat-card-content>
+              }
+
+              <!-- Depth-1 sub-stages for foreach -->
+              @if (stage.type === 'foreach') {
+                <div class="wbp-substages">
+                  <div class="wbp-substages-header">
+                    <mat-icon class="wbp-substages-icon">subdirectory_arrow_right</mat-icon>
+                    <span class="wbp-section-label">Sub-stages ({{ getSubStages(i).length }})</span>
+                    <span class="wbp-spacer"></span>
+                    <mat-select class="wbp-add-sub-select"
+                                placeholder="Add sub-stage"
+                                (selectionChange)="addSubStage(i, $event.value); $event.source.value = ''"
+                                (click)="$event.stopPropagation()">
+                      @for (type of stageTypes; track type) {
+                        <mat-option [value]="type">
+                          <mat-icon [style.color]="getStageMeta(type).color">{{ getStageMeta(type).icon }}</mat-icon>
+                          {{ getStageMeta(type).label }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </div>
+
+                  @if (getSubStages(i).length === 0) {
+                    <div class="wbp-substages-empty">No sub-stages yet. Add one above.</div>
+                  }
+
+                  @for (sub of getSubStages(i); track $index; let j = $index) {
+                    <mat-card class="wbp-substage-card" [class.wbp-stage-selected]="isSubSelected(i, j)"
+                              (click)="selectSubStage(i, j); $event.stopPropagation()">
+                      <mat-card-header>
+                        <mat-icon [style.color]="getStageMeta(sub.type).color">{{ getStageMeta(sub.type).icon }}</mat-icon>
+                        <span class="wbp-stage-id">{{ sub.stageId }}</span>
+                        <span class="wbp-stage-type-badge" [style.background]="getStageMeta(sub.type).color">
+                          {{ getStageMeta(sub.type).label }}
+                        </span>
+                        <span class="wbp-spacer"></span>
+                        <button mat-icon-button matTooltip="Move up" size="small"
+                                (click)="moveSubStageUp(i, j); $event.stopPropagation()"
+                                [disabled]="j === 0">
+                          <mat-icon>arrow_upward</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Move down" size="small"
+                                (click)="moveSubStageDown(i, j); $event.stopPropagation()"
+                                [disabled]="j === getSubStages(i).length - 1">
+                          <mat-icon>arrow_downward</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Remove" size="small"
+                                (click)="removeSubStage(i, j); $event.stopPropagation()">
+                          <mat-icon style="color: #d32f2f;">delete</mat-icon>
+                        </button>
+                      </mat-card-header>
+
+                      @if (isSubSelected(i, j)) {
+                        <mat-card-content (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+                          <mat-form-field appearance="outline" class="wbp-field-full">
+                            <mat-label>Stage ID</mat-label>
+                            <input matInput [(ngModel)]="sub.stageId">
+                          </mat-form-field>
+                          @if (sub.type === 'ai-extract' || sub.type === 'ai-generate' || sub.type === 'ai-analyze' || sub.type === 'confirmation') {
+                            <mat-form-field appearance="outline" class="wbp-field-full">
+                              <mat-label>Prompt</mat-label>
+                              <textarea matInput [(ngModel)]="sub.prompt" rows="3"
+                                        placeholder="Instructions or prompt text..."></textarea>
+                            </mat-form-field>
+                          }
+                          @if (sub.type === 'tool') {
+                            <mat-form-field appearance="outline" class="wbp-field-full">
+                              <mat-label>Tool ID</mat-label>
+                              <input matInput [(ngModel)]="sub.toolId" placeholder="e.g. ado-create-feature">
+                            </mat-form-field>
+                          }
+                          @if (sub.type === 'foreach') {
+                            <mat-form-field appearance="outline" class="wbp-field-full">
+                              <mat-label>Items From (dot-path)</mat-label>
+                              <input matInput [(ngModel)]="sub.itemsFrom" placeholder="e.g. feature.pbis">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="wbp-field-full">
+                              <mat-label>Item Alias</mat-label>
+                              <input matInput [(ngModel)]="sub.itemAlias" placeholder="e.g. pbi">
+                            </mat-form-field>
+                          }
+                        </mat-card-content>
+                      }
+
+                      <!-- Depth-2: foreach within depth-1 sub-stage -->
+                      @if (sub.type === 'foreach') {
+                        <div class="wbp-substages wbp-substages-deep" (click)="$event.stopPropagation()">
+                          <div class="wbp-substages-header">
+                            <mat-icon class="wbp-substages-icon">subdirectory_arrow_right</mat-icon>
+                            <span class="wbp-section-label">Nested ({{ getDeepStages(i, j).length }})</span>
+                            <span class="wbp-spacer"></span>
+                            <mat-select class="wbp-add-sub-select"
+                                        placeholder="Add nested stage"
+                                        (selectionChange)="addDeepStage(i, j, $event.value); $event.source.value = ''"
+                                        (click)="$event.stopPropagation()">
+                              @for (type of depth2StageTypes; track type) {
+                                <mat-option [value]="type">
+                                  <mat-icon [style.color]="getStageMeta(type).color">{{ getStageMeta(type).icon }}</mat-icon>
+                                  {{ getStageMeta(type).label }}
+                                </mat-option>
+                              }
+                            </mat-select>
+                          </div>
+
+                          @if (getDeepStages(i, j).length === 0) {
+                            <div class="wbp-substages-empty">No nested stages yet. Add one above.</div>
+                          }
+
+                          @for (deep of getDeepStages(i, j); track $index; let k = $index) {
+                            <mat-card class="wbp-substage-card wbp-deep-card"
+                                      [class.wbp-stage-selected]="isDeepSelected(i, j, k)"
+                                      (click)="selectDeepStage(i, j, k); $event.stopPropagation()">
+                              <mat-card-header>
+                                <mat-icon [style.color]="getStageMeta(deep.type).color">{{ getStageMeta(deep.type).icon }}</mat-icon>
+                                <span class="wbp-stage-id">{{ deep.stageId }}</span>
+                                <span class="wbp-stage-type-badge" [style.background]="getStageMeta(deep.type).color">
+                                  {{ getStageMeta(deep.type).label }}
+                                </span>
+                                <span class="wbp-spacer"></span>
+                                <button mat-icon-button matTooltip="Move up" size="small"
+                                        (click)="moveDeepStageUp(i, j, k); $event.stopPropagation()"
+                                        [disabled]="k === 0">
+                                  <mat-icon>arrow_upward</mat-icon>
+                                </button>
+                                <button mat-icon-button matTooltip="Move down" size="small"
+                                        (click)="moveDeepStageDown(i, j, k); $event.stopPropagation()"
+                                        [disabled]="k === getDeepStages(i, j).length - 1">
+                                  <mat-icon>arrow_downward</mat-icon>
+                                </button>
+                                <button mat-icon-button matTooltip="Remove" size="small"
+                                        (click)="removeDeepStage(i, j, k); $event.stopPropagation()">
+                                  <mat-icon style="color: #d32f2f;">delete</mat-icon>
+                                </button>
+                              </mat-card-header>
+
+                              @if (isDeepSelected(i, j, k)) {
+                                <mat-card-content (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+                                  <mat-form-field appearance="outline" class="wbp-field-full">
+                                    <mat-label>Stage ID</mat-label>
+                                    <input matInput [(ngModel)]="deep.stageId">
+                                  </mat-form-field>
+                                  @if (deep.type === 'ai-extract' || deep.type === 'ai-generate' || deep.type === 'ai-analyze' || deep.type === 'confirmation') {
+                                    <mat-form-field appearance="outline" class="wbp-field-full">
+                                      <mat-label>Prompt</mat-label>
+                                      <textarea matInput [(ngModel)]="deep.prompt" rows="3"
+                                                placeholder="Instructions or prompt text..."></textarea>
+                                    </mat-form-field>
+                                  }
+                                  @if (deep.type === 'tool') {
+                                    <mat-form-field appearance="outline" class="wbp-field-full">
+                                      <mat-label>Tool ID</mat-label>
+                                      <input matInput [(ngModel)]="deep.toolId" placeholder="e.g. ado-create-pbi">
+                                    </mat-form-field>
+                                  }
+                                </mat-card-content>
+                              }
+                            </mat-card>
+                          }
+                        </div>
+                      }
+                    </mat-card>
+                  }
+                </div>
+              }
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- JSON Preview Tab -->
+      <mat-tab label="JSON">
+        <div class="wbp-json-section">
+          <div class="wbp-json-toolbar">
+            <span class="wbp-section-label">prompts.json preview</span>
+            <button mat-icon-button (click)="copyJson()" matTooltip="Copy to clipboard">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+          </div>
+          <pre class="wbp-json-content">{{ jsonPreview }}</pre>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

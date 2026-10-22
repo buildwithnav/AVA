@@ -1,0 +1,27 @@
+<mat-sidenav-container class="sidenav-container" [class.embed-mode]="embedMode()">
+  @if (!embedMode()) {
+    <mat-sidenav mode="side" opened class="sidenav">
+      <div class="sidenav-header">
+        <mat-icon class="logo-icon">smart_toy</mat-icon>
+        <span class="logo-text">AVA Orchestration</span>
+      </div>
+      <mat-nav-list>
+        @for (item of navItems; track item.route) {
+          <a mat-list-item
+             [routerLink]="item.route"
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{ exact: false }">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+  }
+
+  <mat-sidenav-content class="content">
+    <div class="page-content" [class.embed-page]="embedMode()">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

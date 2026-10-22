@@ -1,0 +1,34 @@
+<mat-expansion-panel class="agent-run-panel" [expanded]="isRunning">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <span class="panel-header">
+        <mat-icon>account_tree</mat-icon>
+        Agent Plan
+        @if (isRunning) {
+          <mat-spinner diameter="14"></mat-spinner>
+        }
+      </span>
+    </mat-panel-title>
+    <mat-panel-description>{{ plan.length }} step(s)</mat-panel-description>
+  </mat-expansion-panel-header>
+
+  @for (step of plan; track step.stepId) {
+    <div class="step-row">
+      <div class="step-icon">
+        @switch (getStepStatus(step.stepId)) {
+          @case ('success') { <mat-icon class="success">check_circle</mat-icon> }
+          @case ('failed')  { <mat-icon class="failed">error</mat-icon> }
+          @case ('running') { <mat-spinner diameter="18"></mat-spinner> }
+          @default          { <mat-icon class="pending">radio_button_unchecked</mat-icon> }
+        }
+      </div>
+      <div class="step-info">
+        <div class="step-tool">{{ step.toolName }}</div>
+        <div class="step-rationale">{{ step.rationale }}</div>
+      </div>
+      @if (getStepExecution(step.stepId); as exec) {
+        <span class="step-duration">{{ exec.durationMs }}ms</span>
+      }
+    </div>
+  }
+</mat-expansion-panel>

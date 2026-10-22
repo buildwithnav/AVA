@@ -1,0 +1,319 @@
+Please make updates to this EDC Support Cheat Sheet document here:,,,,,\\ad.sjm.com\apps\Clinical_Data\CDS_Docs\Systems - Only CDS,
+Troubleshooting Guide,,,,,Last document update: 13-May-24 by Jaime,VOICEMAIL PIN: 8675308#
+Category,System,Status,Error/Issue,Possible Cause,Possible Solution,Dept
+Account Access,EDC,A,Account is not being released AT ALL even though all requirements are met,"1. User exists with exactly the same name
+2. Mismatch between name or email address in Active Directory and Study Organizer
+3. Length of first or last name is too long (maximum is unknown per Ilya)","0. Confirm emails were not sent per EDC Inbox. Confirm non-release with EDC Account Request status report. 
+1. Verify username by searching EDC Account Request Status report or look in OC > Admin > Users > Query Accounts > Type Last and First name > F8. Contact Jordan/Ilya to perform manual process to create account.
+2. Confirm credentials in Active Directory and ask Jordan to manually release the account
+3. same as #2",CDSA
+Account Access,EDC,A,EDC Account not released. All requirements are met. No error in SA_ERROR_LOG,"Duplicate contact in SO with same first name, last name and email address",Run EDC Account Release Status Report and make sure all items are set for release.  Plus further investigation.,DevOp
+Account Access,EDC,A,Didn't get email with new account credentials,"1. Email bounced-back
+2. Email caught in SPAM filter","1. Ask FCE/FCRA/CRA to confirm email address and update via Study Organizer-New and notify you when done. Email address will update to system within the hour. Need to FORWARD the original email to correct email address because system will not automatically resend it.
+2. Ask user to send an email to EDC@ABBOTT.com. Reply to email with copy/paste of account details. (This will usually validate our domain as not being blacklisted)",CDSA
+Account Access,EDC,A,EDC account stuck in LIMITED RELEASE/ PENDING,"1. SO Data incomplete/incorrect:
+'- Site Personnel Status is not ACTIVE
+- EDC Submission Auth req. missing
+- Site Status is not ACTIVATED, ENROLLING or END-ENROLL
+- Study Status is not ACTIVE, APPROVED,  END ENROLL-CTRS or END ENROLL-PTS
+- Study Stage is CLOSED
+- Account release process has not happened yet since requirements were updated (process runs hourly)
+2. NT account mismatch between SO and training log","1. Run EDC Account Status report, check EDC@ABBOTT.com mailbox for alert
+2. If report states CSL did not complete Generic EDC training, but the CSL is present in the training log, compare the NT account in both tables (see below). If EMP_ID does not match NT_ACCT go into the training app and add the CSL manually
+Select * from CAP.TRN_FORM_DETAIL 
+WHERE TRN_MSTR_ID='3727' 
+--and trn_dt > TO_DATE('25-DEC-2020','DD-MON-YYYY')
+and upper(LAST_NAME) like 'VANDEN %'
+order by EMP_ID, TRN_DT
+
+Select DISTINCT NT_ACCT from CAP.SO_SJM_PERSONNEL
+WHERE UPPER(LAST_NAME) LIKE 'VANDEN %'",CDSA
+Account Access,EDC,A,Locked out of account,10 consecutive login attempts,"Accounts unlock 30 minutes after locking, or use Access Control to Terminate Session",CDSA
+,EDC,A,Locked out of account - RDC Screen ,saved password change - entering wrong password when logging in directly to RDC link instead of via EDC Portal,"Contact a DevOps with access to ACCTS_SA users table, so that they can unlock it.
+
+",DevOp
+Account Access,EDC,A,Message that EDC account is disabled,"1. EDC Account is actually disabled
+2. There is a duplicate EDC account with the same first, last name and email address which has been disabled
+3. The person has a previously deprovisioned account from another study/core lab.","1. Verify with EDC Account Request Status report or SO > Centers Maintenance and inform user to contact their CSL
+2. Pursue duplicate contact resolution with Jocelyn
+3. If no evidence of deprovisioning exists in the report, and there is no duplicate, ask DevOps to verify if Active Directory shows them as active, and if there is a previous EDC account showing Deprovisioned with the same person _id.",CDSA/DEVOPs
+Account Access,EDC,A,User wants to update their name,,"1. Log into EDC Study Portal
+2. Click on Site Contact Info link in the top right next to Log Out
+3. Click checkbox to request Name Change/Correction
+4. Edit contact fields and Save Changes
+(An email will be sent to Global CDSA email list for processing by team manually)",CDSA
+Account Access,EDC,A,Site user wants to update their email address or contact info,,"If the site user is logged into the portal:
+1. Log into EDC Study Portal
+2. Click on Site Contact Info link in the top right next to Log Out
+3. Edit contact fields and Save Changes
+4. The contact info will populate to Study Organizer automatically.
+
+If the site user cannot log into the portal and/or they need to reset their password, email the CSL and site iCRA asking them to confirm and update the contact information in the Study Organizer-New Application.
+
+**please note** The email address is synched from Study Organizer to Active Directory hourly, email address is  synced from AD to SA_SJME_ACCOUNTS hourly too.",CDSA
+Account Access,EDC,A,"New user received access email, but portal says they have no studies assigned.",MV needs to refresh (every 30 min),Ask the user to wait 30 minutes and try again.,CDSA
+Error,OC/RDC,A,"Error: Patient Casebooks - The selected patient is assigned to an invalid, provisional, or retired casebook. A new CRF cannot be created."" ",The protocol was updated and the system no longer allows data to be entered for visits past 12 months. ,User advised to enter form under UNSCHEDULED visit and request a key change to move it to the 30 month visit in the back end.,CDSA
+Interface,OC/RDC,A,Can't see patients in list on home page,No CSL assigned,Contact CDC to assign in OC,CDSA
+Other Requests,Alerts,A,Patient positions alert not triggering (for CDC),If the # of assigned patient positions for a study site in OC is above the Site Patient Cap # recorded in the CTMS (Study Organizer – New > Studies > Home) the alert will no longer trigger since the # of assigned patient positions is above the Site Cap.,Direct CDC to study project manager in case site cap needs to be updated.,CDSA
+Interface,EDC,A,Can't see their site in the drop-down in EDC Portal,"1.  DCI book not assigned
+2.  No patient positions assigned
+3.  Site not in activated status (not common)","Contact:
+1. SDBM, CDMA
+2. CDC
+3. Site-ICRA",CDSA
+Interface,OC/RDC,A,Missing Visit and/or CRF when selecting a patient,Oracle bug for specific patients on Single-Patient View.,"Workaround: Multi-patient view.  
+After switching to Multi-Patient view, the user can select the visit they want from the ""Visit"" drop down, which will show them all the Visits and the ones that Single-Patient View was not showing them.
+",CDSA
+Other Requests,EDC,A,SJM Abbott Field User website,,https://istudyedc.sjm.com,CDSA
+Other Requests,EDC,A,Wants CRF deleted or moved,,Explain that all CRF deletions and moves must be tracked with a support request. Direct user to EDC Study Portal > Go (if on multiple studies) > Support Request button on left side of screen.,CDSA
+Password Reset,EDC,A,Needs to reset password,"Must be at least eight characters long.
+Must contain at least one lower case letter.
+Must contain at least one upper case letter.
+Must contain a number (such as 0, 1, 2, etc.).
+Must contain a special character.
+Special characters must be #, $, _
+First name or last name can not be in the password.","Direct link: 
+https://studyedc-passreset.sjm.com/PasswordReset/
+",CDSA
+Password Reset,EDC,A,Password reset utility can't find user in system,"1.  User is entering a different email address than what is on file
+2.  Name change occurred but Ilya did not update name in Active Directory (this is now a scheduled process to run every Friday night at 10pm)
+3. User is entering wrong name (nickname)","1. Have user confirm email address. If needs to be updated, have them notify their FCE or ask CRA to update via Site Contacts. Email updates refresh every top of hour from 5am to 10pm.
+2. Confirm name on file using CDO Gateway report: System/Application and Report Usage log > User Type = EDC, search user name. Selection criteria shows Last, First (USERNAME) format.
+3. Ask user what they are entering and have them give suggestions of what else it might be. Confirm if correct (do not give out name or email information)",CDSA
+Password Reset,EDC,A,"Sorry, an internal error occurred…",The password reset servers cannot communicate with the mail servers.,"01-Jul-2022: This could be an issue with the AppPool needing to be restarted. There is an automated process to check this every five minutes. Recommend to tell the user to wait about 5-10 minutes for the restart to complete. If the error persists, reach out to Will or other DevOps so they can contact Abbott IT to resolve the issue.
+",CDSA
+RDC Functions,OC/RDC,A,Can't add particular CRF,"1. Interval Rules depending on another CRF to be Save/Complete status
+2. Can't find CRF on Add Visit Page","1. Check EDC Portal for study-specific help document and direct user there, or go the Study Folder to view the  Study Setup Timelines Template > DCM Help Text to see what the rules are: \\ad.sjm.com\data\Clinical\Data Operations\Clinical Systems Studies
+2. If it's not on Add Visit page, it's usually on Add Other page.",CDSA
+Error,EDC,A,"User gets error message that ""window is open"" when they try to get into EDC Data Entry. - 
+Please open browser in new session (File, New Session) or close all browser windows and re-open. ","1. Known Issue - Not resolved yet
+2. Cache is old
+3. Internet Browser settings are wrong","1. Wait 15 minutes for session to clear or kill session in Access Control app
+2. Instruct user on clearing cache, Completely Close all IE Browsers and try again.
+3. Review user's IE browser settings",CDSA
+Error,EDC,A,As above ^,Missing Role Grants or proxies.  Possible stuck OC session.,Check for any inactive sessions.  Verify permissions/grants.,DevOp
+RDC Functions,RDC,A,CRF is blank and fields are all grayed out (and icon is a blank white square),"User may have saved the CRF as ""Complete"" by accident.","Go to Oracle Clinical > Data Entry > Key Changes
+Enter Study #
+Enter Doc #, press ENTER KEY, choose UPDATE EXISTING
+Change Blank? from Y to N
+Save. 
+Then, ask user to retry.",CDSA
+Error,EDC,A,User gets message after logging in to go to study.edc.sjm.com,Usually means their email address was added after the account was originally populated.,"1. Ask Edgar to check
+2. Ask Jordan or Ilya to populate it
+
+**31-Mar-2023 (JA): Is this current?",CDSA
+Error,EDC,A,"Popup: oracle.adf.controller.ControllerException: ADFC-12001: The ADF Controller is attempting to pop last entry from page flow scope stack. ADF_FACES-60097:For more information, please see the server's error log for an entry beginning with: ADF_FACES-60096:Server Exception during PPR, #16",Happens to FCRA after being idle or losing connection?,"Instruct user to log out, clear cache, close browser and log back in.",CDSA
+Error,EDC,A,"Popup: /fragment/SinglePatientCasebook.jsff @586,67 value= ""#{bindings.caseBookView.inputValue}"": Target Unreachable,'caseBookView' returned null ADF_FACES-60097:For more inforamtion, please see the server's error log for an entry beginning with: ADF_FACES-60096:Server Exception during PPR, #17",Happens to FCRA after being idle or losing connection?,"Instruct user to log out, clear cache, close browser and log back in.",CDSA
+Error,EDC,A,User taken to a Horizon Login Screen after initial login and given incorrect username/password message,"1. Account created improperly and data not written to table.
+2. Could also be a blank character in username (usually first name in OC)","1. (Jordan, please insert) - JS
+2. Correct first name in SO. Delete SJME account, remove study access in OC, delete DB account (OC), drop user and delete from SF_SITE_ACCT_REQ",DevOp
+Account Access,EDC,A,User with access to CSA and EDC Study Portal but only sees the links to CSA in Horizon upon successful login,User SJME account is missing AD group permissions to see EDC Study Portal link in Horizon,"1. Check Access Control to confirm user should have access to both CSA and EDC Study Portal
+2. Contact DevOps, and follow-up with SR, to add GUSSY_AP_CLINICAL_EDC AD group to this user in SJME.com
+==> (Level 1 support - Jordan or Boris; Level 2 support - Will) 
+",DevOp
+Account Access,EDC,A,User attempts to log into EDC but system indicates Invalid Username / Password,External user (SJME domain) has an account login that is the same as an Internal user (ONEABBOTT domain),"**As of 16-Feb-2023, DevOps and Lam discussing permanent fix to address username/domain during login
+1. Review external users login and check if there is a matching login in the ONEABBOTT domain
+2. Contact DevOps, and follow-up with SR, to delete the external user account and create a new account with unique login between SJME and ONEABBOTT domains.",DevOp
+Error,OC/RDC,A,"User asked to login again (double login, second login) after logging into EDC and then receives a message that user has been logged out.",Patient positions were not yet assigned in OC. To verify: log in to RDC and see if you can see site listed in drop-down. ,"1. Contact the study CDC to confirm if they received an activation alert and assigned patients for that study.
+2. Once you can see the site in RDC, reach out to the user to try again.
+",CDSA
+Error,EDC,A,Please access the SJM Study Site Portal from https://studyedc.sjm.com link or the Clinical Data Systems Application Launcher.,Special character in password or duplicate contact or INACTIVE user account or study in Development status,"Request user to reset password without the invalid special character (allowed: “$” (dollar), “#” (pound), ""_"" (underscore))
+(INVALID: @, &, ' )",CDSA
+Error,EDC,A,As above ^,Could also be a missing grant on the account: SELECT * FROM DBA_ROLE_PRIVS WHERE GRANTEE = 'USERNAME',Verify Grants and Proxies (Mid-Tier) for account,DevOp
+Error,EDC,A,(missing error message),Special character in username,"Correct last name in SO. Delete SJME account, remove study access in OC, delete DB account (OC), drop user and delete from SF_SITE_ACCT_REQ
+
+**31-Mar-2023 (JA): Is this current?",DevOp
+Error,EDC,A,Blank loading screen when logging into EDC Study Portal,Cache / Bookmark link issue / Special character in username,"Options to solve this:
+1. Ask to clear cache
+2. Check the url used - if from Favorite/bookmark, please have the user adjust their favorite or bookmark.  The user can also type the address manually to bypass this. 
+3. Request user to reset password without the invalid special character",CDSA
+Interface,EDC,A,User cannot access Attachment to CRF or support request,User does not have an entry in CAP.SA_SJME_ACCOUNTS,Verify all required items and manually trigger Account Release,DevOp
+Interface,EDC,A,"When user clicks on CRF, nothing happens.","User is on Edge
+or
+Compatibility Mode is turned on for site",Use Chrome,CDSA
+Error,OC/RDC,A,"The data entry window has encountered an unexpected error and will shut down. If the problem recurs, please report the following information for diagnostic purposes: Log code 0162761134, internal error","Can happen to several users at the same site, using different computers on the same form while CDO users can open the form",Can be related to discrepancy at DM Review / DE Review triggered by a validation procedure referencing a non-CRF variable. Closing the discrepancy or updating/retiring the procedure will obsolete the discrepancy. Users can then open the form normally.,CDSA
+Error,EDC,A,Unable to get property 'Style' of undefined or null reference,Cache mismatch,Clear  IE cache,CDSA
+Error,OC/RDC,A,Writeresponses - 286600:Audit reason required and not provided,Oracle bug when saving form - Please take down Study / Site / Patient / Visit / Doc for proper resolution,"run findMandQuestionsNoDisc.sql script. Once the DCM Questions have been identified then the workaround can be applied i.e.
+prompt => 1. uncheck the Mandatory checkbox for these questions     => save.
+prompt => 2. check the Mandatory checkbox again for these questions => save.
+prompt => 3. run Batch Validation",DevOp
+Error,EDC,A,Error The data entry window has encountered an unexpected error and will shut down. If the problem recurs please report report the following information for diagnostic purposes: Invalid JSON received.,Security settings blocking Java from launching properly,Add *.sjm.com to trusted site,CDSA
+Error,OC/RDC,A,"The data entry window has encountered an unexpected error and will shut down. If the problem recurs, please report the following information for diagnostic purposes: CRF load was incomplete","Under Investigation* - 
+Case1: specific Study/Site/Patient/CRF discrepancy (OOS)","? - Under Investigation - This appears to only affect one user on one specific CRF
+Possible solutions:
+- Ask the user the clear the browser cache (IE)
+- Ask the user to try on another computer
+- Have a different user complete the CRF or possibly needed to delete the CRF",DevOp
+Error,EDC,A,"This application has encountered an unexpected error.  Please contact the SJM Clinical Data Systems personnel at edc@sjm.com to notify this error.  We apologize for the inconvenience.
+
+Collection was modified; enumeration operation may not execute.",? - Under Investigation - Possibly Re-Write Error from the F5,"1) Possible Resolution - User could be using a bookmark that has not been updated
+2) Possible Resolution - Direct user to access EDC using the following link: https://studyedc-jp.sjm.com",CDSA
+Error,OC/RDC,A,Error - Log code: #######. internal error. - or - Unable to get property 'statusDesc' of undefined or null reference,"Encountered when someone opens CRF and then clicks on a Discrepancy to view the Discrepancy.
+This is when a manual discrepancy (resolved or open) exists on a field not displayed in RDC.",Reach out to Study CDSA to inform the study CSE to update the RDC GL to display the fields.,CDSA
+Error,EDC,A,"The session reference number: 4480651
+
+Access was denied by the access policy. This may be due to a failure to meet access policy requirements.",? - Under Investigation - Possibly Password Related,? - Under Investigation - Possible Resolution - Have user reset their password.,DevOp
+Error,EDC,A,Session has been logged out,Hung or multiple sessions open,"User needs to wait 15 minutes for sessions to end, or DevOp can terminate sessions, if urgent.
+External User
+>> If the user gets an error that their session has been logged out, this usually means that they have multiple sessions open simultaneously. In order to resolve this, you would go to Access Control, find the user and terminate their sessions.
+>> This issue might actually be caused by web browser caching, but if that does not resolve it for the user, then we can do this.
+Internal User
+>> If an internal user calls and needs their sessions terminated then we would need to contact DevOps to terminate their sessions.",DevOp
+Error,EDC,A,Your session has expired since your browser window has remained idle for 30 minutes or more.  We apologize for the inconvenience,Shortcut or Bookmark with incorrect address,Please have the user adjust their favorite or bookmark.  The user can also type the address manually to bypass this.,CDSA
+Error,OC/RDC,A,No server response received (HTTP Response Code: 500) This may be due to a temporary loss of network connectivity…Retries 1 of 15,"CRF conditional branching needs to be redone.
+","If others are experiencing the same, ask study CDSA to reach out to SDBM and send them this and the screenshot to the left from Oracle: 
+Fix: Review and fix any DCM level conditional branch issues in the Graphic Layout Editor screen. This can be done by backing out the changes that were made and then adding them back one by one.  The OC Documentation contains a section titled 'Invalid Conditional Block Conditions' and lists these i.e.
+""It is possible to create conditional blocks that result in invalid layout generations. When you save your work, the 
+validates the conditional blocks. If there are invalid conditions, the system generates the invalid blocks anyway, issuing anerror message, and saves your work. You can then re-position fields to fix the problems.
+The following conditions are invalid:
+etc"" 
+Reference: https://docs.oracle.com/health-sciences/oc-rdc-521/create-study/dciforms.htm#OCCRS10234",CDSA
+Error,EDC,A,"My Studies section of EDC Portal doesn't appear - instead, a spinning circle in that section (menu on left does appear)",Need to redirect to correct URL,"Ask user to type studyedc.sjm.com and hit enter, then backspace the /my.policy and hit enter. Usually the user is able to view the portal page successfully after this.",CDSA
+Interface,RDC,A,The border lines for data entry fields in a CRF  are not showing properly.,Appears to be tied to IE cookie information,"Please add *.sjm.com to the allowed cookies from sites in IE.
+Gear > Internet Options > Privacy > Sites > Type in and click Allow
+
+Also add to *.sjm.com to Trusted Sites",CDSA
+Interface,EDC,A,"Not tied to any particular error, but useful in troubleshooting weird behaviors for EDC/RDC",Sometimes a site's configuration or IT restriction can disallow proper clearing of cache items,"IE's In-Private browsing mode can be used to help identify caching issues or if a tool/extension is interfering with behavior of the site.
+Gear > Safety > In-Private Browsing
+Right Click IE icon in taskbar > Start In-Private Browsing",CDSA
+Error,OC/RDC,A,Upon trying to open a CRF from the Review Discrepancies link: Data Entry Error:,Oracle bug - will be patched in next version,"- Ask user to try to open the CRF from the Patient Casebook view instead.
+- Also Ask user to clear their cache.",CDSA
+Interface,OC/RDC,A,"When user is entering dates/times in RDC, they appear as if they saved differently from what was entered.",The system is deferring to the server time / timezone (the servers are located in Plymouth).,"Users may set their preference in RDC to display timestamps for transactions in their local time zone rather than the local server time zone.  
+
+1. In the top-right area of the surround of the RDC main window, click on the ‘Preferences’ link.
+2. Mark the checkbox for ‘Display timestamps in local timezone’:
+3. Click ‘Apply’ to apply your Date Format preferences.",CDSA
+Error,OC/RDC,A,"When using Action > Review CRFs in the RDC Review listing, the following error is displayed: 
+""Assigned casebook has changed.  Refreshing patient to reflect current status.""",Bug associated to RDC Review page listing.,"Instruct user on these workarounds:
+1) If you choose to open the next CRF down on the list, and then use the navigation button within the data entry window to view Previous CRF, the CRF will then load properly. 
+2) If you look at this CRF using Multi-Patient View or Single Patient View (instead of the Action > Review CRFs) the CRF will load properly.",CDSA
+Other Requests,EDC,A,Unable to perform randomization ,because studyedc.sjm.com site is down,"The site users need to contact the study CRA and provide all information required for randomization, e.g., study, site, patient ID, and answer to the stratification question (such as grouping) based on the study protocol. Then CRA can send an Nancy Wu or Sara Maharjan requesting us to randomize on site’s behalf. ",CDSA
+Error,OC/RDC,A,"No active, valid casebook is defined for this study.",This error occurs when trying to view a patient casebook. The Home tab may list patient list with MAIN BOOK (Provisional). This is because a developer is currently editing the OC setup. ,Contact developer and tell them to stop and to make change after hours.,CDSA
+Error,OC/RDC,A,"""Data Entry Error""",This error occurs when trying to view a patient casebook in CHROME browser after closing the window incorrectly at least 3 times., User should log out and back into reset it after receiving this error. See icon for the correct way to close it - using the red [X].,CDSA
+Error,EDC,A,"Chrome: ""errorDate"": …. ""id"": ""851…"", ""message"": ""BadRequest"". This message appears after launching RDC from the Horizon page 
+
+IE: The website cannot display the page HTTP500",The username is the same for both an SJME user and an ABBOTT domain user.," There should be a scheduled process to delete a duplicate account every evening at 9:40pm PST. If this is urgent please ask a DevOp to delete the interfering username from cap.sa_ad_accounts (15-Aug-2020, JAS)",DevOp
+Error,EDC,A,"Chrome: ""errorDate"": …. ""id"": ""5AC88847…., ""message"": ""BadRequest"". This message appears after logging to EDC Portal.",Password had expired so user reset it with special character & (ampersand) which is an invalid character,"User should reset password again using the password reset app via the login page: https://studyedc-passreset.sjm.com/PasswordReset/ (09-Feb-21, JAS)",CDSA
+Error,RDC,A,"""Duplicate Received CRF section found in CRF number: #####. Please note the number and contact your help desk.","This message appears when the user tries to save a subset DCM under the wrong visit. The system allows them to create a form and enter data, but upon save, the message appears and the data cannot be saved. (example: user does ADD OTHER PAGE to save the UNSCHEDULED FOLLOW UP form to the 6 MONTH visit, fills it out and then receives error.)",Inform user that the form should only be saved under the visit it's intended for. ,CDSA
+Error,EDC,A,"""errorDate"": ""YYYY-MM-DDTHH:MM:SS.9379475Z"",""id"": ""C45B5FBA-5F8B-4FC6-97EB-E698C64FFDBE"",""message"": ""BadRequest""
+
+IE: The website cannot display the page HTTP500",Password had an invalid special character (e.g. ampersand &),"User should reset password again using the password reset app via the login page: https://studyedc-passreset.sjm.com/PasswordReset/ (22-Feb-21, JA)",CDSA
+Error,EDC,A,"""errorDate"": ""YYYY-MM-DDTHH:MM:SS.23811922"",""id"": ""020B4AB2-D5F1-4580-8808-EFBFC06952AF"",""message"": ""Index was outside the bounds of the array.""",Password had an invalid special character (e.g. ampersand &),"User should reset password again using the password reset app via the login page: https://studyedc-passreset.sjm.com/PasswordReset/ (22-Feb-21, JA)",CDSA
+Issue,RDC,A,Demo accounts don't have patients or casebooks,"DEMO accounts do not have patient positions or casebooks in RDC after the TEST refresh
+
+NOTE: Demo sites/patients, and demo EDC accounts are typically created after Accel Copy TEST refresh","In TEST environment:
+1. Contact the study CDC or a study SDBM to assign patient positions/ assign DCI books to patients in OC 
+2. Contact Jaime or Jocelyn",CSE/CDSA
+,RDC,A,"The data entry window has encountered an unexpected error and will shut down. If the problem recurs, please report the following information for diagnostic purposes: CRF load was incomplete",A typo/invalid character in the investigator field in Oracle Clinical.,"In OC > Design > Investigators and Sites > Investigators, make sure no typos or invalid characters appear in the investigator name (such as "") ",CDSA
+Error,EDC,A,"Error message : 'ORA-12899: value too large for column ""CAP"".""SSP_HSP_ATTACHMENTS"".""ATT_TYPE"" (actual : 124, maximum: 100)
+ when the site tries to upload a source document.","Reason: the Attachment type label (ATT_SOURCE_DOC) is too long, it should be max 100 characters long.",Contact the SDBM and CDMA of the study to shorten the label.,CSE/CDSA
+Error,EDC,A,Error when uploading a device session record,One possible cause might be that the file trying to be uploaded does not have the right type.,"Send which file types are accepted for Device Sessions Upload:
+- Cardiac Devices XFILES (can be uploaded through EDC Study Portal):
+-- Zip Files containing the extracted data files (NOT printouts)
+-- Exactly as extracted from programmer
+-- Note : PDF files or files with changed name and/or file structure won't be accepted.
+
+- Neuromodulation Devices (via email through iPad, not EDC Study Portal):
+-- XML files
+-- Exactly as selected from Clinician Programmer iPad
+-- Note : PDF files or altered/edited files won't be accepted.
+-- Tip : Click only on the xml icon and do not click on the date/time or any other part of the session bar/display as this will generate a pdf.
+",CDSA
+Other Requests,EDC,A,User inadvertently uploads device session record / Xfiles,User error; no feature in EDC Study Portal to delete,Contact CDS Xfiles team to investigate and delete session record,CDSA
+Error,EDC,A,User resets password and receives message 'Domain change operation failed',unknown,Ask a DevOp to reset the password manually through SJME,DevOp
+Error,RDC,A,"User tries to Add Visit Page and receives message ""One or more data entry windows are open. To complete this action, close all data entry windows."" but there were no open data entry windows",user was using Edge instead of Chrome or IE,"• change to Chrome or IE
+Additionally:
+• clear cache
+• check and correct, if needed, browser settings",CDSA
+Error,RDC,A,"Error
+Log code XXXXXX, Custom Review Type deactivated. Please retry operation.null.""","Too many discrepancies/discrepancy records against a single CRF.  It only shows when trying to view the discrepancy details or discrepancy history, so loading the CRF is okay until viewing the discrepancy information.
+
+It's possible an open discrepancy exists on the CRF without a datapoint reference.  What this means is that the system knows there’s a discrepancy on the CRF, but it has no datapoint on the screen to highlight.
+
+It’s a bug and a fix is available but we only had one instance, resolved by the fix to the right.  Implementing the fix would require additional impact assessments, which we are not ready to do, or request consultation. (JA 30-Apr-2020)","The fix would be to have someone from the ABT side resolve the discrepancy through OC Discrepancy Database instead of through RDC.  It might be the CRA to whom the discrepancy was routed to, but we should route the SR through the CDA to assess.",CDSA
+Issue,RDC,A,OC user unable to generate PDR,"Occurs when an OC account is created in Access Control without copying an existing user - the value of \\ussp-clinsys\repout is populated as the report server directory. PDR, PSUB jobs and report server jobs will not work for the user when this value is populated.",In OC > Admin >Users and Roles > Query Accounts > F7 > Account = OPS$LASTF# > F8 > Studies > Back > Report Server Directory = \\USSPPAPP132\repout,DevOp
+Other Requests,RDC,A,Site is asking for proof of our website security (21 CFR Electronic Signature compliance),Some organizations require this (new sites),"Send them the document uploaded on the CDO Gateway called 'EDC Study Portal Information Security Whitepaper'
+WC document CL1010654",CDSA/DEVOPs
+Issue,EDC,A,"User has two different user IDs linked to the same email address, so they are unable to reset their password.","This usually occurs because user has worked in two different places and needs two different types of access that can't be combined, so they get two different user IDs, but will still have the same contact email.",We have to manually reset their password for them via Access Control. ,CDSA/DEVOPs
+Other Requests,OC/RDC,A,OC Data Entry Window for an opened CRF has missing data field labels,Display Settings Scale and layout are too large,Set Display Settings > Scale and Layout to 100%,CDSA/DEVOPs
+Category,System,,Error/Issue,Possible Cause,Possible Solution,Dept
+Error,CDOG,A,Error while updating TOS status. !,CDO Gateway can't update a newly created user account's Terms of Service flag,User must be added manually to the CAS_USER_AGREEMENT table with completion flags.,DevOp
+Issue,CDOG,A,Site CSLs / Field Monitors unable to connect to VPN onsite,firewall/VPN down/Abbott IT issue,"Use the external URL:
+URL address:      https://istudyedc.sjm.com
+Username:          Windows NT username
+Password:           Windows NT password
+Note:                    User must be part of the field user group in order to access; DevOps maintains list.",DevOp
+Error,SO,A,ORA-12154: TNS could not resolve the connect identifier specified.,Invalid special character in password,"Request user to reset password without the invalid special character (allowed: “$” (dollar), “#” (pound), ""_"" (underscore))
+(INVALID: @, &, ', ! )",CDSA
+Issue,SO,A,Unable to open or display SO,Java Temporary Internet Files,"Go to this directory - C:\Program Files (x86)\Java\jre1.8.0_45\bin
+Open javacpl.exe
+Under the General tab click Settings under Temporary Internet Files then delete files.
+Close all IE windows then try again.",CDSA
+Error,SO,A,"Failed to validate certificate error 
+--or--
+Security Exception: JARSigningException: Found unsigned entry in resource: https://clinoc.sjm.com/forms/java/opaicons.jar",Need to adjust Java Control Panel Certificate setting,"1. Click on Start, type “configure java” in the search bar, click on the Configure Java returned result
+2. Click on the Advanced tab, scroll down to the category “Perform signed code certificate revocation checks on”
+3. Click on Do not check (not recommended)
+- Click Apply and close the window
+- Close all browser windows and try again. May be prompted to 'run on latest version'.",CDSA
+Error,SO,A,Warning - Unavailable Version of Java Requested. This application would like to use a version of Java (1.7*) that is not installed on your system. We recommend running the application with the latest version of Java on your computer. ,Study Organizer is looking for an old version.,Click Run with Latest Version option and you should be able to continue.,CDSA
+Error,SO,A,"Application Blocked by Deployment Rule Set
+","A. Confirm correct Java version(s) installed
+B. Needs to add sites to exception list
+C. Delete the Deployment Rule Set file in C drive (if user has permissions, or call and ask IT to do it)
+","A. User should either have 1.8.0_191+, or both the older 1.8.0_45 AND 1.7. 
+B. Add sites to exception list:
+   1. Click on Start, type “configure java” in the search bar
+   2. Click on the Configure Java returned result
+   3. Click on the Security tab, Exception Site List, Edit Site List
+   4. Add the following sites, one by one:
+https://clinoas.sjm.com
+https://clinoasdev.sjm.com
+https://clinoastest.sjm.com
+https://clinoc.sjm.com
+https://clinoctest.sjm.com
+https://clinocdev.sjm.com
+   5. Clear Java cache
+C. Delete the Deployment Rule set file
+   1. Navigate to C:\Windows\Sun\Java\Deployment
+   2. Delete the DeploymentRuleSet.jar file
+   3. Open Edge and launch SO.
+   4. When prompted, click checkboxes to accept risk and 'don't show' again, and Run with the Latest Version.
+   5. Do the same for Oracle Clinical 5.2
+   6. Issue should resolve.",CDSA/DEVOPs
+Issue,SO,A,Classic ABT user can't use SO due to a Java issue,We cannot help without classic Abbott I.T. intervention.  Either they grant the user local admin access and we can help with implementing the Java exception.  Or classic Abbott I.T. can implement the fix.,"See Java documents posted on CDO Gateway
+It's not so much a versioning issue as it is having to add clinoas.sjm.com to their Java installation exception list. (Will M., 4/16/18)
+
+IT will need to uninstall the 64-bit version and have the 32-bit version installed instead.
+They can do that manually, or they might be able to make the change below:
+
+• I.T. can add user's computer name to the following deployment group: Global_Marimba_Oracle_Java_1.8.45_x86_Managed",None
+Issue,SO-New,I,ICF module keeps loading/is stuck,"Application inconsistency (as of 10-Dec.) 
+Occurs when a user has filtered for a study site on another module and then clicks into the ICF module. ","Click on another module, then click back to the ICFs module and reselect the study site. ",CDSA/DEVOPs
+Issue,SO-New,A,Blank screen when launching SO-New/SMA in Edge (or IE),Compatibility mode turned on,"Click on the IE logo next to the address link to view the IE emulated version. It needs to be IE11 for SO New to launch successfully. If not IE 11 : 
+-- If IE is still installed on the computer: Go to IE > Compatibility View settings. If any SJM.com exists in 'Websites you've added to Compatibility View', remove them. Also uncheck the Display intranet sites in Compatibility View, and close. Relaunch browser.
+-- If IE is not installed anymore : Go into Edge’s settings (3 vertical dots) on the upper right-hand corner and go to Settings/Default Browser and ensure the setting for ‘Allow sites to be reloaded in Internet Explorer mode (IE mode) is set to ‘Allow’. Once that setting has been saved, you just need to reboot the machine and your changes should take effect and SO New should now launch in Edge.
+--> If Compatibility version cannot be changed, contact DevOps
+
+OR Workaround - new computers since Summer 2022 - must use Chrome because IE not allowed to be installed.",CDSA/DEVOPS
+Issue,Custom Patient Data Report (OC/RDC),A,"Email received indicating:
+No results were generated for the specified criteria.",Intermittent issue successfully running the OC command line used in requesting Custom Patient Data Reports (OC/RDC) thru the CDO Gateway report,"Issue not yet determined and pending resourcing.
+Work-around: Obtain the report directly from RDC for each study site.
+EDC Study Portal > RDC > (selected study and site) > Reports > New Patient Data Report  
+
+NOTE: Please reference RDC FAQ Tip Sheet - CRF Printing Instructions for detailed steps",CDSA/DEVOPS
+Other Requests,EDC,,Maximum EDC Portal Upload Size,100 MB max file upload size to the EDC Study Portal ,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

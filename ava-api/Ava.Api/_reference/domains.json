@@ -1,0 +1,148 @@
+[
+  {
+    "id": "ado",
+    "name": "Azure DevOps",
+    "description": "Work items, sprints, pipelines, and pull requests",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": [],
+    "suggestions": [
+      "Show me my active work items",
+      "What PRs need my review?",
+      "Check the status of today's pipeline runs"
+    ],
+    "welcomeMessage": "I can help you manage work items, review pull requests, check pipeline status, and explore sprint data."
+  },
+  {
+    "id": "study",
+    "name": "Clinical Studies",
+    "description": "Clinical study search, analysis, and RDL data extracts",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": ["trial-report"],
+    "suggestions": [
+      "Show me enrollment trends across all active trials",
+      "Which Phase III trials are behind target?",
+      "Create a status report for the leadership team"
+    ],
+    "welcomeMessage": "I can help you query clinical trial data, search knowledge bases, and run workflows."
+  },
+  {
+    "id": "ctms",
+    "name": "CTMS",
+    "description": "Clinical Trial Management System workflows",
+    "owner": "ctms-team",
+    "enabled": true,
+    "knowledgeBaseIds": [],
+    "suggestions": [
+      "Show me all active clinical trials",
+      "Which sites have pending activations?",
+      "Generate a site enrollment summary"
+    ],
+    "welcomeMessage": "I can help you manage clinical trials, track site activations, and generate CTMS reports."
+  },
+  {
+    "id": "support",
+    "name": "Support",
+    "description": "Support knowledge base queries and ticket assistance",
+    "owner": "support-team",
+    "enabled": true,
+    "knowledgeBaseIds": ["support-faq"],
+    "suggestions": [
+      "What's the SLA for P1 tickets?",
+      "How do I reset a user's MFA?",
+      "Show me open escalations from this week"
+    ],
+    "welcomeMessage": "I can answer questions from the support knowledge base, help with ticket triage, and look up policies."
+  },
+  {
+    "id": "study-pi-insight",
+    "name": "Study Physician Insight",
+    "description": "This domain guides users through selecting a study, then a site, then a principal investigator (PI), and displays relevant information at each step from the FDF API.",
+    "owner": "platform-team",
+    "enabled": true
+  },
+  {
+    "id": "central-monitoring",
+    "name": "Central Monitoring",
+    "description": "Central monitoring reports, study reviews, findings, and actions",
+    "owner": "platform-team",
+    "enabled": true
+  },
+  {
+    "id": "mon-log",
+    "name": "Monitoring Log",
+    "description": "View and analyze electronic monitoring logs — select a study, then a site, and explore visit logs, status counts, and visit details.",
+    "owner": "platform-team",
+    "enabled": true
+  },
+  {
+    "id": "ava-prompts",
+    "name": "AVA Prompts",
+    "description": "Configure AVA domains, workflows, tools, and templates interactively",
+    "owner": "platform-team",
+    "enabled": true
+  },
+  {
+    "id": "clinical-data",
+    "name": "Clinical Data",
+    "description": "Clinical site data including site details, IRB/EC information, protocol revisions, and site operational status",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": ["clinical-data-sites", "clinical-data-patients"],
+    "suggestions": [
+      "Show me all active sites for a study",
+      "Which sites have pending IRB approvals?",
+      "List sites by enrollment status",
+      "Show patient enrollment counts by study",
+      "Which patients have withdrawn and why?"
+    ],
+    "welcomeMessage": "I can help you query clinical site and patient data including site details, IRB/EC information, patient demographics, enrollment dates, and device assignments."
+  },
+  {
+    "id": "clinical-site",
+    "name": "Clinical Site",
+    "description": "Clinical site and patient data including site details, IRB/EC information, patient demographics, protocol revisions, site requirement tracking, and activation milestones.",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": ["clinical-site-sites", "clinical-site-patients", "clinical-site-requirements"],
+    "suggestions": [
+      "Show sites missing required agreements",
+      "Which sites have incomplete activation checklists?",
+      "List patients by study and site",
+      "Show sites where financial agreement is pending"
+    ],
+    "welcomeMessage": "I can help you query clinical site details, patient records, and site requirement milestones including regulatory, contractual, training, and activation status."
+  },
+  {
+    "id": "support",
+    "name": "Support",
+    "description": "EDC portal, eForms, eLogs, account access, and general clinical-systems support. Answer questions from the support knowledge base and help users open support tickets.",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": [],
+    "suggestions": [
+      "How do I reset my password?",
+      "I cannot access the EDC portal",
+      "Create a support request"
+    ],
+    "welcomeMessage": "I can help answer support questions about the EDC portal, eForms, eLogs, and account access — and I can open a support ticket for you when you need one.",
+    "agenticInstruction": "You are AVA acting as a clinical-systems support assistant. First, try to resolve the user's issue using the support knowledge base and tools. When a user describes a problem you cannot fully resolve — or after you have helped and the issue may still need follow-up — PROACTIVELY OFFER to create a support request ticket for them (e.g. \"Would you like me to open a support ticket for this?\"). Do NOT auto-launch the support-request workflow for general questions. Only call start_workflow with promptId=\"create-support-request\" once the user agrees to create a ticket OR explicitly asks to create/open/submit one. When you do start it, the workflow will use the prior conversation to pre-fill the ticket, so the user should not need to repeat themselves."
+  },
+  {
+    "id": "ado",
+    "name": "Azure DevOps",
+    "description": "Create and manage Azure DevOps work items (Epics, Features, PBIs, Bugs, Tasks), decompose PRDs into work item hierarchies, query backlogs, check pipelines, and manage pull requests.",
+    "owner": "platform-team",
+    "enabled": true,
+    "knowledgeBaseIds": [],
+    "suggestions": [
+      "Create an Epic",
+      "Create a Feature",
+      "Create a PBI",
+      "Decompose a PRD into work items"
+    ],
+    "welcomeMessage": "I can help you create and manage Azure DevOps work items, decompose PRDs into Epic/Feature/PBI hierarchies, query backlogs, and more.",
+    "agenticInstruction": "You are AVA acting as an Azure DevOps assistant. You help users create work items and decompose documents into ADO work item hierarchies. IMPORTANT ROUTING RULES — follow these exactly: (1) If the user pastes or shares ANY document that resembles a PRD, requirements document, problem statement, executive summary, functional requirements, user roles, use cases, acceptance criteria, or any structured specification document — IMMEDIATELY call start_workflow with promptId=\"decompose-prd\". Do NOT summarize it, do NOT ask questions first, do NOT explain what you are going to do — just call start_workflow. (2) If the user asks to create a SINGLE work item (one Epic, one Feature, one PBI, one Bug, or one Task) — call start_workflow with promptId=\"create-work-item\". (3) For all other questions about ADO, backlogs, pipelines, or sprints — answer conversationally. The decompose-prd workflow will use the full conversation context to read the document, so you do not need to parse or repeat it."
+  }
+]

@@ -1,0 +1,150 @@
+.domain-files-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header-card {
+  background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle {
+    color: white !important;
+  }
+}
+
+.domain-selector {
+  padding: 16px 24px;
+
+  .domain-input {
+    width: 350px;
+  }
+}
+
+.upload-zone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  text-align: center;
+  padding: 48px 24px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &.drag-over {
+    border-color: #1976d2;
+    background: rgba(25, 118, 210, 0.05);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  .upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .upload-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #666;
+  }
+
+  .upload-text {
+    font-size: 16px;
+    color: #444;
+    margin: 0;
+  }
+
+  .upload-subtext {
+    color: #888;
+    margin: 0;
+  }
+
+  .upload-progress {
+    margin-top: 16px;
+  }
+}
+
+.metadata-card {
+  .metadata-fields {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+
+    mat-form-field {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+}
+
+.files-card {
+  .files-table {
+    width: 100%;
+  }
+}
+
+.description {
+  color: #666;
+  font-size: 12px;
+}
+
+.type-badge {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.tag-chip {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  margin-right: 4px;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.inline-edit {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.inline-edit-description {
+  margin-top: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+  }
+
+  p {
+    margin-top: 12px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

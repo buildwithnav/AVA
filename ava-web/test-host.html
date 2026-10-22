@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Host App — AVA Loader Test</title>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+    .site-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #333; color: white; padding: 0 16px; height: 48px;
+    }
+    .header-item { display: flex; align-items: center; gap: 8px; }
+    .action-item-container button {
+      background: none; border: none; color: white; cursor: pointer;
+      width: 40px; height: 40px; border-radius: 4px; font-size: 16px;
+    }
+    .action-item-container button:hover { background: rgba(255,255,255,0.15); }
+    .content { padding: 40px; }
+    .card { background: white; border-radius: 8px; padding: 24px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    p { max-width: 600px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <!-- Simulated host-app header (matches your .site-header pattern) -->
+  <div class="site-header">
+    <div class="header-item">
+      <strong>Central Monitoring Application</strong>
+    </div>
+    <div class="header-item action-item-container">
+      <!-- existing app buttons -->
+      <button title="Filter">&#9776;</button>
+      <button title="Menu">&#8942;</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <h2>Header-button mode</h2>
+      <p>The AVA button is injected into the header's <code>.action-item-container</code> as the first child. Click <strong>AVA</strong> in the top-right to open the sidebar.</p>
+    </div>
+    <div class="card">
+      <h2>Integration code</h2>
+      <pre>&lt;script src="http://localhost:9090/ava-loader.js"
+        data-app="CMA"
+        data-api-url="http://localhost:5010"
+        data-target=".site-header .action-item-container"&gt;&lt;/script&gt;</pre>
+    </div>
+  </div>
+
+  <!-- One-line integration with header target -->
+  <script src="http://localhost:9090/ava-loader.js"
+          data-app="CMA"
+          data-api-url="http://localhost:5010"
+          data-target=".site-header .action-item-container"></script>
+</body>
+</html>

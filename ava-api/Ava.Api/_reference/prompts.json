@@ -1,0 +1,973 @@
+[
+  {
+    "id": "mon-log-select-flow",
+    "domain": "mon-log",
+    "domains": [
+      "mon-log"
+    ],
+    "description": "Guide user through selecting a study, then a site, view monitoring log visits with status counts, then drill into a specific visit for full detail.",
+    "samplePrompt": "Show me the monitoring logs for a study",
+    "contextTags": [
+      "monitoring log",
+      "monitoring logs",
+      "mon log",
+      "site visits",
+      "visit log",
+      "show monitoring logs",
+      "view monitoring log",
+      "check monitoring log",
+      "monitoring log status",
+      "study site log",
+      "electronic log",
+      "eLog",
+      "eLogs",
+      "monitoring log detail",
+      "visit detail",
+      "log detail"
+    ],
+    "systemPrompt": "Assist users in viewing monitoring log data. Start by prompting the user to select a study. After study selection, prompt for a site. Then display the monitoring log header, visit list, and status counts. Finally let the user pick a specific visit to see full details (monitor, approver, dates, status). If the API returns an error, display the problem.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "Extract the user's intent. If they want to view monitoring logs, proceed. If a studyId or study name is given, extract it. Return JSON: { \"studyQuery\": \"?\" }.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "initFilters",
+        "type": "tool",
+        "toolId": "monlog-filters-init",
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectStudy",
+        "type": "user-select",
+        "outputMap": {
+          "studyId": "value",
+          "studyName": "text"
+        },
+        "selectPrompt": "Which study would you like to view monitoring logs for?",
+        "optionsFrom": "_result_initFilters.studies",
+        "confirmEach": false
+      },
+      {
+        "stageId": "listSites",
+        "type": "tool",
+        "toolId": "monlog-filters-sites",
+        "parameters": {
+          "studyid": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectSite",
+        "type": "user-select",
+        "outputMap": {
+          "siteId": "value",
+          "siteName": "text"
+        },
+        "selectPrompt": "Select a site for study {{studyName}}:",
+        "optionsFrom": "_result_listSites",
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetchLogsHeader",
+        "type": "tool",
+        "toolId": "monlog-logs-header",
+        "parameters": {
+          "SiteId": "{{siteId}}",
+          "StudyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetchLogsView",
+        "type": "tool",
+        "toolId": "monlog-logs-view",
+        "parameters": {
+          "SiteId": "{{siteId}}",
+          "Status": "%",
+          "StudyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetchTabsCounts",
+        "type": "tool",
+        "toolId": "monlog-tabs-counts",
+        "parameters": {
+          "SiteId": "{{siteId}}",
+          "Status": "%",
+          "StudyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "formatVisits",
+        "type": "ai-extract",
+        "prompt": "From the fetchLogsView response, extract the visit list from monitoringLogVisitViewModel.data. Format each visit as a selection option. Each option: { text: 'DATE_RANGE | VISIT_TYPE | STATUS', value: logId }. Also use the fetchTabsCounts data to build a summary string. Return only valid JSON: { \"summary\": \"Completed: N, Ready for Monitor: N, Draft: N, Ready for Site: N\", \"options\": [ { \"text\": \"04/14/2025 \u2013 04/14/2025 | Periodic Visit | COMPLETED\", \"value\": 72418 } ] }.",
+        "outputMap": {
+          "visitOptions": "options",
+          "visitSummary": "summary"
+        },
+        "dataFrom": [
+          "fetchLogsView",
+          "fetchTabsCounts"
+        ],
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectVisit",
+        "type": "user-select",
+        "outputMap": {
+          "logId": "value",
+          "visitLabel": "text"
+        },
+        "selectPrompt": "{{siteName}} \u2014 {{visitSummary}}\n\nSelect a visit to view details:",
+        "optionsFrom": "visitOptions",
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetchDetail",
+        "type": "tool",
+        "toolId": "monlog-details",
+        "parameters": {
+          "logId": "{{logId}}",
+          "Status": "%",
+          "isActive": "Y"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "analyze",
+        "type": "ai-analyze",
+        "prompt": "Present a complete monitoring log report for the user:\n\n1. **Header**: Study name, site name, and PI(s) from the logs_header result.\n2. **Status Counts**: Completed, Ready for Monitor, Ready for Site, and Draft counts.\n3. **Selected Visit Detail**:\n   - Visit Date and type\n   - Assigned Monitor: name and acknowledgement date\n   - Site Approver: name, role, and acknowledgement date\n   - Status and description\n   - Permissions: whether editing, deletion, or signing is allowed\n   - Time zone and sync status\n\nBe clear and concise. If any data is missing or null, note it.",
+        "dataFrom": [
+          "fetchLogsHeader",
+          "fetchLogsView",
+          "fetchTabsCounts",
+          "fetchDetail"
+        ],
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "ava-build-workflow",
+    "domain": "ava-prompts",
+    "domains": [
+      "ava-prompts"
+    ],
+    "description": "Build a complete AVA workflow \u2014 generates all required JSON configs (prompts, tools, templates, domains, appsettings) with full engine knowledge and guardrails",
+    "samplePrompt": "Help me build a workflow that fetches patient lab results from the LIMS API",
+    "contextTags": [
+      "build workflow",
+      "create workflow",
+      "new workflow",
+      "design workflow",
+      "build prompt",
+      "create prompt",
+      "new prompt",
+      "design prompt",
+      "build flow",
+      "create flow",
+      "new flow",
+      "workflow builder",
+      "prompt builder",
+      "setup workflow",
+      "configure workflow",
+      "build a workflow",
+      "help me build",
+      "construct workflow",
+      "generate workflow config",
+      "workflow configuration",
+      "add new flow",
+      "new domain flow",
+      "create new flow"
+    ],
+    "systemPrompt": "You are the AVA Workflow Builder \u2014 an expert assistant that generates complete, production-ready AVA workflow configurations.",
+    "stages": [
+      {
+        "stageId": "gather",
+        "type": "ai-extract",
+        "required": [
+          "workflowGoal",
+          "apiEndpoints"
+        ],
+        "prompt": "Extract the workflow requirements from the user's message. Return JSON with these keys:\n\n- workflowGoal (string, required): What the workflow accomplishes in one sentence\n- domainId (string): kebab-case domain identifier\n- domainName (string): Human-readable domain display name\n- serviceName (string): API service identifier for appsettings\n- serviceBaseUrl (string): Base URL of the API service\n- requiresCdsAuth (boolean): Whether the service needs CDS cookie authentication (default false)\n- apiEndpoints (array, required): Array of endpoint objects, each with: { name, route, httpMethod, description, parameters }\n- userFlowDescription (string): How the user interacts step by step\n- needsUserSelect (boolean): Whether the workflow includes user selection from lists\n- needsPreview (boolean): Whether to show a confirmation preview before creating/updating\n- needsPiiCheck (boolean): Whether PII detection should be enabled (default false)\n- existingDomain (boolean): Whether the domain already exists (default false)\n\nReturn only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "preview",
+        "type": "ai-generate",
+        "prompt": "Based on the gathered requirements, design and preview the complete workflow.\n\nGoal: {{workflowGoal}}\nDomain: {{domainId}} ({{domainName}})\nService: {{serviceName}}\nEndpoints: {{apiEndpoints}}\n\nDesign the complete stage sequence. For each stage show type, purpose, data flow, and any outputMap. Apply guardrails (end with ai-analyze, use tool\u2192ai-extract\u2192user-select pattern for selections). Ask the user to confirm.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "generate",
+        "type": "ai-analyze",
+        "prompt": "Generate ALL configuration JSON artifacts for the workflow. Include: domains.json entry, tools.json entries, templates.json entries (if needed), prompts.json entry, and appsettings.json service stub. Trace every {{token}} to verify it resolves from a prior stage.",
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "build-prompt",
+    "domain": "ava-prompts",
+    "domains": [
+      "ava-prompts"
+    ],
+    "description": "Design and generate a new Ava workflow definition for prompts.json \u2014 interactively builds stages, tool references, and templates",
+    "samplePrompt": "I want to create a new workflow for querying JIRA tickets",
+    "contextTags": [
+      "build prompt",
+      "create prompt",
+      "new workflow",
+      "design workflow",
+      "add prompt",
+      "build a workflow",
+      "create a workflow",
+      "new prompt",
+      "workflow builder",
+      "prompt builder",
+      "make a prompt",
+      "generate prompt definition",
+      "configure AVA",
+      "help me configure",
+      "create a new domain",
+      "add a new workflow"
+    ],
+    "systemPrompt": "You are the Ava Workflow Builder. You help users design new workflow definitions that get added to prompts.json.\n\n## Ava Engine Reference\n\n### Stage Types\n1. **ai-extract** \u2014 LLM extracts structured JSON fields from the user message. Props: `prompt` (extraction instructions), `required` (array of field names that must be present \u2014 pauses with 'clarify' if missing), `outputMap` (optional).\n2. **tool** \u2014 Calls an external HTTP API tool. Two modes:\n   - Fixed: `toolId` + `parameters` (with `{{token}}` placeholders)\n   - Dynamic: `prePrompt` with `prompt` + `allowedToolIds` \u2014 LLM picks the tool at runtime\n   Props: `toolId`, `parameters`, `prePrompt`, `outputMap`.\n3. **ai-generate** \u2014 LLM generates long-form content (previews, documents). Props: `prompt`, `templateRef` (optional \u2014 links to templates.json for editable UI preview).\n4. **ai-analyze** \u2014 LLM summarizes/formats results for the user. Props: `prompt`. Typically the final stage.\n5. **user-select** \u2014 Presents options for user to pick one. Props: `selectPrompt`, `optionsFrom` (field name holding the options array), `outputMap`.\n6. **confirmation** \u2014 Pauses for user yes/no before a destructive action. Props: `confirmPrompt`.\n\n### Variable System\n- All extracted/output fields are stored in `ctx.Fields` (case-insensitive dictionary).\n- Use `{{fieldName}}` tokens anywhere in prompts or parameters \u2014 resolved at runtime.\n- Tool stage results are stored as `_result_{stageId}` \u2014 reference with `{{_result_stageId}}`.\n- `_generatedContent` holds ai-generate output.\n- `outputMap`: `{ \"targetField\": \"sourceJsonProperty\" }` \u2014 extracts specific properties from JSON results into named fields.\n\n### Prompt Definition Structure\n```json\n{\n  \"id\": \"kebab-case-id\",\n  \"domain\": \"ado|study|ctms|support\",\n  \"description\": \"Short description for intent matching\",\n  \"contextTags\": [\"phrases that trigger this workflow\"],\n  \"systemPrompt\": \"Instructions the LLM follows throughout\",\n  \"piiCheck\": false,\n  \"stages\": [ ... ]\n}\n```\n\n### Rules\n- Every workflow starts with `ai-extract` to gather user intent.\n- Read-only flows: extract \u2192 tool \u2192 ai-analyze.\n- Write flows: extract \u2192 preview (ai-generate) \u2192 confirmation \u2192 tool \u2192 ai-analyze.\n- Multi-result flows: tool \u2192 ai-extract (format) \u2192 user-select \u2192 tool \u2192 ai-analyze.\n- Use `outputMap` when a downstream stage needs specific fields from a JSON result.\n- Always end with `ai-analyze` to present results to the user.\n- `piiCheck: true` only when handling personal data.\n- `contextTags` should include natural phrasings users would type.\n- Stage IDs should be descriptive: extract, search, format, select, preview, create, summarize, etc.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [
+          "workflowGoal"
+        ],
+        "prompt": "Extract from the user's message what workflow they want to build. Return JSON with: workflowGoal (what the workflow should accomplish \u2014 required), domain (ado/study/ctms/support \u2014 infer from goal or null), existingTools (any tool names or APIs they mentioned), isWriteOperation (true if workflow creates/updates/deletes data, false if read-only). Return only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "design",
+        "type": "ai-generate",
+        "templateRef": "prompt-design",
+        "prompt": "Based on the user's workflow goal, design the workflow interactively.\n\nGoal: {{workflowGoal}}\nDomain: {{domain}}\nMentioned tools: {{existingTools}}\nIs write operation: {{isWriteOperation}}\n\nPresent a design summary covering:\n1. **Workflow ID** \u2014 suggest a kebab-case id\n2. **Domain** \u2014 confirm or suggest\n3. **Stages** \u2014 list each stage with type, purpose, and key props\n4. **Tools needed** \u2014 which tools the workflow will call (existing or new)\n5. **Context tags** \u2014 suggest 6-10 trigger phrases\n6. **PII check** \u2014 recommend yes/no\n\nIf this is a write operation, include a preview + confirmation stage before the tool call.\nIf multiple results are possible, include a user-select stage.\n\nAsk the user to confirm or adjust before generating the final JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "generate",
+        "type": "ai-generate",
+        "prompt": "The user has confirmed the design. Now generate the complete prompt definition JSON.\n\nDesign decisions:\n{{_generatedContent}}\n\nUser's goal: {{workflowGoal}}\nDomain: {{domain}}\n\nGenerate a complete, valid JSON object for prompts.json following the Ava Engine Reference in the system prompt. Include all stages, contextTags, systemPrompt, and proper {{token}} references.\n\nWrap the JSON in a markdown code block with ```json fences.\n\nIMPORTANT:\n- Use _result_{stageId} tokens (e.g. {{_result_search}}) to reference tool results from earlier stages.\n- Use outputMap when downstream stages need specific fields extracted from JSON.\n- Ensure all {{token}} references correspond to fields that will exist by that stage.\n- contextTags should be natural phrases a user would type.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "result",
+        "type": "ai-analyze",
+        "prompt": "Present the generated workflow definition to the user. Show the full JSON and explain:\n- How many stages it has and what each does\n- What fields flow between stages\n- Any tools.json or templates.json entries they may also need to add\n\nBe concise but thorough.",
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "central-monitoring-review-drilldown",
+    "domain": "central-monitoring",
+    "domains": [
+      "central-monitoring"
+    ],
+    "description": "Drill into central monitoring study reviews \u2014 view findings and actions for each review",
+    "samplePrompt": "Show me the study reviews and drill into their findings",
+    "contextTags": [
+      "review studies",
+      "show study reviews",
+      "inspect central monitoring reviews",
+      "find study review issues",
+      "view review findings",
+      "list findings for review",
+      "review central-monitoring study",
+      "see actions for review finding",
+      "study review drilldown",
+      "examine monitoring findings",
+      "monitoring actions",
+      "what findings in study"
+    ],
+    "systemPrompt": "You are AVA, an assistant for central monitoring. Guide the user through drilling down from a study review, to findings, to actions and details. Always label findings and actions clearly. Wait for user selection at each level. Never assume missing context \u2014 prompt for selection if needed.",
+    "stages": [
+      {
+        "stageId": "listReviews",
+        "type": "tool",
+        "toolId": "list-study-reviews",
+        "confirmEach": false
+      },
+      {
+        "stageId": "formatReviewOptions",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "From the API results, format each study review with a clear, concise label including study and site or review name. For each, output: { text: 'LABEL', value: reviewId }. Return: { options: [...] }. Return only valid JSON.",
+        "outputMap": {
+          "reviewOptions": "options"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectReview",
+        "type": "user-select",
+        "outputMap": {
+          "reviewId": "value",
+          "reviewLabel": "text"
+        },
+        "selectPrompt": "Select a study review to inspect.",
+        "optionsFrom": "reviewOptions",
+        "confirmEach": false
+      },
+      {
+        "stageId": "getReviewDetail",
+        "type": "tool",
+        "toolId": "get-review-detail",
+        "parameters": {
+          "reviewId": "{{reviewId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "listFindings",
+        "type": "tool",
+        "toolId": "list-review-findings",
+        "parameters": {
+          "reviewId": "{{reviewId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "formatFindingOptions",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "From the API results, format each finding with a clear label (including type, code, and summary if available). For each, output: { text: 'LABEL', value: findingId }. Return: { options: [...] }. Return only valid JSON.",
+        "outputMap": {
+          "findingOptions": "options"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectFinding",
+        "type": "user-select",
+        "outputMap": {
+          "findingId": "value",
+          "findingLabel": "text"
+        },
+        "selectPrompt": "Select a finding to review for {{reviewLabel}}.",
+        "optionsFrom": "findingOptions",
+        "confirmEach": false
+      },
+      {
+        "stageId": "getFindingActions",
+        "type": "tool",
+        "toolId": "list-finding-actions",
+        "parameters": {
+          "reviewId": "{{reviewId}}",
+          "findingId": "{{findingId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "summarize",
+        "type": "ai-analyze",
+        "prompt": "Summarize the selected study review ({{reviewLabel}}), show the detailed review findings ({{findingLabel}}), and detail all actions associated with that finding. Clearly list each action, status, and any notes. Provide a clear, readable summary for the user.",
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "ado-create-work-item",
+    "domain": "ado",
+    "domains": [
+      "ado",
+      "ctms",
+      "support"
+    ],
+    "description": "Create a new work item in Azure DevOps — Bug, Task, Epic, or Feature",
+    "samplePrompt": "Create a bug for the login page timeout issue and assign it to John",
+    "contextTags": [
+      "create work item",
+      "new bug",
+      "new task",
+      "new feature",
+      "add backlog item",
+      "create ticket",
+      "log a bug"
+    ],
+    "systemPrompt": "Help the user create work items in Azure DevOps. Extract the work item type (Bug/Task/Feature), title, description, assignee, and any parent references (Epic or Feature titles). If the type is unclear, default to Bug. IMPORTANT: Do NOT handle PBI creation requests here — PBIs must be routed to the generate-pbi prompt instead. Do NOT handle Epic creation here — Epics are routed to the ado-create-epic prompt instead.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [
+          "title",
+          "workItemType"
+        ],
+        "prompt": "Extract the following fields from the user's message. Return a JSON object with these keys: workItemType (one of: Bug, Task, Epic, Feature — default to Bug if unclear), title (required), description, assignedTo, epicTitle, featureTitle, areaPath (the ADO area path if mentioned, e.g. 'CDS\\\\Team\\\\Project' — extract verbatim). Return only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "preview",
+        "type": "ai-generate",
+        "templateRef": "work-item-create",
+        "prompt": "Generate a preview of the work item to be created using the extracted fields. Confirm the details look correct before proceeding.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "create",
+        "type": "tool",
+        "toolId": "ado-create-work-item",
+        "parameters": {
+          "type": "{{workItemType}}",
+          "title": "{{title}}",
+          "description": "{{description}}",
+          "assignedTo": "{{assignedTo}}",
+          "parentId": "{{parentId}}",
+          "areaPath": "{{areaPath}}"
+        },
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "ado-update-work-item",
+    "domain": "ado",
+    "domains": [
+      "ado",
+      "ctms",
+      "support"
+    ],
+    "description": "Update an existing Azure DevOps work item — change state, assignee, title, description, or sprint",
+    "samplePrompt": "Move work item 12345 to Done",
+    "contextTags": [
+      "update work item",
+      "change state",
+      "move to done",
+      "reassign",
+      "close ticket",
+      "mark as active",
+      "update bug",
+      "edit story",
+      "change priority",
+      "move sprint"
+    ],
+    "systemPrompt": "Help the user update an existing work item. Extract the work item ID (if not provided, ask), and the fields to change. For sprint moves, extract the iteration path.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [
+          "workItemId"
+        ],
+        "prompt": "Extract from the user's message: workItemId (required — numeric ID of the work item to update), state, assignedTo, title, description, priority, iterationPath. If workItemId is not mentioned, it is missing. Return only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "preview",
+        "type": "ai-generate",
+        "templateRef": "work-item-update",
+        "prompt": "Show the user a preview of the changes to be applied to work item {{workItemId}}.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "update",
+        "type": "tool",
+        "prePrompt": {
+          "prompt": "Update work item {{workItemId}}. If iterationPath is set and no other fields, use ado-move-to-sprint. Otherwise use ado-update-work-item. Return JSON: { \"toolId\": \"...\", \"params\": { ... } }.",
+          "allowedToolIds": [
+            "ado-update-work-item",
+            "ado-move-to-sprint"
+          ]
+        },
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "complaints-review-status",
+    "domain": "study",
+    "domains": [
+      "study"
+    ],
+    "description": "Fetch the Complaints Review Status report from CDS — filterable by division, study, review status, date range",
+    "samplePrompt": "Get the complaints review status report for the ADC division",
+    "contextTags": [
+      "complaints review status",
+      "complaints report",
+      "review status",
+      "complaint review",
+      "complaints data",
+      "fetch complaints",
+      "get complaints",
+      "show complaints",
+      "complaint status",
+      "review status report",
+      "PER review",
+      "EPIQ review",
+      "safety complaints",
+      "complaint review status data",
+      "complaints review"
+    ],
+    "systemPrompt": "Help the user fetch the Complaints Review Status report from CDS. Extract any filter parameters they mention (division, org unit, study stage, study ID, review status, review stage, date range). Use sensible defaults for unspecified filters. After fetching, the data is automatically loaded as a queryable knowledge base — tell the user how many rows were loaded and suggest they can ask follow-up questions about the data.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "Extract filter parameters from the user's message for the Complaints Review Status report. Return JSON with these keys (use defaults shown if not mentioned): pDivision (comma-separated division codes, default 'ADC,CRM,EP,HF,NM,RES,SH,VSC'), pOrgUnit (default '%'), pSafetySpecialist (default '%'), pStudyStage (default 'DESIGN'), pStudyId (default '%'), pReviewStatus (default '%'), pReviewStage (default '%'), pReviewDateFrom (DD-Mon-YYYY, default '01-Jan-2000'), pReviewDateTo (DD-Mon-YYYY, default today's date). Return only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetch",
+        "type": "tool",
+        "toolId": "cds-complaints-review-status",
+        "parameters": {
+          "pOrgUnit": "{{pOrgUnit}}",
+          "pStudyId": "{{pStudyId}}",
+          "pDivision": "{{pDivision}}",
+          "pStudyStage": "{{pStudyStage}}",
+          "pReviewStage": "{{pReviewStage}}",
+          "pReviewDateTo": "{{pReviewDateTo}}",
+          "pReviewStatus": "{{pReviewStatus}}",
+          "pReviewDateFrom": "{{pReviewDateFrom}}",
+          "pSafetySpecialist": "{{pSafetySpecialist}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "summarize",
+        "type": "ai-analyze",
+        "prompt": "The Complaints Review Status report has been fetched and loaded as a queryable knowledge base. Summarize the result: how many rows were loaded, what columns are available, and what filters were applied. Let the user know they can now ask follow-up questions like 'which studies have the most unreviewed complaints?' or 'show me complaints by review stage'. Be concise.",
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "central-monitoring-report",
+    "domain": "central-monitoring",
+    "domains": [
+      "central-monitoring"
+    ],
+    "description": "Fetch the Central Monitoring report from CDS \u2014 filterable by study ID",
+    "samplePrompt": "Fetch the central monitoring report for study 1234",
+    "contextTags": [
+      "central monitoring",
+      "cmon report",
+      "monitoring report",
+      "review findings",
+      "central monitoring data",
+      "fetch cmon",
+      "get central monitoring",
+      "show cmon",
+      "monitoring findings",
+      "cmon findings",
+      "clinical monitoring",
+      "study monitoring",
+      "central monitoring report",
+      "cmon data",
+      "monitoring review"
+    ],
+    "systemPrompt": "Help the user fetch the Central Monitoring report from CDS. Extract the study ID if they mention one, otherwise use '%' for all studies. After fetching, the data is automatically loaded as a queryable knowledge base \u2014 tell the user how many rows were loaded and suggest they can ask follow-up questions about the data.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "Extract filter parameters from the user's message for the Central Monitoring report. Return JSON with this key: pStudyId (the clinical study ID if mentioned, otherwise '%' for all studies). If the user mentions a study by name or code, extract the numeric study ID if possible. Return only valid JSON.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "fetch",
+        "type": "tool",
+        "toolId": "cds-central-monitoring",
+        "parameters": {
+          "pStudyId": "{{pStudyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "summarize",
+        "type": "ai-analyze",
+        "prompt": "The Central Monitoring report has been fetched and loaded as a queryable knowledge base. Summarize the result: how many rows were loaded, what columns are available, and what study filter was applied. Let the user know they can now ask follow-up questions like 'which findings are still open?' or 'show me findings by type' or 'what reviews have the most findings?'. Be concise.",
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "study-select-flow",
+    "domain": "study-pi-insight",
+    "domains": [
+      "study-pi-insight"
+    ],
+    "description": "Guide user through selecting a study, then site, then PI, and displaying PI and timepoint data.",
+    "samplePrompt": "I want to look up PI information for a study site",
+    "contextTags": [
+      "study selection",
+      "select study",
+      "show studies",
+      "choose study",
+      "study site PI insight",
+      "physician info",
+      "show all PIs",
+      "site selection",
+      "pick site",
+      "PI selection",
+      "timepoint data"
+    ],
+    "systemPrompt": "Assist users in selecting a study, then a site, then a Principal Investigator (PI), and display associated information. Always start by prompting the user to select a study if none is selected. If API has error or anything please display the problem",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": [],
+        "prompt": "Extract the user's intent. If they wish to see studies, select a study, or want information about studies, proceed. If studyId is referenced, extract it. Return JSON: { \"studyQuery\": \"?\" } if a study name or code is given.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "listStudies",
+        "type": "tool",
+        "toolId": "fdf-list-studies",
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectStudy",
+        "type": "user-select",
+        "outputMap": {
+          "studyId": "value",
+          "studyName": "text"
+        },
+        "selectPrompt": "Which study would you like to view?",
+        "optionsFrom": "_result_listStudies",
+        "confirmEach": false
+      },
+      {
+        "stageId": "listSites",
+        "type": "tool",
+        "toolId": "fdf-list-sites",
+        "parameters": {
+          "studyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectSite",
+        "type": "user-select",
+        "outputMap": {
+          "siteId": "value",
+          "siteName": "text"
+        },
+        "selectPrompt": "Select a site for study {{studyName}}:",
+        "optionsFrom": "_result_listSites",
+        "confirmEach": false
+      },
+      {
+        "stageId": "listPis",
+        "type": "tool",
+        "toolId": "fdf-list-pis",
+        "parameters": {
+          "siteId": "{{siteId}}",
+          "studyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "selectPi",
+        "type": "user-select",
+        "outputMap": {
+          "piId": "piid",
+          "piName": "piName"
+        },
+        "selectPrompt": "Select a Principal Investigator (PI) for site {{siteName}}:",
+        "optionsFrom": "_result_listPis",
+        "labelField": "piName",
+        "confirmEach": false
+      },
+      {
+        "stageId": "queryFormCounts",
+        "type": "tool",
+        "toolId": "fdf-query-form-counts",
+        "parameters": {
+          "siteId": "{{siteId}}",
+          "studyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "readTimepoint",
+        "type": "tool",
+        "toolId": "fdf-read-timepoint",
+        "parameters": {
+          "piId": "{{piId}}",
+          "siteId": "{{siteId}}",
+          "studyId": "{{studyId}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "analyze",
+        "type": "ai-analyze",
+        "prompt": "Analyze the data for study {{studyName}}, site {{siteName}}, PI {{piName}}. Summarize query form counts (completed, pending, sent to approval, rejected) and timepoint information. Present findings clearly and concisely.",
+        "dataFrom": [
+          "queryFormCounts",
+          "readTimepoint"
+        ],
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false
+  },
+  {
+    "id": "create-support-request",
+    "domain": "support",
+    "domains": ["support"],
+    "description": "Create a support request ticket — only trigger when the user explicitly asks to create, open, or submit a ticket or support request, not for general KB questions",
+    "samplePrompt": "I want to create a support request",
+    "contextTags": [
+      "create support request",
+      "open a ticket",
+      "submit a ticket",
+      "log an issue",
+      "raise a ticket",
+      "create a ticket",
+      "file a ticket",
+      "open support ticket",
+      "submit support request",
+      "log a support request",
+      "create case",
+      "escalate issue",
+      "report an issue",
+      "I need support",
+      "need to open a ticket",
+      "want to create a ticket",
+      "can you create a ticket",
+      "please create a support request"
+    ],
+    "systemPrompt": "You are a support request assistant. Help users create clear and accurate support tickets based on their reported issues.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": ["title", "description"],
+        "prompt": "Extract support request details from the conversation. Use the entire prior conversation (shown as context) AND the user's latest message to infer the issue — the user may have described the problem in earlier turns before asking to create a ticket. Return ONLY a raw JSON object — no markdown, no tables, no explanations, no text before or after. The response must start with { and end with }. Nothing else.\n\nFields to extract:\n- title (string): A concise summary of the issue (max 100 characters). Return null if not determinable.\n- description (string): A clear description of the problem, drawing on the full conversation. Return null if not determinable.\n- priority (string): One of 'P1 - Critical', 'P2 - High', 'P3 - Medium', 'P4 - Low'. Default to 'P3 - Medium' if not specified.\n- category (string): One of 'Account Access', 'Password Reset', 'EDC Portal', 'RDC Error', 'eForms', 'eLogs', 'Other'. Infer from the description. Default to 'Other' if unclear.\n\nIMPORTANT: Do not describe the data. Do not return tables or narrative. Return ONLY the JSON object.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "preview",
+        "type": "ai-generate",
+        "prompt": "Present a clear preview of the support request to the user before it is submitted:\n\n**Support Request Preview**\n- **Title**: {{title}}\n- **Description**: {{description}}\n- **Priority**: {{priority}}\n- **Category**: {{category}}\n\nTell the user to reply 'yes' to submit or describe any changes they want to make.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "submit",
+        "type": "tool",
+        "toolId": "create-support-request",
+        "parameters": {
+          "title": "{{title}}",
+          "description": "{{description}}",
+          "priority": "{{priority}}",
+          "category": "{{category}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "result",
+        "type": "ai-analyze",
+        "prompt": "The support request was submitted successfully. Present a friendly confirmation to the user showing the ticket ID and a brief summary. Let them know the support team will review it and respond within the SLA for their priority level. Include: ticket ID, title, priority, and category.",
+        "dataFrom": ["submit"],
+        "confirmEach": false
+      }
+    ],
+    "piiCheck": false,
+    "preserveContext": true
+  },
+  {
+    "id": "create-work-item",
+    "domain": "ado",
+    "description": "Create a single Azure DevOps work item (Epic, Feature, PBI, Bug, or Task). Triggered when the user asks to create one specific work item.",
+    "samplePrompt": "Create a work item",
+    "preserveContext": true,
+    "piiCheck": false,
+    "contextTags": [
+      "create work item","create a work item","create epic","create an epic",
+      "create feature","create a feature","create pbi","create a pbi",
+      "create product backlog item","create bug","create a bug",
+      "create task","create a task","new work item","new epic",
+      "new feature","new pbi","add work item","add epic",
+      "add feature","add pbi","add a work item"
+    ],
+    "systemPrompt": "You are an Azure DevOps work item creation assistant. Help users create clear, well-structured work items. Ask for missing required information (type and title). For area path and iteration path, ask the user if not provided — do not guess. For descriptions and acceptance criteria, generate professional HTML-formatted content based on the context.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": ["type", "title"],
+        "clarifyPrompt": "I need a few details to create the work item. What type of work item is this (Epic, Feature, PBI, Bug, or Task) and what should the title be?",
+        "prompt": "Extract work item details from the conversation and the user's latest message. Use all prior context to infer as much as possible. Return ONLY a raw JSON object — no markdown, no explanations. Must start with { and end with }.\n\nFields:\n- type (string, REQUIRED): Exactly one of: 'Epic', 'Feature', 'Product Backlog Item', 'Bug', 'Task'. Infer from context. Return null only if truly undeterminable.\n- title (string, REQUIRED): Concise title. Return null if not determinable.\n- description (string): HTML-formatted description appropriate for the work item type. Generate from context if enough information exists, otherwise null.\n- acceptanceCriteria (string): HTML-formatted BDD acceptance criteria for PBIs. Generate from context if possible, otherwise null.\n- areaPath (string): Area path if mentioned. Return null if not mentioned — do NOT guess.\n- iterationPath (string): Iteration/sprint path if mentioned. Return null if not mentioned — do NOT guess.\n- parentId (number): Numeric parent work item ID if mentioned. Return null if not mentioned.\n- priority (number): 1-4. Return null if not specified.\n- assignedTo (string): Assignee if mentioned. Return null if not mentioned.\n- tags (string): Comma-separated tags if mentioned. Return null if not mentioned.\n- effort (number): Story points if mentioned. Return null if not mentioned.\n\nIMPORTANT: Return ONLY the JSON object.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "preview",
+        "type": "ai-generate",
+        "prompt": "Present a clear preview of the work item to the user before it is created. Show all non-null fields. Tell the user to reply 'yes' to create the work item, or describe any changes they want to make.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "confirm",
+        "type": "confirmation",
+        "prompt": "Create this work item in Azure DevOps?",
+        "rewindTo": "extract",
+        "confirmEach": false
+      },
+      {
+        "stageId": "submit",
+        "type": "tool",
+        "toolId": "create-ado-work-item",
+        "parameters": {
+          "type": "{{type}}",
+          "title": "{{title}}",
+          "description": "{{description}}",
+          "acceptanceCriteria": "{{acceptanceCriteria}}",
+          "areaPath": "{{areaPath}}",
+          "iterationPath": "{{iterationPath}}",
+          "parentId": "{{parentId}}",
+          "priority": "{{priority}}",
+          "assignedTo": "{{assignedTo}}",
+          "tags": "{{tags}}",
+          "effort": "{{effort}}"
+        },
+        "confirmEach": false
+      },
+      {
+        "stageId": "result",
+        "type": "ai-analyze",
+        "prompt": "The work item was successfully created in Azure DevOps. Present a friendly confirmation showing the key details. Include the work item ID, type, title, and a link if the URL is available.",
+        "dataFrom": ["submit"],
+        "confirmEach": false
+      }
+    ]
+  },
+  {
+    "id": "decompose-prd",
+    "domain": "ado",
+    "description": "Decompose a Product Requirements Document (PRD) into an Azure DevOps work item hierarchy: one Epic, multiple Features, and PBIs under each Feature. Triggered when the user pastes a PRD, requirements document, problem statement, functional spec, or any structured product specification.",
+    "samplePrompt": "Decompose my PRD into work items",
+    "preserveContext": true,
+    "piiCheck": false,
+    "contextTags": [
+      "decompose prd","break down prd","prd to work items","create work items from prd",
+      "convert prd","prd breakdown","decompose requirements","create hierarchy",
+      "create epic features pbis","break down requirements","import prd",
+      "create work items from requirements","prd decomposition",
+      "product requirements document","requirements document","functional requirements",
+      "executive summary","problem statement","solution overview","user roles",
+      "use cases","acceptance criteria","non-functional requirements","functional spec",
+      "product spec","feature specification","software requirements","project requirements",
+      "user stories from requirements","backlog from prd","plan from requirements"
+    ],
+    "systemPrompt": "You are an Azure DevOps planning assistant. You help teams decompose Product Requirements Documents and specification documents into structured work item hierarchies in Azure DevOps. You create well-organized Epics, Features, and Product Backlog Items with clear titles, HTML-formatted descriptions, and meaningful acceptance criteria derived directly from the document content.",
+    "stages": [
+      {
+        "stageId": "extract",
+        "type": "ai-extract",
+        "required": ["epicTitle", "features"],
+        "clarifyPrompt": "I need a PRD or requirements document to decompose. Please paste the document content.",
+        "prompt": "Analyze the PRD or requirements document from the conversation and produce a flat JSON breakdown for Azure DevOps work item creation. Use ALL content in the conversation — the document may have been pasted earlier. Return ONLY a raw JSON object — no markdown, no explanations. Must start with { and end with }.\n\nFields (ALL TOP-LEVEL — do NOT nest under a 'hierarchy' key):\n- epicTitle (string, REQUIRED): A concise Epic title summarizing the entire document scope. Never null.\n- epicDescription (string): HTML-formatted Epic description. 2-4 sentences using <p> tags.\n- features (array, REQUIRED): Array of Feature objects. Each Feature has:\n  - title (string): Feature title (concise, actionable)\n  - description (string): HTML Feature description using <p> tags.\n  - pbis (array): Array of PBI objects. Each PBI has:\n    - title (string): PBI title in user story format\n    - description (string): HTML user story body using <p> and <ul>\n    - acceptanceCriteria (string): HTML BDD criteria with <strong>Given/When/Then</strong>\n    - effort (number): Story point estimate (1,2,3,5,8,13). null only if uninferable.\n- areaPath (string): ADO area path if mentioned. Empty string '' if not mentioned.\n- iterationPath (string): ADO iteration path if mentioned. Empty string '' if not mentioned.\n\nCreate one Feature per major PRD section. 2-6 PBIs per Feature from the requirements. All descriptions must be valid HTML. Do NOT wrap fields in a 'hierarchy' key.\n\nIMPORTANT: Return ONLY the flat JSON object.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "plan-preview",
+        "type": "ai-generate",
+        "prompt": "Present the PRD decomposition plan to the user as a clear hierarchy tree. Use epicTitle for the Epic name. Show the Epic, each Feature, and PBIs under each Feature. After the tree, tell the user to reply 'yes' to create all work items in Azure DevOps, or describe any changes they'd like first.",
+        "confirmEach": false
+      },
+      {
+        "stageId": "confirm-plan",
+        "type": "confirmation",
+        "prompt": "Create all work items in Azure DevOps as shown above?",
+        "rewindTo": "extract",
+        "confirmEach": false
+      },
+      {
+        "stageId": "create-epic",
+        "type": "tool",
+        "toolId": "create-ado-work-item",
+        "parameters": {
+          "type": "Epic",
+          "title": "{{epicTitle}}",
+          "description": "{{epicDescription}}",
+          "areaPath": "{{areaPath}}",
+          "iterationPath": "{{iterationPath}}"
+        },
+        "outputMap": { "epicId": "id" },
+        "confirmEach": false
+      },
+      {
+        "stageId": "create-features",
+        "type": "foreach",
+        "itemsFrom": "features",
+        "itemAlias": "feature",
+        "confirmEach": false,
+        "stages": [
+          {
+            "stageId": "create-feature",
+            "type": "tool",
+            "toolId": "create-ado-work-item",
+            "parameters": {
+              "type": "Feature",
+              "title": "{{feature.title}}",
+              "description": "{{feature.description}}",
+              "parentId": "{{epicId}}",
+              "areaPath": "{{areaPath}}",
+              "iterationPath": "{{iterationPath}}"
+            },
+            "outputMap": { "featureId": "id" },
+            "confirmEach": false
+          },
+          {
+            "stageId": "create-pbis",
+            "type": "foreach",
+            "itemsFrom": "feature.pbis",
+            "itemAlias": "pbi",
+            "confirmEach": false,
+            "stages": [
+              {
+                "stageId": "create-pbi",
+                "type": "tool",
+                "toolId": "create-ado-work-item",
+                "parameters": {
+                  "type": "Product Backlog Item",
+                  "title": "{{pbi.title}}",
+                  "description": "{{pbi.description}}",
+                  "acceptanceCriteria": "{{pbi.acceptanceCriteria}}",
+                  "effort": "{{pbi.effort}}",
+                  "parentId": "{{featureId}}",
+                  "areaPath": "{{areaPath}}",
+                  "iterationPath": "{{iterationPath}}"
+                },
+                "confirmEach": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "stageId": "result",
+        "type": "ai-analyze",
+        "prompt": "All work items have been created in Azure DevOps. Present a friendly summary showing the Epic ID and title, each Feature with its ID, and the count of PBIs created under it. Include any IDs visible in the results.",
+        "dataFrom": ["create-epic", "create-features"],
+        "confirmEach": false
+      }
+    ]
+  }
+]

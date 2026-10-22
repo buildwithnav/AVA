@@ -1,0 +1,230 @@
+{
+    "description": "Patient-level clinical trial data including study and site identifiers, patient identifiers, demographic characteristics, consent/enrollment/procedure dates, randomization and cohort assignments, device implant details, withdrawal/death status, monitoring dates, and operational study contacts. No direct patient PII; patient identifiers are source-system subject IDs only.",
+    "fields": {
+        "STUDY": {
+            "label": "STUDY",
+            "description": "Sponsor/source-system study code identifying the clinical trial or registry record belongs to, such as CRD_1032, CRD_1003, or CRD_971. Used with SITE and PT/PT_LAST to associate the patient with the correct parent study.",
+            "data_type": "string"
+        },
+        "STUDY_TITLE": {
+            "label": "STUDY_TITLE",
+            "description": "Full study or registry title associated with STUDY, such as VANTAGE, SH Device Registry, ARIES HM3, or other trial names. Provides human-readable context for the study code.",
+            "data_type": "string"
+        },
+        "SITE": {
+            "label": "SITE",
+            "description": "Sponsor/source-system site code identifying the clinical trial site where the patient was consented, enrolled, implanted, followed, or screened, such as EU1883 or EU1957.",
+            "data_type": "string"
+        },
+        "SITE_NAME": {
+            "label": "SITE_NAME",
+            "description": "Name of the participating site, hospital, institution, or internal-use site associated with SITE.",
+            "data_type": "string"
+        },
+        "CITY": {
+            "label": "CITY",
+            "description": "City recorded for the clinical trial site.",
+            "data_type": "string"
+        },
+        "STATE": {
+            "label": "STATE",
+            "description": "State, province, region, or source-system geographic abbreviation for the clinical trial site.",
+            "data_type": "string"
+        },
+        "COUNTRY": {
+            "label": "COUNTRY",
+            "description": "Country recorded for the clinical trial site.",
+            "data_type": "string"
+        },
+        "PT": {
+            "label": "PT",
+            "description": "Patient/subject number within the study or site context. This is a source-system patient identifier, not a direct personal identifier.",
+            "data_type": "string"
+        },
+        "PT_LAST": {
+            "label": "PT_LAST",
+            "description": "Composite patient/subject identifier or label, commonly combining site code and patient number, such as SITE-PT. Used as the row-level patient key in reporting.",
+            "data_type": "string"
+        },
+        "PT_STATUS": {
+            "label": "PT_STATUS",
+            "description": "Patient-level disposition/status flag summarizing subject state in the study. Values may be single or combined flags, for example enrolled/active, failed screening, withdrawn, deceased, or all-follow-up-complete indicators. Observed values: ALL; D; D ALL; F; F D; W; W ALL; W D; W D ALL.",
+            "data_type": "enum"
+        },
+        "PHYSICIAN": {
+            "label": "PHYSICIAN",
+            "description": "Investigator or treating/enrolling physician associated with the patient record, when available. This is professional contact/context information rather than patient PII.",
+            "data_type": "string"
+        },
+        "GENDER": {
+            "label": "GENDER",
+            "description": "Patient sex/gender value as captured by the source study system. Values may use abbreviated or full-text coding depending on study/source. Observed values: F; FEMALE; Female; M; MALE; Male.",
+            "data_type": "enum"
+        },
+        "PT_AGE": {
+            "label": "PT_AGE",
+            "description": "Patient age at the relevant study baseline, screening, consent, or enrollment time point, depending on study conventions. Observed non-blank range in this file: -1 to 100.",
+            "data_type": "integer"
+        },
+        "NYHA_CLASS_ENR": {
+            "label": "NYHA_CLASS_ENR",
+            "description": "NYHA functional class or heart-failure status at enrollment/baseline. Values include NYHA classes and study-specific no-heart-failure or not-determined values. Observed values: CLASS II; CLASS IIIA; CLASS IIIB; CLASS IV; I; II; III; IV; IV (AMBULATORY); IV (NON-AMBULATORY); NO HEART FAILURE; NO HF; NOT ASSESSED; NOT DETERMINED; NOT DONE; UNK.",
+            "data_type": "enum"
+        },
+        "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.CONSENT_DT,'YYYY-MM-DD')",
+            "description": "Date the patient signed informed consent or consent was recorded, formatted by the source SQL extract as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "CONSENT_REV": {
+            "label": "CONSENT_REV",
+            "description": "Informed consent form revision/version used for the patient consent, often including revision letter, version number, date, and/or country/language suffix. Observed values include 1041 distinct non-blank values; examples: 01 AUGUST 2017; 01-12-2016; 01.OCT.2015 VERSION F; 01/10/17; 01/10/2017; 01/12/2016; 03 AUGUST 2015; 03-21-2017; 03-22-2016; 03-AUG-2015; 03/10/2017; 03/21/2017; 03/21/2018; 03/22/2017; 03AUG2015; 03JUN2016; 04 MAY 2016; 04-11-2017; 04APR2017; 04APR2017 VERSION J.",
+            "data_type": "enum"
+        },
+        "PROT_REV": {
+            "label": "PROT_REV",
+            "description": "Protocol revision/version applicable to the patient record at consent, notification, enrollment, or procedure, depending on study workflow. Observed values: 1; A; A (28JUL2021); A_20Mar2025; A_RU; B; B_26Jun2025; B_RU; C; CIP VERSION B; C_05DEC2023; C_05Dec2023; D; D_26AUG2024; E; ED; F; G; H; K; SOUTH AMERICA VERSION A; South America Version A; VERSION B; VERSION C; VERSION E; Version E.",
+            "data_type": "enum"
+        },
+        "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.NOTIF_DT,'YYYY-MM-DD')",
+            "description": "Patient notification date from the source system, formatted as YYYY-MM-DD when populated. Used by some studies to track notification or source workflow milestone timing.",
+            "data_type": "date"
+        },
+        "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.ENROLL_DT,'YYYY-MM-DD')",
+            "description": "Date the patient was enrolled or formally entered into the study, formatted as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.IMP_DT,'YYYY-MM-DD')",
+            "description": "Date of device implant, index procedure, ablation, or relevant study procedure, formatted as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "SYST_REV_FG": {
+            "label": "SYST_REV_FG",
+            "description": "System revision flag captured for applicable device studies. Indicates whether a system revision occurred or was applicable for the patient. Observed values: Y.",
+            "data_type": "enum"
+        },
+        "RAND_CONFIG": {
+            "label": "RAND_CONFIG",
+            "description": "Randomization configuration, assignment process, or study-specific randomized configuration value used for the patient when applicable. Observed values: APPROVED, PENDING RANDOMIZATION; APPROVED, TERMINATED PRIOR TO RANDOMIZATION; CONTINUED ACCESS STUDY (CAS); CONTROL; EXISTING; INTERMEDIATE; LOW; MEDICAL THERAPY (CONTROL) GROUP; N; NEW; RANDOMIZED; ROLL-IN; SCREEN FAILURE; TREATMENT; TRICLIP DEVICE (DEVICE) GROUP; Y.",
+            "data_type": "enum"
+        },
+        "RAND_ARM": {
+            "label": "RAND_ARM",
+            "description": "Randomization arm or assigned treatment/control group for randomized studies. Used to distinguish randomized device, control, drug/therapy, or study-group assignments. Observed values: AMULET; CAV; CONTROL; Control Group - 65% Fixed Tilt; DEVICE; ESPRIT BTK; FIXED DELAY; IN-CLINIC; MEDICAL THERAPY (CONTROL) GROUP; MITRACLIP DEVICE (CONTROL) GROUP; MITRACLIP DEVICE (DEVICE) GROUP; MITRAL VALVE REPAIR SURGERY (CONTROL) GROUP; NAVITOR; NOAC; PORTICO; PTA; RANDOMIZED AMULET; RANDOMIZED ARM; RANDOMIZED CONTROL; ROLL-IN AMULET; SINGLE ARM; Study Group - Fixed Pulse Width; SYNCAV; TENDYNE DEVICE (DEVICE) GROUP; TREATMENT; TRICLIP DEVICE (DEVICE) GROUP; VIRTUAL.",
+            "data_type": "enum"
+        },
+        "DEVICE_TYPE": {
+            "label": "DEVICE_TYPE",
+            "description": "Device type, therapy type, implant category, or product family associated with the patient record, such as AMULET, NOAC, PROCLAIM DRG, or other study-specific device/therapy categories. Observed values: ASSERT-IQ TM INSERTABLE CARDIAC MONITOR; CLIP; ETERNA SCS; IPG; LEAD; LVAD; N; PROCLAIM DRG; PROCLAIM ELITE 5; PROCLAIM ELITE 7; PROCLAIM IPG 5; PROCLAIM XR; PRODIGY; PRODIGY MRI; VALVE; Y.",
+            "data_type": "enum"
+        },
+        "PG_MANUF": {
+            "label": "PG_MANUF",
+            "description": "Pulse generator manufacturer recorded for cardiac rhythm/device studies, when applicable. Observed values: ABBOTT; ABBOTT/SJM; BIOTRONIK; BOSTON SCIENTIFIC; LIVANOVA; MEDTRONIC; OTHER; SJM/ABBOTT; UNKNOWN.",
+            "data_type": "enum"
+        },
+        "PG_MODEL": {
+            "label": "PG_MODEL",
+            "description": "Pulse generator model recorded for cardiac rhythm/device studies, when applicable.",
+            "data_type": "string"
+        },
+        "PG_SERIAL": {
+            "label": "PG_SERIAL",
+            "description": "Pulse generator serial number recorded for cardiac rhythm/device studies, when applicable.",
+            "data_type": "string"
+        },
+        "DEVICE_MODEL": {
+            "label": "DEVICE_MODEL",
+            "description": "Model or size identifier for the study device, implant, or comparator device used for the patient, when applicable.",
+            "data_type": "string"
+        },
+        "DEVICE_SERIAL": {
+            "label": "DEVICE_SERIAL",
+            "description": "Serial number or unique device identifier for the implanted or study device, when captured by the source system.",
+            "data_type": "string"
+        },
+        "TO_CHAR(P.WD_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.WD_DT,'YYYY-MM-DD')",
+            "description": "Withdrawal, discontinuation, screen-failure, or study-exit date for the patient, formatted as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "WD_REASON": {
+            "label": "WD_REASON",
+            "description": "Reason the patient withdrew, discontinued, screen-failed, was lost to follow-up, died, or otherwise exited study participation. Observed values include 161 distinct non-blank values; examples: ABORTED PROCEDURE PRIOR TO FLEXABILITY SE INSERTION; ABORTED PROCEDURE PRIOR TO TACTIFLEX PFA CATHETER INSERTION; ABORTED PROCEDURE PRIOR TO VOLT PFA INSERTION; ABORTED PROCEDURE, TACTIFLEX PFA CATHETER INSERTED BUT NO RF OR PF ENERGY; CLINICAL INVESTIGATION DISCONTINUED BY THE SPONSOR; CONSENTED SCREEN FAILURE; CONSENTED, NO TREATMENT ATTEMPTED; DEACTIVATION; DEATH; DEVICE EXPLANT; DEVICE EXPLANTED; EARLY TERMINATION OF THE CLINICAL TRIAL; EXPIRED; EXPLANTED; FAILED BOTH RANDOMIZATION AND SINGLE ARM CRITERIA; FAILED INCLUSION OR EXCLUSION CRITERIA AFTER SIGNING INFORMED CONSENT; HEART TRANSPLANT; IMPLANT NOT ATTEMPTED; IMPLANT/PROCEDURE WITH STUDY DEVICE CANCELED; IMPROPER/DUPLICATE SUBJECT ENROLLMENT.",
+            "data_type": "enum"
+        },
+        "DEATH_FG": {
+            "label": "DEATH_FG",
+            "description": "Flag indicating whether the patient death indicator is recorded for the patient. Observed values: Y.",
+            "data_type": "enum"
+        },
+        "IMPLANT_TYPE": {
+            "label": "IMPLANT_TYPE",
+            "description": "Study-specific implant or procedure type, such as new implant, replacement, system upgrade, de novo implant, initial procedure, or index ablation procedure. Observed values: 12M; 30D; ARTERIOVENOUS; ARTERIOVENOUS - E; ARTERY; ARTERY - E; ASD; CAS; DE NOVO IMPLANT; IDE; IMPLANT; INDEX ABLATION PROCEDURE; INITIAL; INITIAL PROCEDURE; INSERTION; LINE_EXTENSION; N; NAVITOR JAPAN; NEW IMPLANT; P1_AMP_4V; P1_AMP_ASD_PFO; P1_AMP_PDA; P2_AMP_PDA; PFO; PHASE II; PIVSD; RE-ATTEMPT; REATTEMPTED IMPLANT; REPLACEMENT; SINGLE; SURGERY; SYSTEM UPGRADE; VEIN; VEIN - E; VISTA NOVA; VSD; Y.",
+            "data_type": "enum"
+        },
+        "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.DEATH_DT,'YYYY-MM-DD')",
+            "description": "Patient death date, formatted as YYYY-MM-DD when populated and applicable.",
+            "data_type": "date"
+        },
+        "SOURCE": {
+            "label": "SOURCE",
+            "description": "Source-system or procedure-source text for the patient record. In some studies this contains source category, region, visit/procedure timing, or procedure-event strings. Observed values include 7938 distinct non-blank values; examples: (02 MAY 2023 00:00); (04 DEC 2024 00:00); (06 DEC 2023 00:00); (06 FEB 2024 00:00); (06 NOV 2023 00:00); (08 AUG 2023 00:00); (10 NOV 2022 00:00); (11 JAN 2024 00:00); (11 JUL 2024 00:00); (11 MAY 2023 00:00); (11 SEP 2023 00:00); (12 JAN 2024 00:00); (13 AUG 2024 00:00); (13 SEP 2023 00:00); (15 AUG 2023 00:00); (15 OCT 2024 00:00); (15-AUG-2025 00:00); (16 JAN 2024 00:00); (17 JUL 2024 00:00); (17 MAR 2025 00:00); (17 NOV 2022 00:00); (17 OCT 2023 00:00); (18 APR 2023 00:00); (18 FEB 2025 00:00); (18 MAY 2023 00:00); (18 OCT 2023 00:00); (19 JUL 2023 00:00); (20 MAY 2025 00:00); (21 FEB 2024 00:00); (21 MAY 2025 00:00); (22 APR 2025 00:00); (22 AUG 2023 00:00); (22 MAY 2024 00:00); (22 OCT 2024 00:00); (23-JUL-2025 00:00); (24 JUN 2024 00:00); (27 APR 2023 00:00); (27 MAY 2025 00:00); (28 JAN 2025 00:00); (28 JUN 2023 00:00); (29 AUG 2024 00:00); (29 JUL 2024 00:00); (30 OCT 2024 00:00); (31 AUG 2023 00:00); (31 OCT 2023 00:00); 01 APR 2019 00:00; 01 APR 2020 00:00; 01 APR 2021 00:00; 01 AUG 2017 00:00; 01 AUG 2018 00:00.",
+            "data_type": "enum"
+        },
+        "OLD_SITE": {
+            "label": "OLD_SITE",
+            "description": "Prior site code or migrated legacy site value, when a patient/site was transferred or converted from an earlier source-system site identifier.",
+            "data_type": "string"
+        },
+        "FCE": {
+            "label": "FCE",
+            "description": "Field clinical engineer or field clinical contact associated with the patient/site record, when available.",
+            "data_type": "string"
+        },
+        "CRA_NAME": {
+            "label": "CRA_NAME",
+            "description": "Clinical research associate assigned to the patient/site/study record, when available.",
+            "data_type": "string"
+        },
+        "PT_TRANS_FG": {
+            "label": "PT_TRANS_FG",
+            "description": "Patient transfer flag indicating whether the patient was transferred between sites or source-system contexts, when populated.",
+            "data_type": "enum"
+        },
+        "PT_GROUP_VALUE": {
+            "label": "PT_GROUP_VALUE",
+            "description": "Patient group, cohort, analysis population, visit grouping, follow-up cohort, or study-specific classification assigned to the patient. Observed values include 96 distinct non-blank values; examples: 12_MONTH; 12_MONTH_PA; 30_DAY; 30_DAY_D; 6_MONTH_CA; 6_MONTH_PA; ALIVE; ALIVE_E; AMPLATZER; ANALYSIS - NG; ANALYSIS - TITAN; ANALYSIS-INTERMEDIATE RISK; ANALYSIS-LOW RISK; B; CALA MECHANICAL; CALA TISSUE; CONTINUED ACCESS STUDY (CAS); CRT-D; DE NOVO (DUAL CHAMBER LP INDICATION); DE NOVO (SINGLE CHAMBER ATRIAL LP INDICATION); DE NOVO IMPLANT; EASE; EMEA MECHANICAL; ENROLLMENT; EXISTING CONTROL; EXISTING HM3; EXISTING NO-RAND; EXTENSION COHORT; Extreme; FEASIBILITY SUB-STUDY; FLEXNAV ANALYSIS COHORT; FLEXNAV ROLL-IN; GROUP 1; GROUP 1; GROUP 3; GROUP 1; GROUP 4; GROUP 1; GROUP 5; GROUP 2; GROUP 4; GROUP 5; High; ICD; INTERMEDIATE; LINE_EXTENSION; LOW; MAC; MAC CAP; MAIN STUDY; N; NEW HM3; NEW NO-RAND.",
+            "data_type": "enum"
+        },
+        "WEIGHT": {
+            "label": "WEIGHT",
+            "description": "Patient weight value captured at the relevant baseline, enrollment, procedure, or study-specific time point. Observed non-blank range in this file: 1 to 960.",
+            "data_type": "number"
+        },
+        "WEIGHT_UNIT": {
+            "label": "WEIGHT_UNIT",
+            "description": "Unit of measure for WEIGHT, such as KG or LB. Observed values: G; KG; Kg; kg; LB; LBS; lbs.",
+            "data_type": "enum"
+        },
+        "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.ENROLL_RECV_DT,'YYYY-MM-DD')",
+            "description": "Date enrollment documentation or enrollment data was received/recorded by the source workflow, formatted as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')": {
+            "label": "TO_CHAR(P.MON_TRIGGER_DT,'YYYY-MM-DD')",
+            "description": "Monitoring trigger date or date used to initiate monitoring/workflow activities for the patient record, formatted as YYYY-MM-DD when populated.",
+            "data_type": "date"
+        },
+        "RETROSPECTIVE_FG": {
+            "label": "RETROSPECTIVE_FG",
+            "description": "Flag indicating whether the patient record is retrospective or prospectively captured according to the study/source workflow. Observed values: N; Y.",
+            "data_type": "enum"
+        }
+    }
+}

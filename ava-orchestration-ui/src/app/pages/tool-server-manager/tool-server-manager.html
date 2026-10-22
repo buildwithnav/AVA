@@ -1,0 +1,305 @@
+<mat-form-field appearance="outline" class="search-bar">
+  <mat-icon matPrefix>search</mat-icon>
+  <mat-label>Search tools by name, service, route, or description</mat-label>
+  <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+  @if (searchQuery) {
+    <button matSuffix mat-icon-button (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+</mat-form-field>
+
+@if (isLoading()) {
+  <p>Loading tools...</p>
+} @else {
+  <!-- DB Tools Section — Editable -->
+  <section class="section-header">
+    <h3>Custom Tools</h3>
+    <button mat-raised-button color="primary" (click)="startCreate()" [disabled]="creatingNew">
+      <mat-icon>add</mat-icon> New Tool
+    </button>
+  </section>
+
+  @if (creatingNew) {
+    <mat-card class="tool-edit-card new-tool-card">
+      <mat-card-content>
+        <div class="tool-form">
+          <mat-form-field appearance="outline">
+            <mat-label>ID</mat-label>
+            <input matInput [(ngModel)]="newTool.id" placeholder="my-tool-id">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Service</mat-label>
+            <input matInput [(ngModel)]="newTool.service" placeholder="service-name">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Route</mat-label>
+            <input matInput [(ngModel)]="newTool.route" placeholder="/api/endpoint">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>HTTP Method</mat-label>
+            <mat-select [(ngModel)]="newTool.httpMethod">
+              <mat-option value="GET">GET</mat-option>
+              <mat-option value="POST">POST</mat-option>
+              <mat-option value="PUT">PUT</mat-option>
+              <mat-option value="PATCH">PATCH</mat-option>
+              <mat-option value="DELETE">DELETE</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="newTool.description" rows="2"></textarea>
+          </mat-form-field>
+
+          <!-- Parameters -->
+          <div class="params-section">
+            <div class="params-header">
+              <span>Parameters</span>
+              <button mat-icon-button color="primary" (click)="addParameter(newTool.parameters!)">
+                <mat-icon>add_circle</mat-icon>
+              </button>
+            </div>
+            @for (param of newTool.parameters; track $index) {
+              <div class="param-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Name</mat-label>
+                  <input matInput [(ngModel)]="param.name">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Type</mat-label>
+                  <mat-select [(ngModel)]="param.type">
+                    <mat-option value="string">string</mat-option>
+                    <mat-option value="number">number</mat-option>
+                    <mat-option value="integer">integer</mat-option>
+                    <mat-option value="array">array</mat-option>
+                    <mat-option value="object">object</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Location</mat-label>
+                  <mat-select [(ngModel)]="param.location">
+                    <mat-option value="query">query</mat-option>
+                    <mat-option value="path">path</mat-option>
+                    <mat-option value="body">body</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-chip-set>
+                  <mat-chip [highlighted]="param.required" (click)="param.required = !param.required">
+                    {{ param.required ? 'Required' : 'Optional' }}
+                  </mat-chip>
+                </mat-chip-set>
+                <button mat-icon-button color="warn" (click)="removeParameter(newTool.parameters!, $index)">
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="form-actions">
+            <button mat-button (click)="cancelEdit()">Cancel</button>
+            <button mat-raised-button color="primary" (click)="saveNewTool()" [disabled]="!newTool.id || !newTool.service">
+              Create
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (filteredServices().length === 0 && !creatingNew) {
+    <mat-card>
+      <mat-card-content>
+        <div class="empty-state">
+          <mat-icon>build</mat-icon>
+          <p>{{ searchQuery ? 'No custom tools match your search.' : 'No custom tools registered. Click "New Tool" to add one.' }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    @for (svc of filteredServices(); track svc.name) {
+      <mat-card class="service-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>dns</mat-icon>
+          <mat-card-title>{{ svc.name }}</mat-card-title>
+          <mat-card-subtitle>{{ svc.tools.length }} tool(s)</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @for (tool of svc.tools; track tool.id) {
+            <div class="tool-item" [class.editing]="editingToolId === tool.id">
+              @if (editingToolId === tool.id) {
+                <!-- Inline edit form -->
+                <div class="tool-form">
+                  <div class="edit-title full-width">
+                    <code class="tool-id">{{ tool.id }}</code>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Service</mat-label>
+                    <input matInput [(ngModel)]="tool.service">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Route</mat-label>
+                    <input matInput [(ngModel)]="tool.route">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>HTTP Method</mat-label>
+                    <mat-select [(ngModel)]="tool.httpMethod">
+                      <mat-option value="GET">GET</mat-option>
+                      <mat-option value="POST">POST</mat-option>
+                      <mat-option value="PUT">PUT</mat-option>
+                      <mat-option value="PATCH">PATCH</mat-option>
+                      <mat-option value="DELETE">DELETE</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput [(ngModel)]="tool.description" rows="2"></textarea>
+                  </mat-form-field>
+
+                  <div class="params-section">
+                    <div class="params-header">
+                      <span>Parameters</span>
+                      <button mat-icon-button color="primary" (click)="addParameter(tool.parameters)">
+                        <mat-icon>add_circle</mat-icon>
+                      </button>
+                    </div>
+                    @for (param of tool.parameters; track $index) {
+                      <div class="param-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Name</mat-label>
+                          <input matInput [(ngModel)]="param.name">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Type</mat-label>
+                          <mat-select [(ngModel)]="param.type">
+                            <mat-option value="string">string</mat-option>
+                            <mat-option value="number">number</mat-option>
+                            <mat-option value="integer">integer</mat-option>
+                            <mat-option value="array">array</mat-option>
+                            <mat-option value="object">object</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Location</mat-label>
+                          <mat-select [(ngModel)]="param.location">
+                            <mat-option value="query">query</mat-option>
+                            <mat-option value="path">path</mat-option>
+                            <mat-option value="body">body</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-chip-set>
+                          <mat-chip [highlighted]="param.required" (click)="param.required = !param.required">
+                            {{ param.required ? 'Required' : 'Optional' }}
+                          </mat-chip>
+                        </mat-chip-set>
+                        <button mat-icon-button color="warn" (click)="removeParameter(tool.parameters, $index)">
+                          <mat-icon>remove_circle</mat-icon>
+                        </button>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="form-actions">
+                    <button mat-button (click)="cancelEdit()">Cancel</button>
+                    <button mat-raised-button color="primary" (click)="saveTool(tool)">Save</button>
+                  </div>
+                </div>
+              } @else {
+                <!-- Read-only view -->
+                <div class="tool-summary">
+                  <div class="tool-info">
+                    <code class="tool-id">{{ tool.id }}</code>
+                    <span class="tool-method">{{ tool.httpMethod }}</span>
+                    <code class="tool-route">{{ tool.route }}</code>
+                    <span class="tool-desc">{{ tool.description }}</span>
+                  </div>
+                  <div class="tool-actions">
+                    <button mat-icon-button (click)="startEdit(tool)" matTooltip="Edit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="archiveTool(tool)" matTooltip="Archive">
+                      <mat-icon>archive</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  }
+
+  <!-- View Archived Button -->
+  <div class="archived-toggle">
+    <button mat-button (click)="toggleArchived()">
+      <mat-icon>{{ showArchived() ? 'visibility_off' : 'inventory_2' }}</mat-icon>
+      {{ showArchived() ? 'Hide Archived' : 'View Archived' }}
+    </button>
+  </div>
+
+  @if (showArchived()) {
+    <mat-card class="archived-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>inventory_2</mat-icon>
+        <mat-card-title>Archived Tools</mat-card-title>
+        <mat-card-subtitle>{{ archivedTools().length }} archived tool(s)</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        @if (archivedTools().length === 0) {
+          <p class="empty-state-inline">No archived tools.</p>
+        } @else {
+          @for (tool of archivedTools(); track tool.id) {
+            <div class="tool-item archived-item">
+              <div class="tool-summary">
+                <div class="tool-info">
+                  <code class="tool-id">{{ tool.id }}</code>
+                  <span class="tool-method">{{ tool.httpMethod }}</span>
+                  <code class="tool-route">{{ tool.route }}</code>
+                  <span class="tool-desc">{{ tool.description }}</span>
+                </div>
+                <div class="tool-actions">
+                  <button mat-icon-button color="primary" (click)="restoreTool(tool)" matTooltip="Restore">
+                    <mat-icon>unarchive</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- MCP Tools Section — Read-Only, Categorized -->
+  <mat-divider class="section-divider"></mat-divider>
+
+  <section class="section-header">
+    <h3>ADO MCP Tools</h3>
+    <mat-chip>Read-Only</mat-chip>
+  </section>
+
+  <mat-accordion multi>
+    @for (cat of filteredMcpCategories(); track cat.name) {
+      <mat-expansion-panel [expanded]="!!searchQuery">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="category-icon">{{ cat.icon }}</mat-icon>
+            {{ cat.name }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ cat.tools.length }} tools
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="mcp-tool-list">
+          @for (tool of cat.tools; track tool.id) {
+            <div class="mcp-tool-item">
+              <code class="mcp-tool-name">{{ getMcpToolName(tool) }}</code>
+              <span class="mcp-tool-desc">{{ tool.description }}</span>
+            </div>
+          }
+        </div>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

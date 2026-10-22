@@ -1,0 +1,196 @@
+# Retrieval Evaluation Cases
+# Each case tests whether the retrieval pipeline finds the right document sections.
+#
+# Fields:
+#   id:               Unique identifier for the test case
+#   question:         The user query to send to the retrieval pipeline
+#   source_document:  Expected source filename (must match a file in documents/)
+#   expected_sections:
+#     - section_heading: The heading/title of the section that should be retrieved
+#       key_content: |
+#         The essential content from that section. Doesn't need to be verbatim —
+#         the eval uses semantic similarity, so paraphrasing is fine.
+#         Include the key facts/details the retrieval MUST surface.
+#   min_similarity:   (optional) Override the default 0.70 threshold for this case
+
+cases:
+  # Example entry (replace with real cases):
+  #
+  # - id: "descriptive-kebab-case-id"
+  #   question: "What is the policy on X?"
+  #   source_document: "handbook.docx"
+  #   expected_sections:
+  #     - section_heading: "Section Title"
+  #       key_content: |
+  #         The key facts from this section that the retrieval
+  #         should surface. Multiple lines are fine.
+  #   min_similarity: 0.70
+
+  - id: "MONITORING-VISIT-REPORT-verbatim-retrieval"
+    question: "List out everything as written verbatim for the monitoring visit report section in the system spec"
+    source_document: "SMA System Specification.docx"
+    expected_sections:
+      - section_heading: "4.4	MONITORING VISIT REPORT"
+        key_content: |
+          4.4.1	The PDF output for the Periodic Monitoring Visit report shall conform to the template and shall be based on the template version associated with the visit. The Periodic Monitoring Visit report output shall contain the following sections: (ADO PBI 15338.1)
+          •	Study Title, Site Name, Principal Investigator, Visit Dates, and Visit Type
+          •	Abbott and Site Attendees
+          •	Informed Consent Form Review
+          •	Informed Consent Findings
+          •	Source Document Review (SDR)
+          •	SDR Findings
+          •	Source Data Verification (SDV)
+          •	SDV Findings
+          •	General Monitoring Activities and Critical Processes
+          •	General Monitoring Activities and Critical Process Finding(s)
+          •	Escalation Finding(s)
+          •	Finding(s) from Previous Visits
+          •	Comments
+          •	Site Summary of enrollment, protocol deviations, adverse events, total withdrawals excluding deaths, deaths, and IRB expiration date.   
+          4.4.2	The output of the Periodic Monitoring Visit report shall display all findings that were imported into the visit. (ADO PBI 15338.2)
+          4.4.3	The output shall be stamped with “DRAFT” when generated for a visit that is in the FCRA Review or Manager Review stages.  The “DRAFT” stamp shall be removed once the status is updated to Manager Approved. (ADO PBI 15338.3)
+          4.4.4	The internal visit rating shall not be present on the Periodic Monitoring Visit Report. (ADO PBI 15338.4)
+    min_similarity: 0.70
+
+  - id: "MONITORING-VISIT-REPORT-next-section-retrieval"
+    question: "What is after the monitoring visit report section in the system spec"
+    source_document: "SMA System Specification.docx"
+    expected_sections:
+      - section_heading: "4.5	MONITORING LETTER"
+        key_content: |
+          Monitoring Letter section 4.5
+          Monitor Letter shall pull all findings
+          escalation findings excluded from monitoring letter
+          internal visit rating shall not be present on the Monitor Letter
+    min_similarity: 0.30  # Sequential navigation — concise identification is acceptable
+
+  - id: "sma-db-table-question"
+    question: "What tables are used in the SMA database and what are their purposes?"
+    source_document: "SMA System Specification.docx"
+    expected_sections:
+      - section_heading: "7.2	LOCATION OF ORACLE DATA TABLES"
+        key_content: |
+          7.2	LOCATION OF ORACLE DATA TABLES
+          All data tables are in the CAP schema in PROD, TEST, and DEV instances and start with the prefix “MON_or SMART_SDV_”
+            
+            7.2.1	Tables and Description
+            Name	Description
+            MON_ACT_TIME	Stores the date, begin and end times for all activities.
+            MON_ACTIVITY	Master table to store all activities related to monitoring
+            MON_RPT_QUESTIONS	Stores a master list of questions that can be added to monitoring visit report templates
+            MON_RPT_TEMPLATE_QUESTIONS	Associates report questions with a report template.
+            MON_RPT_TEMPLATES	Stores set up for templates, the associated visit type, and report name used to generate the template
+            MON_RPT_TEMPLATES_ORGUNIT	Stores the association between the template and organization unit using the template
+            MON_STUDY_ADMIN	Stores all setup information related to monitoring visit frequencies
+            MON_VISIT	Stores information about Monitoring Visits
+            MON_VISIT_ADDENDUMS	Stores addendum information for a Monitoring Visit
+            MON_VISIT_APPROVAL	Stores the approval hierarchy to route review of Monitoring Visit Reports
+            MON_VISIT_ATTENDEES	Stores the Abbott and Site Attendees for the Monitoring Visit
+            MON_VISIT_AUDIT	Smart SDV Audit table for tracking visit activities such as prepare, completing sections, and escalations.
+            MON_VISIT_CRFS_MANUAL	Stores information about CRFs entered manually through the application.
+            MON_VISIT_CRFS_OC	Stores information about CRFs imported from OC
+            MON_VISIT_ICF	Stores information about Informed Consent Forms reviewed during a Monitoring Visit
+            MON_VISIT_ICF_ITEMS	Store the ICF Patients considered for the lot for a visit.
+            MON_VISIT_INT_COMM	Stores review statuses and internal review comments for a monitoring visit.
+            MON_VISIT_ISSUES	Stores all finding information for a Monitoring Visit
+            MON_VISIT_QUESTION_RESPONSES	Stores responses to questions on the report template based on actual monitoring visits.
+            MON_VISIT_SDR	Stores information about Source Document Review during a Monitoring Visit
+            MON_VISIT_SDR_SDV_CRFS	Stores the SDR and SDV CRFs for the lot for a visit
+            MON_VISIT_SDR_CRFS	Stores the selected/reserved SDR CRFs for a visit
+            MON_VISIT_SMART_SDV	Stores Smart SDV specific metrics for a monitoring visit
+            SMART_SDV_CONFIG_ISSUE_LIMITS	Table that configures the issue thresholds by sample size by study tier.
+            SMART_SDV_CONFIG_MESSAGES	Table that converts system messages into user friendly messages returned to the user.
+            SMART_SDV_CONFIG_SAMPLING	Configures the sample sizes by lot size by study tier.
+            SMART_SDV_CONFIG_SITES	Configures the sites that have 100% monitoring. Sites here are populated automatically from the smart_sdv_config_studies configuration or they can be manually added.
+            SMART_SDV_CONFIG_STUDIES	General configuration table where ICF 100% configuration is set, minimum sizes are set, debugging configuration, and specific study configuration settings are set.
+            SMART_SDV_DEBUG	This is a debug table that can be used when troubleshooting SMA. Simply turning on the debug configuration in the smart_sdv_config_studies table and then using the log_debug procedure within the packages will write to this table.
+            SMART_SDV_FREQ_DATA	Monitoring Frequency is set per admin interface and saved in this table.
+            SMART_SDV_IMPORTANT_FORMS	Important forms and forms with critical variables are rolled up into this table to easily identify them within the SMA logic. A scheduled job populates this table from the important variables table.
+            SMART_SDV_IMPORTANT_VARIABLES	This table from the EDC aggregates important and critical variables. The population is performed by a scheduled job.
+            SMART_SDV_PATIENTS	Patient selection is performed and aggregated in this table for smart sdv patients.
+    min_similarity: 0.70
+
+  - id: "sma-db-package-question"
+    question: "What packages are used in the SMA database and what are their purposes?"
+    source_document: "SMA System Specification.docx"
+    expected_sections:
+      - section_heading: "7.2.2	Database Packages and Description"
+        key_content: |
+          7.2.2	Database Packages and Description
+          Name	Description
+          PKG_MON_ACTIVITY	Mange the Monitoring Activities per the scheduler
+          PKG_MON_FUNC	Supports the SMA application including returning displayed data in the UI
+          PKG_MON_REPORTS	Supports Site Monitoring Reports
+          PKG_MON_VISIT	Manage legacy and rbm monitoring visits
+          PKG_MON_VISIT_COMPL	Populates Monitoring Visit Completeness information in mon_visit_compl table
+          PKG_RPT_MON	Provides SMA data for reporting and selection
+          PKG_RPT_MONITORING_SUITE	Provides SMA data for reporting and selection
+          PKG_RPT_MONITOR_LETTER	Provides SMA data for monitoring letter generation
+          PKG_SMART_SDV_ALERTS	Provides SMA PMV volume and frequency alerts to monitors
+          PKG_SMART_SDV_MON_ESCALATE	Provides escalation logic for Smart SDV Monitoring Visits
+          PKG_SMART_SDV_MON_VISIT	Manage and prepare Smart SDV Monitoring Visits
+          PKG_SMART_SDV_PATIENTS	Populates the preselections and prereservations of patients for Smart SDV studies.
+          PKG_SMART_SDV_VARIABLES	Compiles the important and critical variables from the EDC into a set of configuration tables e.g. smart_sdv_important_variables, smart_sdv_important_forms
+    min_similarity: 0.70
+
+  - id: "sdv-crfs-rdc-manual-question"
+    question: "what are the steps to review the SDV CRFs in RDC?"
+    source_document: "SMA Manual.pdf"
+    expected_sections:
+      - section_heading: "Page 46-47"
+        key_content: |
+          To complete review of the SDV CRFs within your visit all verification activity will still 
+          need to occur in RDC.   
+          The following steps should be followed when starting your SDV while logged into 
+          SMA. 
+          1. Log into RDC for the selected study/site during the monitoring visit. 
+          2. Locate the Activity Link(s) displayed.  There will be additional activity links 
+          based upon the selected and/or escalated subjects depending on the level 
+          of escalations.  
+          Page 46 
+          Rev BM - Last Updated 30MAY2025  
+          **Important Note: These activity links will only display during the scheduled days of 
+          your visit per the SMA calendar.  If you log into RDC prior to or after your scheduled 
+          monitoring visit days the Activity Links will not display. 
+          3. Click the activity link to take you to the listing of the CRFs that require 
+          monitoring verification or re-verification in RDC for your selected or escalated 
+          subjects.   
+          4. If any monitoring findings occur during SDV, create manual discrepancies in 
+          RDC with a reason of ‘Query Initiated by Monitor’.   
+          **Important Note: All manual discrepancies created only on Critical Variable 
+          fields with a reason of “Query Initiated by Monitor” that occurred during the 
+          monitoring visit will be automatically brought into SMA as a finding. 
+          5. Once all RDC Verification/Re-verification and Manual Discrepancies have 
+          been completed for the selected and/or escalated subjects navigate back 
+          to SMA to refresh the SDV listing.  
+          *Click the Refresh button to pull in any additional required CRFs that were entered 
+          during the monitoring
+    min_similarity: 0.60
+
+  - id: "crf-discrepancy-finding-edit-question"
+    question: "Why can't I edit a CRF discrepancy finding?"
+    source_document: "SMA Manual.pdf"
+    expected_sections:
+      - section_heading: "Page 63"
+        key_content: |
+          **Important Note: For CRF findings with an associated RDC Discrepancy, edits to the 
+          finding can only occur in RDC.  Utilize the refresh button to pull in the updated 
+          statuses and details or navigate to the Findings Menu to click the Gears icon and 
+          refresh.  
+    min_similarity: 0.60  # Short note buried in larger section - semantic gap between question and answer
+
+  - id: "compare-monitoring-report-and-letter"
+    question: "What are the differences between the monitoring visit report and the monitoring letter in the system spec?"
+    source_document: "SMA System Specification.docx"
+    expected_sections:
+      - section_heading: "4.4	MONITORING VISIT REPORT"
+        key_content: |
+          Monitoring Visit Report contains: Study Title, Site Name, Principal Investigator, Visit Dates, Visit Type, Abbott and Site Attendees, Informed Consent Form Review, ICF Findings, Source Document Review, SDR Findings, Source Data Verification, SDV Findings, General Monitoring Activities, Escalation Findings, Findings from Previous Visits, Comments, Site Summary
+          Internal visit rating shall not be present on the Periodic Monitoring Visit Report
+          Output stamped with DRAFT when in FCRA Review or Manager Review stages
+      - section_heading: "4.5	MONITORING LETTER"
+        key_content: |
+          Monitor Letter shall pull all findings
+          Escalation findings excluded from monitoring letter
+          Internal visit rating shall not be present on the Monitor Letter
+    min_similarity: 0.55  # Multi-hop comparison — partial matches from each section acceptable

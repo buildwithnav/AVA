@@ -1,0 +1,21 @@
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: git
+      name: K8s/Pipeline-Templates
+      ref: refs/heads/main
+
+trigger: none
+
+stages:
+  - template: templates/build.yml@pipeline-templates
+    parameters:
+      imageRepo: 'backend/ava-kb'
+      buildContext: 'ava-kb'
+      dockerfilePath: 'ava-kb/Dockerfile'
+
+  - template: templates/promote.yml@pipeline-templates
+    parameters:
+      env: 'dev'
+      imageRepo: 'backend/ava-kb'
+      dependsOn: ['Build']

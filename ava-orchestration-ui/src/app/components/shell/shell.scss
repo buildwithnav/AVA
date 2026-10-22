@@ -1,0 +1,79 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 240px;
+  background: #1a1a2e;
+  color: white;
+
+  .sidenav-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+
+    .logo-icon {
+      color: #7c4dff;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  mat-nav-list {
+    padding-top: 8px;
+  }
+
+  a[mat-list-item] {
+    color: rgba(255,255,255,0.85);
+    border-radius: 0 24px 24px 0;
+    margin-right: 8px;
+    margin-bottom: 4px;
+
+    span[matListItemTitle] {
+      color: rgba(255,255,255,0.85) !important;
+    }
+
+    &:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+
+      span[matListItemTitle] { color: white !important; }
+    }
+
+    &.active-link {
+      background: rgba(124, 77, 255, 0.2);
+      color: #ce93d8;
+
+      span[matListItemTitle] { color: #ce93d8 !important; }
+      mat-icon { color: #ce93d8; }
+    }
+
+    mat-icon { color: inherit; }
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.page-content {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+}
+
+// Embed mode: no padding, full height for iframe embedding
+.embed-page {
+  padding: 0;
+}

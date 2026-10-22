@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+    <linearGradient id="icon" x1="30" y1="25" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
+  <!-- Head -->
+  <circle cx="60" cy="48" r="18" stroke="url(#icon)" stroke-width="3.5" fill="none"/>
+  <!-- Hair swoop -->
+  <path d="M42 42 C42 30, 60 24, 72 30" stroke="url(#icon)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Headset band -->
+  <path d="M32 48 C32 28, 88 28, 88 48" stroke="url(#icon)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Left ear cup -->
+  <rect x="28" y="44" width="8" height="14" rx="4" fill="url(#icon)"/>
+  <!-- Right ear cup -->
+  <rect x="84" y="44" width="8" height="14" rx="4" fill="url(#icon)"/>
+  <!-- Mic arm -->
+  <path d="M32 56 C32 72, 48 76, 56 72" stroke="url(#icon)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Mic circle -->
+  <circle cx="56" cy="72" r="4" fill="url(#icon)"/>
+  <!-- Body/shoulders -->
+  <path d="M36 82 C36 74, 48 68, 60 68 C72 68, 84 74, 84 82" stroke="url(#icon)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Neck -->
+  <line x1="60" y1="66" x2="60" y2="70" stroke="url(#icon)" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,350 @@
+{
+    "description": "Study-site requirement tracking data for clinical trials, including site identifiers, regulatory and IRB/EC submissions, approvals, contractual agreements, certifications, training requirements, activation milestones, enrollment planning, sub-study readiness, and closeout documentation. Each row represents site-level operational and compliance readiness for a study. No patient-level records are included.",
+    "fields": {
+        "STUDY": {
+            "label": "STUDY",
+            "description": "Unique clinical study or protocol identifier for the site requirement record. This links the site-level regulatory, contractual, activation, training, certification, enrollment, and closeout milestones back to the parent clinical trial.",
+            "data_type": "string"
+        },
+        "SITE_CODE": {
+            "label": "SITE_CODE",
+            "description": "Unique clinical trial site identifier. This identifies the participating hospital, clinic, or research center for which site requirement milestones are tracked.",
+            "data_type": "string"
+        },
+        "Approval for qualified CT imaging": {
+            "label": "Approval for qualified CT imaging",
+            "description": "Status indicating whether the site has been reviewed and approved to perform protocol-required CT imaging. This confirms that the site's CT imaging equipment, process, and documentation meet study qualification requirements. Observed status values may include APPROVED, SENT, RECEIVED, and CONDITIONAL.",
+            "data_type": "enum"
+        },
+        "Approval for qualified CT imaging Date": {
+            "label": "Approval for qualified CT imaging Date",
+            "description": "Date associated with the current CT imaging qualification status, such as when documentation was sent, received, conditionally accepted, or approved.",
+            "data_type": "date"
+        },
+        "Approval for qualified ECG tracings": {
+            "label": "Approval for qualified ECG tracings",
+            "description": "Status indicating whether the site is qualified to collect or submit ECG tracings according to study requirements. Used to confirm site readiness for protocol-required cardiac rhythm or ECG assessments. Observed status values may include APPROVED, SENT, RECEIVED, and CONDITIONAL.",
+            "data_type": "enum"
+        },
+        "Approval for qualified ECG tracings Date": {
+            "label": "Approval for qualified ECG tracings Date",
+            "description": "Date associated with the current ECG tracing qualification status.",
+            "data_type": "date"
+        },
+        "Approval for qualified ECHO imaging": {
+            "label": "Approval for qualified ECHO imaging",
+            "description": "Status indicating whether the site has been qualified to perform echocardiography imaging for the study. This supports confirmation that imaging procedures, equipment, and site documentation meet protocol and sponsor requirements. Observed status values may include APPROVED, SENT, RECEIVED, and CONDITIONAL.",
+            "data_type": "enum"
+        },
+        "Approval for qualified ECHO imaging Date": {
+            "label": "Approval for qualified ECHO imaging Date",
+            "description": "Date associated with the current ECHO imaging qualification status.",
+            "data_type": "date"
+        },
+        "Approval for qualified MRI imaging": {
+            "label": "Approval for qualified MRI imaging",
+            "description": "Status indicating whether the site has been qualified to perform MRI imaging required by the clinical protocol. Used for site readiness and imaging compliance tracking. Observed status values may include APPROVED, SENT, RECEIVED, and CONDITIONAL.",
+            "data_type": "enum"
+        },
+        "Approval for qualified MRI imaging Date": {
+            "label": "Approval for qualified MRI imaging Date",
+            "description": "Date associated with the current MRI imaging qualification status.",
+            "data_type": "date"
+        },
+        "Clinical Trial Financial Agreement": {
+            "label": "Clinical Trial Financial Agreement",
+            "description": "Status of the financial agreement between sponsor and site covering study budget, payment terms, reimbursement, and financial obligations. This is a key contractual requirement for site activation. Observed status values may include APPROVED, SENT, RECEIVED, CONDITIONAL, and NEGOTIATION-SITE.",
+            "data_type": "enum"
+        },
+        "Clinical Trial Financial Agreement Date": {
+            "label": "Clinical Trial Financial Agreement Date",
+            "description": "Date associated with the current Clinical Trial Financial Agreement status, such as when the agreement was sent, received, negotiated, conditionally accepted, or approved.",
+            "data_type": "date"
+        },
+        "Consulting Agreement": {
+            "label": "Consulting Agreement",
+            "description": "Status of any consulting agreement required between sponsor and site personnel or investigators. Tracks whether the agreement has been sent, received, approved, or remains under negotiation.",
+            "data_type": "enum"
+        },
+        "Consulting Agreement Date": {
+            "label": "Consulting Agreement Date",
+            "description": "Date associated with the current Consulting Agreement status.",
+            "data_type": "date"
+        },
+        "Confidentiality Disclosure Agreement": {
+            "label": "Confidentiality Disclosure Agreement",
+            "description": "Status of the confidentiality or nondisclosure agreement required before confidential study materials, protocol details, or sponsor information can be shared with the site.",
+            "data_type": "enum"
+        },
+        "Confidentiality Disclosure Agreement Date": {
+            "label": "Confidentiality Disclosure Agreement Date",
+            "description": "Date associated with the current Confidentiality Disclosure Agreement status.",
+            "data_type": "date"
+        },
+        "Indemnification Agreement": {
+            "label": "Indemnification Agreement",
+            "description": "Status of the indemnification agreement defining legal responsibility, liability coverage, and sponsor/site obligations for study conduct.",
+            "data_type": "enum"
+        },
+        "Indemnification Agreement Date": {
+            "label": "Indemnification Agreement Date",
+            "description": "Date associated with the current Indemnification Agreement status.",
+            "data_type": "date"
+        },
+        "Research Agreement": {
+            "label": "Research Agreement",
+            "description": "Status of the research agreement governing the site's participation in the clinical study, including operational, regulatory, and contractual responsibilities.",
+            "data_type": "enum"
+        },
+        "Research Agreement Date": {
+            "label": "Research Agreement Date",
+            "description": "Date associated with the current Research Agreement status.",
+            "data_type": "date"
+        },
+        "Publication Agreement": {
+            "label": "Publication Agreement",
+            "description": "Status of the publication agreement defining rights, responsibilities, and review processes for publication or presentation of study results.",
+            "data_type": "enum"
+        },
+        "Publication Agreement Date": {
+            "label": "Publication Agreement Date",
+            "description": "Date associated with the current Publication Agreement status.",
+            "data_type": "date"
+        },
+        "CLIA Certification": {
+            "label": "CLIA Certification",
+            "description": "Status of the site's Clinical Laboratory Improvement Amendments certification or equivalent laboratory qualification documentation. Used to confirm laboratory compliance for protocol-required testing.",
+            "data_type": "enum"
+        },
+        "CLIA Certification Date": {
+            "label": "CLIA Certification Date",
+            "description": "Date associated with the current CLIA Certification status.",
+            "data_type": "date"
+        },
+        "Lab Certification": {
+            "label": "Lab Certification",
+            "description": "Status of site laboratory certification documentation required to support protocol-defined laboratory assessments. Indicates whether certification has been submitted, received, conditionally accepted, or approved.",
+            "data_type": "enum"
+        },
+        "Lab Certification Date": {
+            "label": "Lab Certification Date",
+            "description": "Date associated with the current Lab Certification status.",
+            "data_type": "date"
+        },
+        "CMS Approval": {
+            "label": "CMS Approval",
+            "description": "Status of CMS approval or related regulatory approval documentation required for applicable studies or sites.",
+            "data_type": "enum"
+        },
+        "CMS Approval Date": {
+            "label": "CMS Approval Date",
+            "description": "Date associated with the current CMS Approval status.",
+            "data_type": "date"
+        },
+        "IRB Registration": {
+            "label": "IRB Registration",
+            "description": "Status of Institutional Review Board or Ethics Committee registration information for the site. This may include confirmation that the reviewing IRB/EC is registered and appropriate for study oversight.",
+            "data_type": "enum"
+        },
+        "IRB Registration Date": {
+            "label": "IRB Registration Date",
+            "description": "Date associated with the current IRB Registration status.",
+            "data_type": "date"
+        },
+        "EC/IRB Original Submission Date": {
+            "label": "EC/IRB Original Submission Date",
+            "description": "Date the initial ethics committee or institutional review board submission was made for the site. Used to track the start of the regulatory review process.",
+            "data_type": "date"
+        },
+        "EC/IRB Renewal Letter": {
+            "label": "EC/IRB Renewal Letter",
+            "description": "Status of the IRB/EC renewal letter or continuing approval documentation. Used to confirm ongoing regulatory approval beyond the original approval period.",
+            "data_type": "enum"
+        },
+        "EC/IRB Renewal Letter Date": {
+            "label": "EC/IRB Renewal Letter Date",
+            "description": "Date associated with the current EC/IRB Renewal Letter status.",
+            "data_type": "date"
+        },
+        "Capital Equipment": {
+            "label": "Capital Equipment",
+            "description": "Status indicating whether required capital equipment for the study is available, documented, installed, or approved at the site.",
+            "data_type": "enum"
+        },
+        "Capital Equipment Date": {
+            "label": "Capital Equipment Date",
+            "description": "Date associated with the current Capital Equipment status.",
+            "data_type": "date"
+        },
+        "Cardiac Biomarkers Assay": {
+            "label": "Cardiac Biomarkers Assay",
+            "description": "Status of cardiac biomarker assay capability or documentation at the site. Used when protocol-required biomarker testing must be validated before enrollment or procedure activity.",
+            "data_type": "enum"
+        },
+        "Cardiac Biomarkers Assay Date": {
+            "label": "Cardiac Biomarkers Assay Date",
+            "description": "Date associated with the current Cardiac Biomarkers Assay status.",
+            "data_type": "date"
+        },
+        "Chemistry/Hematology Lab Normals": {
+            "label": "Chemistry/Hematology Lab Normals",
+            "description": "Status of chemistry and hematology laboratory normal ranges submitted by the site. These ranges support interpretation of protocol-required laboratory values.",
+            "data_type": "enum"
+        },
+        "Chemistry/Hematology Lab Normals Date": {
+            "label": "Chemistry/Hematology Lab Normals Date",
+            "description": "Date associated with the current Chemistry/Hematology Lab Normals status.",
+            "data_type": "date"
+        },
+        "EDC Training": {
+            "label": "EDC Training",
+            "description": "Status indicating whether required Electronic Data Capture training has been completed by site staff. This supports site readiness for data entry and study conduct.",
+            "data_type": "enum"
+        },
+        "EDC Training Date": {
+            "label": "EDC Training Date",
+            "description": "Date associated with completion or status update of EDC Training.",
+            "data_type": "date"
+        },
+        "Site Training Log": {
+            "label": "Site Training Log",
+            "description": "Status of the site training log documenting required protocol, system, device, or operational training for site personnel.",
+            "data_type": "enum"
+        },
+        "Site Training Log Date": {
+            "label": "Site Training Log Date",
+            "description": "Date associated with the current Site Training Log status.",
+            "data_type": "date"
+        },
+        "Training Log for Echo/RDC": {
+            "label": "Training Log for Echo/RDC",
+            "description": "Status of training documentation related to echocardiography or RDC-specific study procedures, when applicable.",
+            "data_type": "enum"
+        },
+        "Training Log for Echo/RDC Date": {
+            "label": "Training Log for Echo/RDC Date",
+            "description": "Date associated with the Training Log for Echo/RDC status.",
+            "data_type": "date"
+        },
+        "Site Activation Approval Form": {
+            "label": "Site Activation Approval Form",
+            "description": "Status of the formal approval form used to authorize site activation after required regulatory, contractual, training, and operational requirements are met.",
+            "data_type": "enum"
+        },
+        "Site Activation Approval Form Date": {
+            "label": "Site Activation Approval Form Date",
+            "description": "Date associated with the current Site Activation Approval Form status.",
+            "data_type": "date"
+        },
+        "Site Activation Checklist": {
+            "label": "Site Activation Checklist",
+            "description": "Status of the checklist confirming that all required documents, approvals, contracts, training, equipment, and operational prerequisites are complete before site activation.",
+            "data_type": "enum"
+        },
+        "Site Activation Checklist Date": {
+            "label": "Site Activation Checklist Date",
+            "description": "Date associated with the current Site Activation Checklist status.",
+            "data_type": "date"
+        },
+        "Site Activation Letter": {
+            "label": "Site Activation Letter",
+            "description": "Status of the official communication confirming that the site has been activated or authorized to begin study activities, such as screening or enrollment.",
+            "data_type": "enum"
+        },
+        "Site Activation Letter Date": {
+            "label": "Site Activation Letter Date",
+            "description": "Date associated with the Site Activation Letter status.",
+            "data_type": "date"
+        },
+        "Site Initiation Visit Date": {
+            "label": "Site Initiation Visit Date",
+            "description": "Date the Site Initiation Visit occurred. This milestone typically confirms that the site has been trained and is operationally ready to conduct the study.",
+            "data_type": "date"
+        },
+        "Enrollment Commitment/Month": {
+            "label": "Enrollment Commitment/Month",
+            "description": "Planned number of subjects the site commits to enroll per month. Used for enrollment forecasting and site performance planning.",
+            "data_type": "integer"
+        },
+        "Projected Total Enrollment": {
+            "label": "Projected Total Enrollment",
+            "description": "Total number of subjects the site is expected or planned to enroll over the course of the study.",
+            "data_type": "integer"
+        },
+        "Enrollment Closure Notice": {
+            "label": "Enrollment Closure Notice",
+            "description": "Status of the formal notice indicating that enrollment has been closed or is being closed for the site.",
+            "data_type": "enum"
+        },
+        "Enrollment Closure Notice Date": {
+            "label": "Enrollment Closure Notice Date",
+            "description": "Date associated with the Enrollment Closure Notice status.",
+            "data_type": "date"
+        },
+        "Device Position sub-study": {
+            "label": "Device Position sub-study",
+            "description": "Status indicating whether the site participates in or has met requirements for the Device Position sub-study.",
+            "data_type": "enum"
+        },
+        "Device Position sub-study Date": {
+            "label": "Device Position sub-study Date",
+            "description": "Date associated with the current Device Position sub-study status.",
+            "data_type": "date"
+        },
+        "Imaging sub-study": {
+            "label": "Imaging sub-study",
+            "description": "Status indicating whether the site participates in or has met requirements for an imaging-related sub-study.",
+            "data_type": "enum"
+        },
+        "Imaging sub-study Date": {
+            "label": "Imaging sub-study Date",
+            "description": "Date associated with the current Imaging sub-study status.",
+            "data_type": "date"
+        },
+        "ROAM sub-study": {
+            "label": "ROAM sub-study",
+            "description": "Status indicating whether the site participates in or has met requirements for the ROAM sub-study.",
+            "data_type": "enum"
+        },
+        "ROAM sub-study Date": {
+            "label": "ROAM sub-study Date",
+            "description": "Date associated with the current ROAM sub-study status.",
+            "data_type": "date"
+        },
+        "External Sensing for CPT sub-study": {
+            "label": "External Sensing for CPT sub-study",
+            "description": "Status indicating whether the site participates in or has met requirements for the External Sensing for CPT sub-study.",
+            "data_type": "enum"
+        },
+        "External Sensing for CPT sub-study Date": {
+            "label": "External Sensing for CPT sub-study Date",
+            "description": "Date associated with the current External Sensing for CPT sub-study status.",
+            "data_type": "date"
+        },
+        "Site Closeout Letter": {
+            "label": "Site Closeout Letter",
+            "description": "Status of the formal closeout letter issued when study activities at the site are ending or have ended.",
+            "data_type": "enum"
+        },
+        "Site Closeout Letter Date": {
+            "label": "Site Closeout Letter Date",
+            "description": "Date associated with the Site Closeout Letter status.",
+            "data_type": "date"
+        },
+        "Study Site Closeout Approval Document": {
+            "label": "Study Site Closeout Approval Document",
+            "description": "Status of the document approving or confirming site closeout after required closeout activities and documentation are complete.",
+            "data_type": "enum"
+        },
+        "Study Site Closeout Approval Document Date": {
+            "label": "Study Site Closeout Approval Document Date",
+            "description": "Date associated with the current Study Site Closeout Approval Document status.",
+            "data_type": "date"
+        },
+        "Willing to use and equipped for EDC": {
+            "label": "Willing to use and equipped for EDC",
+            "description": "Indicates whether the site is willing and operationally equipped to use the required Electronic Data Capture system for study data entry. Observed values are typically YES or NO.",
+            "data_type": "enum"
+        }
+    }
+}

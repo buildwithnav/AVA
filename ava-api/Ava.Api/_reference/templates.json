@@ -1,0 +1,82 @@
+[
+  {
+    "id": "work-item-create",
+    "description": "Preview for creating a new Azure DevOps work item",
+    "fields": [
+      { "name": "workItemType", "label": "Type",        "type": "select",    "required": true,  "options": ["PBI", "Bug", "Task", "Epic", "Feature"] },
+      { "name": "title",        "label": "Title",       "type": "text",      "required": true  },
+      { "name": "description",  "label": "Description", "type": "multiline", "required": false },
+      { "name": "reproSteps",   "label": "Repro Steps", "type": "multiline", "required": false },
+      { "name": "severity",     "label": "Severity",    "type": "select",    "required": false, "options": ["Severity 1 \u2013 Critical", "Severity 2 \u2013 High", "Severity 3 \u2013 Medium", "Severity 4 \u2013 Low"] },
+      { "name": "assignedTo",   "label": "Assigned To", "type": "text",      "required": false },
+      { "name": "project",      "label": "Project",     "type": "text",      "required": false },
+      { "name": "areaPath",     "label": "Area Path",   "type": "text",      "required": false },
+      { "name": "epicTitle",    "label": "Parent Epic",   "type": "text",    "required": false },
+      { "name": "featureTitle", "label": "Parent Feature","type": "text",    "required": false }
+    ]
+  },
+  {
+    "id": "work-item-update",
+    "description": "Preview for updating an existing Azure DevOps work item",
+    "fields": [
+      { "name": "workItemId",   "label": "Work Item ID", "type": "text",   "required": true  },
+      { "name": "state",        "label": "State",        "type": "select", "required": false, "options": ["New", "Active", "Resolved", "Closed", "Removed"] },
+      { "name": "assignedTo",   "label": "Assigned To",  "type": "text",   "required": false },
+      { "name": "title",        "label": "Title",        "type": "text",   "required": false },
+      { "name": "description",  "label": "Description",  "type": "multiline", "required": false },
+      { "name": "iterationPath","label": "Sprint",       "type": "text",   "required": false }
+    ]
+  },
+  {
+    "id": "sprint-action",
+    "description": "Preview for a sprint-related action",
+    "fields": [
+      { "name": "action",       "label": "Action",   "type": "select", "required": true, "options": ["show-sprint", "show-items", "move-to-sprint"] },
+      { "name": "project",      "label": "Project",  "type": "text",   "required": true  },
+      { "name": "team",         "label": "Team",     "type": "text",   "required": false },
+      { "name": "workItemId",   "label": "Work Item ID (for move)", "type": "text", "required": false },
+      { "name": "iterationPath","label": "Target Sprint (for move)", "type": "text", "required": false }
+    ]
+  },
+  {
+    "id": "study-analysis-preview",
+    "description": "Preview of the study analysis request before fetching data",
+    "fields": [
+      { "name": "studyName",  "label": "Study Name", "type": "text", "required": true  },
+      { "name": "studyCode",  "label": "Study Code", "type": "text", "required": false },
+      { "name": "studyId",    "label": "Study ID",   "type": "text", "required": false }
+    ]
+  },
+  {
+    "id": "rdl-create",
+    "description": "Preview for creating an RDL data extract request",
+    "fields": [
+      { "name": "studyName",  "label": "Study Name",  "type": "text",   "required": true  },
+      { "name": "studyCode",  "label": "Study Code",  "type": "text",   "required": false },
+      { "name": "activeFg",   "label": "Active Only", "type": "select", "required": false, "options": ["Y", "N"] },
+      { "name": "blindedFg",  "label": "Blinded",     "type": "select", "required": false, "options": ["Y", "N"] }
+    ]
+  },
+  {
+    "id": "prompt-design",
+    "description": "Design decisions for a new Ava workflow — review and adjust before generating the full definition",
+    "fields": [
+      { "name": "workflowGoal",      "label": "Workflow Goal",     "type": "multiline", "required": true  },
+      { "name": "domain",            "label": "Domain",            "type": "select",    "required": true, "options": ["ado", "study", "ctms", "support", "ava-prompts", "mon-log", "study-pi-insight"] },
+      { "name": "existingTools",     "label": "Tools Needed",      "type": "text",      "required": false },
+      { "name": "isWriteOperation",  "label": "Write Operation?",  "type": "select",    "required": true, "options": ["true", "false"] },
+      { "name": "hasMultipleResults","label": "Multiple Results?",  "type": "select",    "required": false, "options": ["true", "false"] },
+      { "name": "needsPiiCheck",     "label": "PII Check?",        "type": "select",    "required": false, "options": ["true", "false"] }
+    ]
+  },
+  {
+    "id": "workflow-stage-preview",
+    "description": "Preview of a workflow's planned stages before generating config",
+    "fields": [
+      { "name": "workflowId",          "label": "Workflow ID",    "type": "text",      "required": true  },
+      { "name": "workflowDomain",      "label": "Domain",         "type": "text",      "required": true  },
+      { "name": "workflowDescription", "label": "Description",    "type": "multiline", "required": true  },
+      { "name": "stagesPlan",          "label": "Planned Stages", "type": "multiline", "required": true  }
+    ]
+  }
+]

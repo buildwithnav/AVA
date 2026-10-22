@@ -1,0 +1,13 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build:element
+
+FROM node:22-alpine AS runtime
+WORKDIR /app
+RUN npm install -g http-server
+COPY --from=build /app/dist/element/browser /app/public
+EXPOSE 9090
+CMD ["http-server", "public", "--port", "9090", "--cors", "-s"]
